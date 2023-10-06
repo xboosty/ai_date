@@ -30,7 +30,7 @@ class AppTheme {
     colors: [secondColorBlur, firstColorBlur],
   );
 
-  static final Shader linearGradientShader = LinearGradient(
+  static final Shader linearGradientShader = const LinearGradient(
     colors: <Color>[firstColorBlur, secondColorBlur],
   ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
 
@@ -61,12 +61,22 @@ class AppTheme {
         ),
         filledButtonTheme: FilledButtonThemeData(
           style: FilledButton.styleFrom(
-            backgroundColor: Color(0xFF6C2EBC),
-            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            backgroundColor: const Color(0xFF6C2EBC),
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
           ),
         ),
+        // pageTransitionsTheme:  PageTransitionsTheme(
+        //   builders: {
+        //     TargetPlatform.android: CupertinoPageTransitionsBuilder().buildTransitions(route, context, animation, secondaryAnimation, child){
+        //       return SlideInLeft(
+        //         child: child,
+        //       );
+        //     },
+        //     TargetPlatform.iOS: const CupertinoPageTransitionsBuilder(),
+        //   },
+        // ),
       );
 }

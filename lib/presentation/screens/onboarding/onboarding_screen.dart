@@ -1,17 +1,16 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
 
 import '../../../config/config.dart' show AppTheme, Strings;
 import '../../widgets/widgets.dart'
     show
-        FilledColorizedOutlineButton,
-        VisibleOnProfile,
-        WelcomeText,
         CircularProgressIndicatorButton,
-        FilledColorizedButton;
-import '../screens.dart' show IntroductionScreen, SignInScreen;
+        CodeVerificationInput,
+        EmailInput,
+        FilledColorizedButton,
+        FilledColorizedOutlineButton,
+        VisibleOnProfile;
+import '../screens.dart' show SignInScreen;
 
 class Genders {
   final String id;
@@ -390,44 +389,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  PinCodeTextField(
-                    appContext: context,
-                    length: 5,
-                    obscureText: false,
-                    animationType: AnimationType.fade,
-                    pinTheme: PinTheme(
-                      borderRadius: BorderRadius.circular(50),
-                      activeFillColor:
-                          Colors.white, // Color de relleno cuando tiene numero
-                      disabledColor: Colors.green, // No
-                      errorBorderColor: Colors.red.shade200,
-                      inactiveColor:
-                          AppTheme.disabledColor, // Colors of the lines
-                      selectedFillColor: Colors.white,
-                      inactiveFillColor: Colors.white,
-                      shape: PinCodeFieldShape.underline,
-                      // activeFillColor: Colors.white,
-                    ),
-                    animationDuration: Duration(milliseconds: 300),
-                    enableActiveFill: true,
-                    // errorAnimationController: errorController,
-                    // controller: textEditingController,
-                    onCompleted: (v) {
-                      print("Completed");
-                    },
-                    onChanged: (value) {
-                      // print(value);
-                      // setState(() {
-                      //   currentText = value;
-                      // });
-                    },
-                    beforeTextPaste: (text) {
-                      print("Allowing to paste $text");
-                      //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-                      //but you can show anything you want here, like your pop up saying wrong paste format or etc
-                      return true;
-                    },
-                  ),
+                  const CodeVerificationInput(),
                   // TextFormField(
                   //   decoration: const InputDecoration(
                   //     enabledBorder: UnderlineInputBorder(
@@ -547,29 +509,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextFormField(
-                  decoration: const InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFF686E8C),
-                        width: 2.0,
-                      ),
-                    ),
-                    border: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFF686E8C),
-                        width: 2.0,
-                      ),
-                    ),
-                  ),
-                  style: const TextStyle(
-                    color: Color(0xFF686E8C),
-                    fontSize: 24,
-                    fontFamily: Strings.fontFamily,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                ),
+                EmailInput(),
                 // const Padding(
                 //   padding: EdgeInsets.symmetric(vertical: 20.0),
                 //   child: Text(
