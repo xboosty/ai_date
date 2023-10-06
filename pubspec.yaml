@@ -1,0 +1,58 @@
+name: ai_date
+description: A new flutter project for a dating app with artificial intelligence integration.
+
+publish_to: 'none' 
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.1.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.2
+  flutter_bloc: ^8.1.3
+  bloc: ^8.1.2
+  equatable: ^2.0.5
+  get_it: ^7.6.4
+  shared_preferences: ^2.2.1
+  animate_do: ^3.1.2
+  intl_phone_number_input: ^0.7.3+1
+  flutter_svg: ^2.0.7
+  gradient_widgets: ^0.6.0
+  pin_code_fields: ^8.0.1
+  # pin_code_fields: ^8.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - assets/imgs/
+    - assets/svgs/
+  #   - images/a_dot_ham.jpeg
+
+  # example:
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf
+        - asset: assets/fonts/Montserrat-Bold.ttf
+        - asset: assets/fonts/Montserrat-Light.ttf
+        - asset: assets/fonts/Montserrat-Thin.ttf
+    # - family: Inter
+    #   fonts:
+    #     - asset: assets/fonts/Inter-Regular.ttf
+    #     - asset: assets/fonts/Inter-Light.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages
