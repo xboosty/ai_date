@@ -14,4 +14,11 @@ class NtsAccountAuthRepository extends AccountRepository<UserEntity> {
     final bool isVerify = await datasource.verificationAccount(verify);
     return isVerify;
   }
+
+  @override
+  Future<UserEntity> signInUserRepository(
+      Map<String, dynamic> credentials) async {
+    final UserEntity user = await datasource.logIn(credentials);
+    return user;
+  }
 }

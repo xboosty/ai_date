@@ -57,9 +57,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   late Sexuality? _sexualitySelected;
 
   final List<Genders> _genders = [
+    Genders(id: 3, name: 'Non Binary'),
     Genders(id: 2, name: 'Woman'),
     Genders(id: 1, name: 'Man'),
-    Genders(id: 3, name: 'Non Binary'),
   ];
 
   final List<Sexuality> _sexualities = [
@@ -71,6 +71,76 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     Sexuality(id: 6, name: 'Transgender'),
   ];
 
+  // Validations
+  String? _validateUsername(String value) {
+    // Define your validation logic here.
+    if (value.isEmpty) {
+      return 'Username is required';
+    }
+    if (value.length < 4) {
+      return 'Username must be at least 4 characters long';
+    }
+    // You can add more validation rules as needed.
+    return null; // Return null if the input is valid.
+  }
+
+  String? _validatePhoneNumber(String value) {
+    // Define your phone number validation logic here.
+    if (value.isEmpty) {
+      return 'Phone number is required';
+    }
+    // You can use regular expressions or other methods to validate phone numbers.
+    // Here, we're checking if the input consists of 10 digits.
+    // if (!RegExp(r'^[0-9]{10}$').hasMatch(value)) {
+    //   return 'Invalid phone number. Please enter 10 digits.';
+    // }
+    return null; // Return null if the input is valid.
+  }
+
+  String? _validateEmail(String value) {
+    // Define your email validation logic here.
+    if (value.isEmpty) {
+      return 'Email is required';
+    }
+    // Use a regular expression to validate the email format.
+    if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
+        .hasMatch(value)) {
+      return 'Invalid email address';
+    }
+    return null; // Return null if the input is valid.
+  }
+
+  String? _validatePassword(String value) {
+    // Define your password validation logic here.
+    if (value.isEmpty) {
+      return 'Password is required';
+    }
+    // Check if the password length is at least 8 characters.
+    if (value.length < 8) {
+      return 'Password must be at least 8 characters long';
+    }
+    // Use regular expressions to enforce additional rules.
+    if (!RegExp(
+            r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%^&*()_+{}\[\]:;<>,.?~\\-]).{8,}$')
+        .hasMatch(value)) {
+      return 'Please insert a valid password';
+    }
+    return null; // Return null if the input is valid.
+  }
+
+  String? _validateVerificationCode(String value) {
+    if (value.isEmpty) {
+      return 'Verification code is required';
+    }
+
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters long';
+    }
+
+    return null;
+  }
+
+  // For Register User
   Future<void> _verificationCode(BuildContext context) async {
     final verification = {
       "phone": {"code": codeNumber, "number": phoneNumberUser},
@@ -96,17 +166,85 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     await context.read<AccountCubit>().registerUser(user);
   }
 
+  void _submitUsername() {
+    if (_formKey.currentState!.validate()) {
+      // If the form is valid, save the form and perform an action.
+      _formKey.currentState!.save();
+      // Here, you can use the _username variable for further processing.
+      print('Username: ${_fullNameCtrl.text}');
+      _netxPage();
+    }
+  }
+
+  void _submitPhoneNumber() {
+    if (_formKey.currentState!.validate()) {
+      // If the form is valid, save the form and perform an action.
+      _formKey.currentState!.save();
+      // Here, you can use the _phoneNumber variable for further processing.
+      print('Phone Number: $phoneNumberUser');
+      _netxPage();
+    }
+  }
+
+  void _submitEmail() {
+    if (_formKey.currentState!.validate()) {
+      // If the form is valid, save the form and perform an action.
+      _formKey.currentState!.save();
+      // Here, you can use the _email variable for further processing.
+      print('Email: ${_emailUserCtrl.text}');
+      _netxPage();
+    }
+  }
+
+  void _submitPassword() {
+    if (_formKey.currentState!.validate()) {
+      // If the form is valid, save the form and perform an action.
+      _formKey.currentState!.save();
+      // Here, you can use the _email variable for further processing.
+      print('Password: ${_passwordCtrl.text}');
+      _netxPage();
+    }
+  }
+
   Future<void> _formRegisterSubmit(BuildContext context,
       {required double page}) async {
     switch (page) {
+      case 0:
+        _submitUsername();
+        break;
+      case 1:
+        _submitPhoneNumber();
+        break;
+      case 2:
+        _submitEmail();
+        break;
+      case 3:
+        _submitPassword();
+        break;
+      case 4:
+        _netxPage();
+        break;
+      case 5:
+        _netxPage();
+        break;
       case 6:
         await _registerUser(context);
+        _netxPage();
+        break;
       case 7:
         if (!mounted) return;
         await _verificationCode(context);
+        break;
       default:
         break;
     }
+  }
+
+  void _netxPage() {
+    pageviewController.nextPage(
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
   }
 
   void _backPage() {
@@ -124,109 +262,112 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     return Container(
       width: double.infinity,
       height: size.height,
-      child: Column(
-        children: [
-          Container(
-            width: size.width,
-            height: size.height * 0.36,
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
-            // color: Colors.red,
-            child: Container(
-              // color: Colors.white,
-              child: Stack(
-                children: [
-                  Center(
-                    child: Image.asset(
-                      'assets/imgs/vector_robot_chat.png',
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              width: size.width,
+              height: size.height * 0.36,
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              // color: Colors.red,
+              child: Container(
+                // color: Colors.white,
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        'assets/imgs/vector_robot_chat.png',
+                      ),
                     ),
-                  ),
-                  Center(child: Image.asset('assets/imgs/robot_chat.png')),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 30.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back_rounded,
-                            color: AppTheme.disabledColor,
-                            size: 32,
+                    Center(child: Image.asset('assets/imgs/robot_chat.png')),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 30.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.arrow_back_rounded,
+                              color: AppTheme.disabledColor,
+                              size: 32,
+                            ),
+                            onPressed: () => Navigator.of(context).pop(),
                           ),
-                          onPressed: () => Navigator.of(context).pop(),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.cancel_outlined,
+                              color: AppTheme.disabledColor,
+                              size: 32,
+                            ),
+                            onPressed: () => _exitSetup(),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: size.height / 40),
+              child: const Text(
+                'What\'s your name?',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xFF261638),
+                  fontSize: 28,
+                  fontFamily: Strings.fontFamily,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: size.width / 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextFormField(
+                    controller: _fullNameCtrl,
+                    decoration: const InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0xFF686E8C),
+                          width: 2.0,
                         ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.cancel_outlined,
-                            color: AppTheme.disabledColor,
-                            size: 32,
-                          ),
-                          onPressed: () => _exitSetup(),
-                        )
-                      ],
+                      ),
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0xFF686E8C),
+                          width: 2.0,
+                        ),
+                      ),
+                    ),
+                    style: const TextStyle(
+                      color: Color(0xFF686E8C),
+                      fontSize: 24,
+                      fontFamily: Strings.fontFamily,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    keyboardType: TextInputType.name,
+                    validator: (value) => _validateUsername(value ?? ''),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20.0),
+                    child: Text(
+                      'This is how it\'ll appear on your profile',
+                      style: TextStyle(
+                        color: Color(0xFF9CA4BF),
+                        fontSize: 12,
+                        fontFamily: Strings.fontFamily,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: size.height / 40),
-            child: const Text(
-              'What\'s your name?',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFF261638),
-                fontSize: 28,
-                fontFamily: Strings.fontFamily,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: size.width / 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextFormField(
-                  controller: _fullNameCtrl,
-                  decoration: const InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFF686E8C),
-                        width: 2.0,
-                      ),
-                    ),
-                    border: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xFF686E8C),
-                        width: 2.0,
-                      ),
-                    ),
-                  ),
-                  style: const TextStyle(
-                    color: Color(0xFF686E8C),
-                    fontSize: 24,
-                    fontFamily: Strings.fontFamily,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  keyboardType: TextInputType.name,
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20.0),
-                  child: Text(
-                    'This is how it\'ll appear on your profile',
-                    style: TextStyle(
-                      color: Color(0xFF9CA4BF),
-                      fontSize: 12,
-                      fontFamily: Strings.fontFamily,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -235,15 +376,13 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     return Container(
       width: double.infinity,
       height: size.height,
-      child: Column(
-        children: [
-          Container(
-            width: size.width,
-            height: size.height * 0.36,
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
-            // color: Colors.red,
-            child: Container(
-              // color: Colors.white,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              width: size.width,
+              height: size.height * 0.36,
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: Stack(
                 children: [
                   Center(
@@ -255,7 +394,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     child: Image.asset('assets/imgs/phone_number_img.png'),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 30.0),
+                    padding: const EdgeInsets.symmetric(vertical: 30.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -281,79 +420,57 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 ],
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: size.height / 40),
-            child: const Text(
-              'What\'s your phone number?',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFF261638),
-                fontSize: 28,
-                fontFamily: Strings.fontFamily,
-                fontWeight: FontWeight.w700,
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: size.height / 40),
+              child: const Text(
+                'What\'s your phone number?',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xFF261638),
+                  fontSize: 28,
+                  fontFamily: Strings.fontFamily,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: size.width / 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    SizedBox(
-                      width: size.width * 0.90,
-                      // height: size.height * 0.20,
-                      child: InternationalPhoneNumberInput(
-                        initialValue: PhoneNumber(dialCode: '+1'),
-                        onInputChanged: (PhoneNumber number) {
-                          codeNumber = number.dialCode ?? '-1';
-                          phoneNumberUser = number.parseNumber();
-                        },
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: size.width / 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: size.width * 0.90,
+                        // height: size.height * 0.20,
+                        child: InternationalPhoneNumberInput(
+                          onInputChanged: (PhoneNumber number) {
+                            codeNumber = number.dialCode ?? '-1';
+                            phoneNumberUser = number.parseNumber();
+                          },
+                          validator: (value) =>
+                              _validatePhoneNumber(value ?? ''),
+                        ),
+                      )
+                    ],
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20.0),
+                    child: Text(
+                      'AI Date will send you a text with a verification code. Message and date rates may apply.',
+                      style: TextStyle(
+                        color: Color(0xFF9CA4BF),
+                        fontSize: 12,
+                        fontFamily: Strings.fontFamily,
+                        fontWeight: FontWeight.w500,
                       ),
-                    )
-                    // TextFormField(
-                    //   decoration: const InputDecoration(
-                    //     enabledBorder: UnderlineInputBorder(
-                    //       borderSide: BorderSide(
-                    //         color: Color(0xFF686E8C),
-                    //         width: 2.0,
-                    //       ),
-                    //     ),
-                    //     border: UnderlineInputBorder(
-                    //       borderSide: BorderSide(
-                    //         color: Color(0xFF686E8C),
-                    //         width: 2.0,
-                    //       ),
-                    //     ),
-                    //   ),
-                    //   style: const TextStyle(
-                    //     color: Color(0xFF686E8C),
-                    //     fontSize: 24,
-                    //     fontFamily: Strings.fontFamily,
-                    //     fontWeight: FontWeight.w600,
-                    //   ),
-                    //   keyboardType: TextInputType.name,
-                    // ),
-                  ],
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20.0),
-                  child: Text(
-                    'AI Date will send you a text with a verification code. Message and date rates may apply.',
-                    style: TextStyle(
-                      color: Color(0xFF9CA4BF),
-                      fontSize: 12,
-                      fontFamily: Strings.fontFamily,
-                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -428,31 +545,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 children: [
                   CodeVerificationInput(
                     controller: _verificationCtrl,
+                    validator: (value) =>
+                        _validateVerificationCode(value ?? ''),
                   ),
-                  // TextFormField(
-                  //   decoration: const InputDecoration(
-                  //     enabledBorder: UnderlineInputBorder(
-                  //       borderSide: BorderSide(
-                  //         color: Color(0xFF686E8C),
-                  //         width: 2.0,
-                  //       ),
-                  //     ),
-                  //     border: UnderlineInputBorder(
-                  //       borderSide: BorderSide(
-                  //         color: Color(0xFF686E8C),
-                  //         width: 2.0,
-                  //       ),
-                  //     ),
-                  //   ),
-                  //   style: const TextStyle(
-                  //     color: Color(0xFF686E8C),
-                  //     fontSize: 24,
-                  //     fontFamily: Strings.fontFamily,
-                  //     fontWeight: FontWeight.w600,
-                  //   ),
-                  //   keyboardType: TextInputType.name,
-                  // ),
-
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
                     child: TextButton(
@@ -496,86 +591,91 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     return Container(
       width: double.infinity,
       height: size.height,
-      child: Column(
-        children: [
-          Container(
-            width: size.width,
-            height: size.height * 0.36,
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
-            // color: Colors.red,
-            child: Container(
-              // color: Colors.white,
-              child: Stack(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              width: size.width,
+              height: size.height * 0.36,
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              // color: Colors.red,
+              child: Container(
+                // color: Colors.white,
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        'assets/imgs/vector_email.png',
+                      ),
+                    ),
+                    Center(child: Image.asset('assets/imgs/email_img.png')),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 30.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.arrow_back_rounded,
+                              color: AppTheme.disabledColor,
+                              size: 32,
+                            ),
+                            onPressed: () => _backPage(),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.cancel_outlined,
+                              color: AppTheme.disabledColor,
+                              size: 32,
+                            ),
+                            onPressed: () => _exitSetup(),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: size.height / 40),
+              child: const Text(
+                'What\'s your email address?',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xFF261638),
+                  fontSize: 28,
+                  fontFamily: Strings.fontFamily,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: size.width / 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(
-                    child: Image.asset(
-                      'assets/imgs/vector_email.png',
-                    ),
+                  EmailInput(
+                    controller: _emailUserCtrl,
+                    validator: (value) => _validateEmail(value ?? ''),
                   ),
-                  Center(child: Image.asset('assets/imgs/email_img.png')),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 30.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back_rounded,
-                            color: AppTheme.disabledColor,
-                            size: 32,
-                          ),
-                          onPressed: () => _backPage(),
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.cancel_outlined,
-                            color: AppTheme.disabledColor,
-                            size: 32,
-                          ),
-                          onPressed: () => _exitSetup(),
-                        )
-                      ],
-                    ),
-                  ),
+                  // const Padding(
+                  //   padding: EdgeInsets.symmetric(vertical: 20.0),
+                  //   child: Text(
+                  //     'This is how it´ll appear on your profile',
+                  //     style: TextStyle(
+                  //       color: Color(0xFF9CA4BF),
+                  //       fontSize: 12,
+                  //       fontFamily: Strings.fontFamily,
+                  //       fontWeight: FontWeight.w500,
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: size.height / 40),
-            child: const Text(
-              'What\'s your email address?',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFF261638),
-                fontSize: 28,
-                fontFamily: Strings.fontFamily,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: size.width / 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                EmailInput(controller: _emailUserCtrl),
-                // const Padding(
-                //   padding: EdgeInsets.symmetric(vertical: 20.0),
-                //   child: Text(
-                //     'This is how it´ll appear on your profile',
-                //     style: TextStyle(
-                //       color: Color(0xFF9CA4BF),
-                //       fontSize: 12,
-                //       fontFamily: Strings.fontFamily,
-                //       fontWeight: FontWeight.w500,
-                //     ),
-                //   ),
-                // ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -672,6 +772,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     ),
                     obscureText: true,
                     keyboardType: TextInputType.visiblePassword,
+                    validator: (value) => _validatePassword(value ?? ''),
                   ),
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 20.0),
@@ -783,7 +884,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                             });
                           },
                         ),
-                        gender.id != 3 ? const Divider() : Container(),
+                        gender.id != 1 ? const Divider() : Container(),
                       ],
                     ),
                   )
@@ -1202,17 +1303,16 @@ class ButtonCircularProgress extends StatefulWidget {
 
 class _ButtonCircularProgressState extends State<ButtonCircularProgress> {
   double percent = 0.125;
+  double currentPage = 0;
 
   void _onPressButtonPage() {
     widget.onNextPage!(widget.pageviewController.page ?? -1);
 
-    widget.pageviewController.nextPage(
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
-
     setState(() {
-      percent = percent + 0.125;
+      if (widget.pageviewController.page != currentPage) {
+        percent = percent + 0.125;
+        currentPage = widget.pageviewController.page ?? -1;
+      }
     });
   }
 
