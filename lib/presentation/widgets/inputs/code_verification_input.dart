@@ -4,15 +4,19 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import '../../../config/config.dart' show AppTheme;
 
 class CodeVerificationInput extends StatelessWidget {
-  const CodeVerificationInput({super.key});
+  const CodeVerificationInput({super.key, this.controller});
+
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
     return PinCodeTextField(
+      controller: controller,
       appContext: context,
-      length: 5,
+      length: 6,
       obscureText: false,
       animationType: AnimationType.fade,
+      keyboardType: TextInputType.number,
       pinTheme: PinTheme(
         borderRadius: BorderRadius.circular(50),
         activeFillColor: Colors.white, // Color de relleno cuando tiene numero

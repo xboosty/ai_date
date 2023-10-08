@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
-import '../../../config/config.dart' show AppTheme, Strings;
+import '../../../config/config.dart'
+    show AccountCubit, AppTheme, Strings, UserRegisterStatus;
 import '../../widgets/widgets.dart'
     show
         CircularProgressIndicatorButton,
@@ -10,17 +12,17 @@ import '../../widgets/widgets.dart'
         FilledColorizedButton,
         FilledColorizedOutlineButton,
         VisibleOnProfile;
-import '../screens.dart' show SignInScreen;
+import '../screens.dart' show HomeScreen, SignInScreen;
 
 class Genders {
-  final String id;
+  final int id;
   final String name;
 
   Genders({required this.id, required this.name});
 }
 
 class Sexuality {
-  final String id;
+  final int id;
   final String name;
 
   Sexuality({required this.id, required this.name});
@@ -36,44 +38,76 @@ class OnBoardingScreen extends StatefulWidget {
 }
 
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
-  final pageviewController = PageController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final PageController pageviewController = PageController();
+  final TextEditingController _fullNameCtrl = TextEditingController();
+  final TextEditingController _emailUserCtrl = TextEditingController();
+  final TextEditingController _passwordCtrl = TextEditingController();
+  final TextEditingController _verificationCtrl = TextEditingController();
+
   bool isLastPage = false;
   bool isNotifyPage = false;
   bool isGenderVisibleProfile = false;
   bool isSexualityVisibleProfile = false;
-  double _percent = 0.0;
+  String phoneNumberUser = '';
+  String codeNumber = '';
 
   int _currentPage = 0;
   late Genders? _genderSelected;
   late Sexuality? _sexualitySelected;
 
-  final List<Color> _buttonBorderColors = [
-    Colors.red,
-    Colors.green,
-    Colors.blue,
-    Colors.yellow,
-    Colors.purple,
-    Colors.brown,
-    Colors.indigo,
-    Colors.lightBlue,
-    Colors.yellow,
-    Colors.yellow,
-  ];
-
   final List<Genders> _genders = [
-    Genders(id: 'woman', name: 'Woman'),
-    Genders(id: 'man', name: 'Man'),
-    Genders(id: 'non-binary', name: 'Non Binary'),
+    Genders(id: 2, name: 'Woman'),
+    Genders(id: 1, name: 'Man'),
+    Genders(id: 3, name: 'Non Binary'),
   ];
 
   final List<Sexuality> _sexualities = [
-    Sexuality(id: 'non-say', name: 'Prefer not to say'),
-    Sexuality(id: 'straight', name: 'Straight'),
-    Sexuality(id: 'gay', name: 'Gay'),
-    Sexuality(id: 'lesbian', name: 'Lesbian'),
-    Sexuality(id: 'bisexual', name: 'Bisexual'),
-    Sexuality(id: 'trans', name: 'Transgender'),
+    Sexuality(id: 1, name: 'Prefer not to say'),
+    Sexuality(id: 2, name: 'Straight'),
+    Sexuality(id: 3, name: 'Gay'),
+    Sexuality(id: 4, name: 'Lesbian'),
+    Sexuality(id: 5, name: 'Bisexual'),
+    Sexuality(id: 6, name: 'Transgender'),
   ];
+
+  Future<void> _verificationCode(BuildContext context) async {
+    final verification = {
+      "phone": {"code": codeNumber, "number": phoneNumberUser},
+      "email": "",
+      "verificationCode": _verificationCtrl.text
+    };
+
+    await context.read<AccountCubit>().verificationCode(verification);
+  }
+
+  Future<void> _registerUser(BuildContext context) async {
+    final user = {
+      "fullName": _fullNameCtrl.text,
+      "password": _passwordCtrl.text,
+      "confirmationPassword": _passwordCtrl.text,
+      "email": _emailUserCtrl.text,
+      "birthday": "2023-10-07T05:16:16.305Z",
+      "phone": {"code": codeNumber, "number": phoneNumberUser},
+      "gender": _genderSelected?.id ?? -1,
+      "sexualOrientation": _sexualitySelected?.id ?? -1
+    };
+
+    await context.read<AccountCubit>().registerUser(user);
+  }
+
+  Future<void> _formRegisterSubmit(BuildContext context,
+      {required double page}) async {
+    switch (page) {
+      case 6:
+        await _registerUser(context);
+      case 7:
+        if (!mounted) return;
+        await _verificationCode(context);
+      default:
+        break;
+    }
+  }
 
   void _backPage() {
     pageviewController.previousPage(
@@ -154,6 +188,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextFormField(
+                  controller: _fullNameCtrl,
                   decoration: const InputDecoration(
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
@@ -271,8 +306,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       width: size.width * 0.90,
                       // height: size.height * 0.20,
                       child: InternationalPhoneNumberInput(
+                        initialValue: PhoneNumber(dialCode: '+1'),
                         onInputChanged: (PhoneNumber number) {
-                          print(number.phoneNumber);
+                          codeNumber = number.dialCode ?? '-1';
+                          phoneNumberUser = number.parseNumber();
                         },
                       ),
                     )
@@ -321,7 +358,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     );
   }
 
-  Widget _buildPageCode(Size size) {
+  Widget _buildPageCode(Size size, bool isVerify) {
     return Container(
       width: double.infinity,
       height: size.height,
@@ -389,7 +426,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const CodeVerificationInput(),
+                  CodeVerificationInput(
+                    controller: _verificationCtrl,
+                  ),
                   // TextFormField(
                   //   decoration: const InputDecoration(
                   //     enabledBorder: UnderlineInputBorder(
@@ -436,6 +475,17 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 ],
               ),
             ),
+            isVerify ? SizedBox(height: size.height * 0.20) : Container(),
+            isVerify
+                ? FilledColorizedButton(
+                    width: size.width * 0.80,
+                    height: size.height * 0.10,
+                    title: 'GETTING STARTED!',
+                    isTrailingIcon: false,
+                    onTap: () =>
+                        Navigator.of(context).pushNamed(HomeScreen.routeName),
+                  )
+                : Container(),
           ],
         ),
       ),
@@ -509,7 +559,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                EmailInput(),
+                EmailInput(controller: _emailUserCtrl),
                 // const Padding(
                 //   padding: EdgeInsets.symmetric(vertical: 20.0),
                 //   child: Text(
@@ -599,6 +649,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextFormField(
+                    controller: _passwordCtrl,
                     decoration: const InputDecoration(
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
@@ -732,7 +783,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                             });
                           },
                         ),
-                        gender.id != 'non-binary' ? Divider() : Container(),
+                        gender.id != 3 ? const Divider() : Container(),
                       ],
                     ),
                   )
@@ -1004,37 +1055,64 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
+    final account = context.watch<AccountCubit>();
+
     return SafeArea(
       child: Scaffold(
-        body: PageView(
-          physics: const NeverScrollableScrollPhysics(),
-          controller: pageviewController,
-          onPageChanged: (index) {
-            setState(() {
-              _currentPage = index;
-              print(_currentPage);
-              // isLastPage = index == 3;
-              // isNotifyPage = index == 1;
-            });
-          },
-          children: [
-            _buildPageUsername(size),
-            _buildPagePhoneNumber(size),
-            _buildPageCode(size),
-            _buildPageEmail(size),
-            _buildPagePassword(size),
-            _buildPageGender(size),
-            _buildPageSexuality(size),
-            _buildPageLocation(size),
-          ],
-        ),
-        // floatingActionButton: const CircularProgressIndicator(
-        //   backgroundColor: AppTheme.disabledColor,
-        //   valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-        // )
-        floatingActionButton:
-            ButtonCircularProgress(pageviewController: pageviewController),
-      ),
+          body: Form(
+            key: _formKey,
+            child: PageView(
+              physics: const NeverScrollableScrollPhysics(),
+              controller: pageviewController,
+              onPageChanged: (index) {
+                setState(() {
+                  _currentPage = index;
+                  print(_currentPage);
+                  // isLastPage = index == 3;
+                  // isNotifyPage = index == 1;
+                });
+              },
+              children: [
+                _buildPageUsername(size),
+                _buildPagePhoneNumber(size),
+                _buildPageEmail(size),
+                _buildPagePassword(size),
+                _buildPageGender(size),
+                _buildPageSexuality(size),
+                _buildPageLocation(size),
+                _buildPageCode(size, account.state.isVerify ?? false),
+              ],
+            ),
+          ),
+          // floatingActionButton: const CircularProgressIndicator(
+          //   backgroundColor: AppTheme.disabledColor,
+          //   valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+          // )
+          floatingActionButton: switch (account.state.status) {
+            UserRegisterStatus.loading => CircularProgressIndicator(),
+            // TODO: Handle this case.
+            UserRegisterStatus.initial => ButtonCircularProgress(
+                pageviewController: pageviewController,
+                onNextPage: (page) => _formRegisterSubmit(context, page: page),
+              ),
+            // TODO: Handle this case.
+            UserRegisterStatus.success => Container(),
+            // TODO: Handle this case.
+            UserRegisterStatus.failure => Container(
+                height: 50,
+                width: 100,
+                color: Colors.red.shade200,
+                child: const Text('Error'),
+              ),
+          }
+
+          // account.state.status == UserRegisterStatus.loading
+          //     ? ButtonCircularProgress(
+          //         pageviewController: pageviewController,
+          //         onNextPage: (page) => _formRegisterSubmit(context, page: page),
+          //       )
+          //     : null,
+          ),
       // bottomSheet: isLastPage
       //     ? TextButton(
       //         onPressed: () async {
@@ -1112,9 +1190,11 @@ class ButtonCircularProgress extends StatefulWidget {
   const ButtonCircularProgress({
     super.key,
     required this.pageviewController,
+    this.onNextPage,
   });
 
   final PageController pageviewController;
+  final ValueChanged<double>? onNextPage;
 
   @override
   State<ButtonCircularProgress> createState() => _ButtonCircularProgressState();
@@ -1123,19 +1203,28 @@ class ButtonCircularProgress extends StatefulWidget {
 class _ButtonCircularProgressState extends State<ButtonCircularProgress> {
   double percent = 0.125;
 
+  void _onPressButtonPage() {
+    widget.onNextPage!(widget.pageviewController.page ?? -1);
+
+    widget.pageviewController.nextPage(
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+
+    setState(() {
+      percent = percent + 0.125;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CircularProgressIndicatorButton(
-      onPressed: () {
-        widget.pageviewController.nextPage(
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-        );
-
-        setState(() {
-          percent = percent + 0.125;
-        });
-      },
+      onPressed: () => _onPressButtonPage(),
       percent: percent,
       backgroundColor: percent < 1
           ? AppTheme.disabledColor

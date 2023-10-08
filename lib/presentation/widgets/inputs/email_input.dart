@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import '../../../config/config.dart' show Strings;
 
 class EmailInput extends StatelessWidget {
-  const EmailInput({super.key});
+  const EmailInput({super.key, this.controller});
+
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       decoration: const InputDecoration(
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(
