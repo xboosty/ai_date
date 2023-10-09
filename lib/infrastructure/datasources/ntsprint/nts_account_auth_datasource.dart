@@ -28,7 +28,7 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
         // headers: headers,
       ),
     );
-
+    // Parsed Response
     final userResponse = NtsUserResponse.fromJson(rs.data);
 
     // Parsed to model response to entity
@@ -38,13 +38,37 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
   }
 
   @override
-  Future<UserEntity> logIn(Map<String, dynamic> credential) {
-    // TODO: implement logIn
+  Future<UserEntity> logIn(Map<String, dynamic> credential) async {
+    // Make Request
+    final rs = await dio.post(
+      '/api/account/login',
+      data: credential,
+      options: Options(
+        followRedirects: false,
+        // will not throw errors
+        validateStatus: (status) => true,
+        // headers: headers,
+      ),
+    );
+
+    final userResponse = NtsUserResponse.fromJson(rs.data);
+    // TODO: implement logOut
     throw UnimplementedError();
   }
 
   @override
-  Future<bool> logOut() {
+  Future<bool> logOut() async {
+    // Make Request
+    final rs = await dio.post(
+      '/api/account/logout',
+      options: Options(
+        followRedirects: false,
+        // will not throw errors
+        validateStatus: (status) => true,
+        // headers: headers,
+      ),
+    );
+
     // TODO: implement logOut
     throw UnimplementedError();
   }

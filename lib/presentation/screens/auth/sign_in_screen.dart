@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../config/config.dart' show AppTheme, Strings;
+import '../../../config/config.dart'
+    show AccountCubit, AccountState, AppTheme, Strings, UserRegisterStatus;
 import '../../widgets/widgets.dart'
     show
         FilledColorizedOutlineButton,
         IconButtonSvg,
         PasswordInput,
         ScaffoldAnimated;
-import '../screens.dart' show IntroductionScreen, ForgotPasswordScreen;
+import '../screens.dart'
+    show ForgotPasswordScreen, HomeScreen, IntroductionScreen;
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -190,9 +193,19 @@ class _SignInFormState extends State<SignInForm> {
     Navigator.of(context).pushNamed(ForgotPasswordScreen.routeName);
   }
 
-  void _startSession() async {
+  void _startSession(BuildContext context) async {
     if (_formKey.currentState?.validate() ?? false) {
-      print('entro');
+      final credentials = {
+        "email": _emailCtrl.text,
+        "password": _passwordCtrl.text
+      };
+
+      final user = await context.read<AccountCubit>().signInUser(credentials);
+
+      if (user != null) {
+        if (!mounted) return;
+        Navigator.of(context).pushNamed(HomeScreen.routeName);
+      }
     }
   }
 
@@ -388,13 +401,24 @@ class _SignInFormState extends State<SignInForm> {
                 ],
               ),
               SizedBox(height: size.height * 0.02),
-              FilledColorizedOutlineButton(
-                width: 150,
-                height: 50,
-                title: 'SIGN IN',
-                isTrailingIcon: false,
-                onTap: () => _startSession(),
-              ),
+              BlocBuilder<AccountCubit, AccountState>(
+                  builder: (context, state) => switch (state.status) {
+                        UserRegisterStatus.initial =>
+                          FilledColorizedOutlineButton(
+                            width: 150,
+                            height: 50,
+                            title: 'SIGN IN',
+                            isTrailingIcon: false,
+                            onTap: () => _startSession(context),
+                          ),
+                        // TODO: Handle this case.
+                        UserRegisterStatus.loading =>
+                          CircularProgressIndicator(),
+                        // TODO: Handle this case.
+                        UserRegisterStatus.success => Container(),
+                        // TODO: Handle this case.
+                        UserRegisterStatus.failure => Container(),
+                      }),
             ],
           ),
         ),

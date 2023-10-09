@@ -4,9 +4,10 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import '../../../config/config.dart' show AppTheme;
 
 class CodeVerificationInput extends StatelessWidget {
-  const CodeVerificationInput({super.key, this.controller});
+  const CodeVerificationInput({super.key, this.controller, this.validator});
 
   final TextEditingController? controller;
+  final FormFieldValidator<String?>? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +48,7 @@ class CodeVerificationInput extends StatelessWidget {
         //but you can show anything you want here, like your pop up saying wrong paste format or etc
         return true;
       },
+      validator: validator,
     );
   }
 }

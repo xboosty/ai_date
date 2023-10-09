@@ -6,5 +6,7 @@ abstract class AccountRepository<T> {
 
   Future<T> registerUserRepository(Map<String, dynamic> user);
 
+  Future<T> signInUserRepository(Map<String, dynamic> credentials);
+
   Future<bool> verificationCodeRepository(Map<String, dynamic> verify);
 }

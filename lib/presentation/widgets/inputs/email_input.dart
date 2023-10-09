@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../config/config.dart' show Strings;
 
 class EmailInput extends StatelessWidget {
-  const EmailInput({super.key, this.controller});
+  const EmailInput({super.key, this.controller, this.validator});
 
   final TextEditingController? controller;
+  final FormFieldValidator<String?>? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +33,7 @@ class EmailInput extends StatelessWidget {
         fontWeight: FontWeight.w600,
       ),
       keyboardType: TextInputType.emailAddress,
+      validator: validator,
     );
   }
 }

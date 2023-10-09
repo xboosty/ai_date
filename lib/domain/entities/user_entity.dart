@@ -12,6 +12,7 @@ class UserEntity {
   final dynamic avatar;
   final dynamic avatarMimeType;
   final String sexualOrientation;
+  final String? token;
 
   UserEntity({
     this.id,
@@ -27,7 +28,10 @@ class UserEntity {
     required this.avatar,
     required this.avatarMimeType,
     required this.sexualOrientation,
+    this.token,
   });
+
+  get isVerify => null;
 
   // factory UserEntity.fromJson(Map<String, dynamic> json) => UserEntity(
   //     id: json["id"],

@@ -19,6 +19,7 @@ class AccountCubit extends Cubit<AccountState> {
       emit(AccountState(status: UserRegisterStatus.success, user: user));
       print('Se Inserto perfecto');
     } catch (e) {
+      print(e.toString());
       emit(
         AccountState(
           status: UserRegisterStatus.failure,
@@ -37,6 +38,7 @@ class AccountCubit extends Cubit<AccountState> {
           AccountState(status: UserRegisterStatus.success, isVerify: isVerify));
       print('Se verifico perfecto');
     } catch (e) {
+      print(e.toString());
       emit(
         AccountState(
           status: UserRegisterStatus.failure,
@@ -45,6 +47,26 @@ class AccountCubit extends Cubit<AccountState> {
         ),
       );
       print('Hubo un error en verificacion');
+    }
+  }
+
+  Future<UserEntity?> signInUser(Map<String, dynamic> credentials) async {
+    emit(const AccountState(status: UserRegisterStatus.loading));
+    try {
+      final user = await repo.signInUserRepository(credentials);
+      emit(AccountState(status: UserRegisterStatus.success, user: user));
+      print('SignIn Success');
+      return user;
+    } catch (e) {
+      print(e.toString());
+      emit(
+        AccountState(
+          status: UserRegisterStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
+      print('SignIn Failure');
+      return null;
     }
   }
 }
