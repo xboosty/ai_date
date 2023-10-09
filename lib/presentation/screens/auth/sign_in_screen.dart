@@ -1,10 +1,14 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:animate_do/animate_do.dart';
 
 import '../../../config/config.dart' show AppTheme, Strings;
 import '../../widgets/widgets.dart'
-    show FilledColorizedOutlineButton, IconButtonSvg, OutlineText;
-import '../screens.dart' show IntroductionScreen;
+    show
+        FilledColorizedOutlineButton,
+        IconButtonSvg,
+        PasswordInput,
+        ScaffoldAnimated;
+import '../screens.dart' show IntroductionScreen, ForgotPasswordScreen;
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -17,119 +21,107 @@ class SignInScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        body: Container(
-          width: double.infinity,
-          height: size.height,
-          decoration: const BoxDecoration(
-            gradient: AppTheme.linearGradientTopRightBottomLeft,
+        body: ScaffoldAnimated(
+          size: size,
+          child: const SignInBox(),
+        ),
+      ),
+    );
+  }
+}
+
+class SignInBox extends StatelessWidget {
+  const SignInBox({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+    return Center(
+      child: SingleChildScrollView(
+        child: Container(
+          width: size.width * 0.93,
+          height: size.height * 0.83,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
           ),
-          child: Stack(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
             children: [
-              Positioned(
-                top: -28,
-                left: size.width * (0.10),
-                child: const OutlineText(
-                  title: 'Smarter Connections',
-                  color: Colors.white,
-                  fontSize: 80,
-                ),
-              ),
-              Positioned(
-                bottom: -28,
-                left: size.width * (-0.05),
-                child: const OutlineText(
-                  title: 'Better Dates',
-                  color: Colors.white,
-                  fontSize: 80,
-                ),
-              ),
-              Center(
-                child: SingleChildScrollView(
-                  child: Container(
-                    width: size.width * 0.93,
-                    height: size.height * 0.85,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        const SignInForm(),
-                        Expanded(
-                          child: Container(
-                            width: size.width,
-                            decoration: const BoxDecoration(
-                              gradient:
-                                  AppTheme.linearGradientTopRightBottomLeft,
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(30),
-                                bottomRight: Radius.circular(30),
-                              ),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                const Text(
-                                  'New here?',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 28,
-                                    fontFamily: Strings.fontFamily,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                const Text(
-                                  'Elevate your love life with AI Precision',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontFamily: Strings.fontFamily,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                SizedBox(height: size.height * 0.02),
-                                FilledButton(
-                                  style: FilledButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 15,
-                                      vertical: 10,
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context).push(PageRouteBuilder(
-                                      pageBuilder: (context, animation,
-                                              secondaryAnimation) =>
-                                          const IntroductionScreen(),
-                                      transitionsBuilder: (context, animation,
-                                          secondaryAnimation, child) {
-                                        return SlideInRight(child: child);
-                                      },
-                                    ));
-                                  },
-                                  child: const Text(
-                                    'SIGN UP',
-                                    style: TextStyle(
-                                      color: Color(0xFF6C2EBC),
-                                      fontSize: 16,
-                                      fontFamily: Strings.fontFamily,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
+              const SignInForm(),
+              Expanded(
+                child: Container(
+                  width: size.width,
+                  decoration: const BoxDecoration(
+                    gradient: AppTheme.linearGradientTopRightBottomLeft,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(30),
+                      bottomRight: Radius.circular(30),
                     ),
                   ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      const Text(
+                        'New here?',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontFamily: Strings.fontFamily,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const Text(
+                        'Elevate your love life with AI Precision',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontFamily: Strings.fontFamily,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      SizedBox(height: size.height * 0.02),
+                      FilledButton(
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 10,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(PageRouteBuilder(
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) =>
+                                    const IntroductionScreen(),
+                            transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) {
+                              return SlideInRight(child: child);
+                            },
+                          ));
+                          // Navigator.of(context)
+                          //     .pushNamed(IntroductionScreen.routeName);
+                        },
+                        child: const Text(
+                          'SIGN UP',
+                          style: TextStyle(
+                            color: Color(0xFF6C2EBC),
+                            fontSize: 16,
+                            fontFamily: Strings.fontFamily,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
+              )
             ],
           ),
         ),
@@ -158,9 +150,9 @@ class _SignInFormState extends State<SignInForm> {
   String? _validatePassword(String value) {
     String password = value.replaceAll(RegExp(r'\s+'), '');
     if (password.isEmpty) {
-      return 'Este campo es requerido.';
+      return 'This field is required';
     } else if (password.length < 8) {
-      return 'La contraseña debe tener al menos 8 caracteres.';
+      return 'The password must be at least 8 characters.';
     }
 
     return null;
@@ -186,12 +178,16 @@ class _SignInFormState extends State<SignInForm> {
     // final RegExp usernameRegex = RegExp(r'^[a-zA-Z0-9_-]{3,16}$');
 
     if (credential.isEmpty) {
-      return 'Este campo es requerido.';
+      return 'This field is required';
     } else if (!emailRegex.hasMatch(credential)) {
-      return 'Ingresa un correo electrónico válido.';
+      return 'Please enter a valid email.';
     }
 
     return null;
+  }
+
+  void _forgotPassword() {
+    Navigator.of(context).pushNamed(ForgotPasswordScreen.routeName);
   }
 
   void _startSession() async {
@@ -339,38 +335,16 @@ class _SignInFormState extends State<SignInForm> {
                       validator: (value) => _validateCredential(value ?? ''),
                     ),
                     // SizedBox(height: size.height * 0.02),
-                    TextFormField(
+                    PasswordInput(
                       controller: _passwordCtrl,
                       obscureText: _obscureText,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        // hintText: 'Password',
-                        labelStyle: const TextStyle(
-                          color: Color(0xFF7F87A6),
-                          fontSize: 14,
-                          fontFamily: Strings.fontFamily,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        errorStyle: const TextStyle(
-                          color: Color(0xFFC02D4F),
-                          fontSize: 12,
-                          fontFamily: Strings.fontFamily,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscureText
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _obscureText = !_obscureText;
-                            });
-                          },
-                        ),
-                      ),
+                      onPressed: () => {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        }),
+                      },
                       validator: (value) => _validatePassword(value ?? ''),
+                      labelText: 'Password',
                     ),
                   ],
                 ),
@@ -397,7 +371,7 @@ class _SignInFormState extends State<SignInForm> {
                   ),
                   Expanded(
                       child: TextButton(
-                    child: Text('Forgot Password?'),
+                    child: const Text('Forgot Password?'),
                     style: TextButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -409,7 +383,7 @@ class _SignInFormState extends State<SignInForm> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () => _forgotPassword(),
                   ))
                 ],
               ),
