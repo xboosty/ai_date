@@ -57,7 +57,18 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
   }
 
   @override
-  Future<bool> logOut() {
+  Future<bool> logOut() async {
+    // Make Request
+    final rs = await dio.post(
+      '/api/account/logout',
+      options: Options(
+        followRedirects: false,
+        // will not throw errors
+        validateStatus: (status) => true,
+        // headers: headers,
+      ),
+    );
+
     // TODO: implement logOut
     throw UnimplementedError();
   }
