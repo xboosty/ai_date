@@ -19,6 +19,7 @@ class AccountCubit extends Cubit<AccountState> {
       emit(AccountState(status: UserRegisterStatus.success, user: user));
       print('Se Inserto perfecto');
     } catch (e) {
+      print(e.toString());
       emit(
         AccountState(
           status: UserRegisterStatus.failure,
@@ -37,6 +38,7 @@ class AccountCubit extends Cubit<AccountState> {
           AccountState(status: UserRegisterStatus.success, isVerify: isVerify));
       print('Se verifico perfecto');
     } catch (e) {
+      print(e.toString());
       emit(
         AccountState(
           status: UserRegisterStatus.failure,
@@ -56,6 +58,7 @@ class AccountCubit extends Cubit<AccountState> {
       print('SignIn Success');
       return user;
     } catch (e) {
+      print(e.toString());
       emit(
         AccountState(
           status: UserRegisterStatus.failure,

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 import '../../../config/config.dart'
-    show AccountCubit, AppTheme, Strings, UserRegisterStatus;
+    show AccountCubit, AccountState, AppTheme, Strings, UserRegisterStatus;
 import '../../widgets/widgets.dart'
     show
         CircularProgressIndicatorButton,
@@ -141,31 +141,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   }
 
   // For Register User
-  Future<void> _verificationCode(BuildContext context) async {
-    final verification = {
-      "phone": {"code": codeNumber, "number": phoneNumberUser},
-      "email": "",
-      "verificationCode": _verificationCtrl.text
-    };
-
-    await context.read<AccountCubit>().verificationCode(verification);
-  }
-
-  Future<void> _registerUser(BuildContext context) async {
-    final user = {
-      "fullName": _fullNameCtrl.text,
-      "password": _passwordCtrl.text,
-      "confirmationPassword": _passwordCtrl.text,
-      "email": _emailUserCtrl.text,
-      "birthday": "2023-10-07T05:16:16.305Z",
-      "phone": {"code": codeNumber, "number": phoneNumberUser},
-      "gender": _genderSelected?.id ?? -1,
-      "sexualOrientation": _sexualitySelected?.id ?? -1
-    };
-
-    await context.read<AccountCubit>().registerUser(user);
-  }
-
   void _submitUsername() {
     if (_formKey.currentState!.validate()) {
       // If the form is valid, save the form and perform an action.
@@ -206,6 +181,36 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     }
   }
 
+  Future<void> _submitRegisterUser(BuildContext context) async {
+    final user = {
+      "fullName": _fullNameCtrl.text,
+      "password": _passwordCtrl.text,
+      "confirmationPassword": _passwordCtrl.text,
+      "email": _emailUserCtrl.text,
+      "birthday": "2023-10-07T05:16:16.305Z",
+      "phone": {"code": codeNumber, "number": phoneNumberUser},
+      "gender": _genderSelected?.id ?? -1,
+      "sexualOrientation": _sexualitySelected?.id ?? -1
+    };
+
+    await context.read<AccountCubit>().registerUser(user);
+    _netxPage();
+  }
+
+  Future<void> _submitVerificationCode(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      final verification = {
+        "phone": {"code": codeNumber, "number": phoneNumberUser},
+        "email": "",
+        "verificationCode": _verificationCtrl.text
+      };
+
+      await context.read<AccountCubit>().verificationCode(verification);
+      if (!mounted) return;
+      Navigator.of(context).pushNamed(HomeScreen.routeName);
+    }
+  }
+
   Future<void> _formRegisterSubmit(BuildContext context,
       {required double page}) async {
     switch (page) {
@@ -228,12 +233,11 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         _netxPage();
         break;
       case 6:
-        await _registerUser(context);
-        _netxPage();
+        await _submitRegisterUser(context);
         break;
       case 7:
         if (!mounted) return;
-        await _verificationCode(context);
+        await _submitVerificationCode(context);
         break;
       default:
         break;
@@ -475,7 +479,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     );
   }
 
-  Widget _buildPageCode(Size size, bool isVerify) {
+  Widget _buildPageCode(Size size) {
     return Container(
       width: double.infinity,
       height: size.height,
@@ -486,9 +490,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               width: size.width,
               height: size.height * 0.36,
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              // color: Colors.red,
               child: Container(
-                // color: Colors.white,
                 child: Stack(
                   children: [
                     Center(
@@ -570,17 +572,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 ],
               ),
             ),
-            isVerify ? SizedBox(height: size.height * 0.20) : Container(),
-            isVerify
-                ? FilledColorizedButton(
-                    width: size.width * 0.80,
-                    height: size.height * 0.10,
-                    title: 'GETTING STARTED!',
-                    isTrailingIcon: false,
-                    onTap: () =>
-                        Navigator.of(context).pushNamed(HomeScreen.routeName),
-                  )
-                : Container(),
           ],
         ),
       ),
@@ -1155,134 +1146,53 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
-    final account = context.watch<AccountCubit>();
-
     return SafeArea(
       child: Scaffold(
-          body: Form(
-            key: _formKey,
-            child: PageView(
-              physics: const NeverScrollableScrollPhysics(),
-              controller: pageviewController,
-              onPageChanged: (index) {
-                setState(() {
-                  _currentPage = index;
-                  print(_currentPage);
-                  // isLastPage = index == 3;
-                  // isNotifyPage = index == 1;
-                });
-              },
-              children: [
-                _buildPageUsername(size),
-                _buildPagePhoneNumber(size),
-                _buildPageEmail(size),
-                _buildPagePassword(size),
-                _buildPageGender(size),
-                _buildPageSexuality(size),
-                _buildPageLocation(size),
-                _buildPageCode(size, account.state.isVerify ?? false),
-              ],
-            ),
+        body: Form(
+          key: _formKey,
+          child: PageView(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: pageviewController,
+            onPageChanged: (index) {
+              setState(() {
+                _currentPage = index;
+                print(_currentPage);
+                // isLastPage = index == 3;
+                // isNotifyPage = index == 1;
+              });
+            },
+            children: [
+              _buildPageUsername(size),
+              _buildPagePhoneNumber(size),
+              _buildPageEmail(size),
+              _buildPagePassword(size),
+              _buildPageGender(size),
+              _buildPageSexuality(size),
+              _buildPageLocation(size),
+              _buildPageCode(size),
+            ],
           ),
-          // floatingActionButton: const CircularProgressIndicator(
-          //   backgroundColor: AppTheme.disabledColor,
-          //   valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-          // )
-          floatingActionButton: switch (account.state.status) {
-            UserRegisterStatus.loading => CircularProgressIndicator(),
-            // TODO: Handle this case.
+        ),
+        floatingActionButton: BlocBuilder<AccountCubit, AccountState>(
+          builder: (context, state) => switch (state.status) {
+            UserRegisterStatus.loading => const CircularProgressIndicator(),
             UserRegisterStatus.initial => ButtonCircularProgress(
                 pageviewController: pageviewController,
                 onNextPage: (page) => _formRegisterSubmit(context, page: page),
               ),
-            // TODO: Handle this case.
-            UserRegisterStatus.success => Container(),
-            // TODO: Handle this case.
+            UserRegisterStatus.success => ButtonCircularProgress(
+                pageviewController: pageviewController,
+                onNextPage: (page) => _formRegisterSubmit(context, page: page),
+              ),
             UserRegisterStatus.failure => Container(
                 height: 50,
                 width: 100,
                 color: Colors.red.shade200,
                 child: const Text('Error'),
               ),
-          }
-
-          // account.state.status == UserRegisterStatus.loading
-          //     ? ButtonCircularProgress(
-          //         pageviewController: pageviewController,
-          //         onNextPage: (page) => _formRegisterSubmit(context, page: page),
-          //       )
-          //     : null,
-          ),
-      // bottomSheet: isLastPage
-      //     ? TextButton(
-      //         onPressed: () async {
-      //           // Navigate to Home Page with init App
-      //           // SharedPref.pref.showLogin = true;
-
-      //           // ignore: use_build_context_synchronously
-      //           // Navigator.of(context)
-      //           //     .pushReplacementNamed(SignInScreen.routeName);
-      //         },
-      //         style: TextButton.styleFrom(
-      //           // shape: RoundedRectangleBorder(
-      //           //   borderRadius: BorderRadius.circular(5.0),
-      //           // ),
-      //           // foregroundColor: Colors.white,
-      //           // backgroundColor: Colors.teal.shade700,
-      //           minimumSize: const Size.fromHeight(80),
-      //         ),
-      //         child: const Text(
-      //           'EMPECEMOS',
-      //           style: TextStyle(fontSize: 24),
-      //         ),
-      //       )
-      //     : Container(
-      //         padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      //         height: 80.0,
-      //         child: Row(
-      //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //           children: [
-      //             TextButton(
-      //               onPressed: () async {
-      //                 // Allow Notify
-      //                 // await PermissionNotify.notification.allowNotification();
-
-      //                 pageviewController.jumpToPage(3);
-      //               },
-      //               child: const Text('SALTAR'),
-      //             ),
-      //             // Center(
-      //             //   child: SmoothPageIndicator(
-      //             //     controller: pageviewController,
-      //             //     count: 4,
-      //             //     effect: WormEffect(
-      //             //       spacing: 16,
-      //             //       dotColor: Colors.grey.shade300,
-      //             //       activeDotColor: AppColors.secondaryColor,
-      //             //     ),
-      //             //     onDotClicked: (index) => pageviewController.animateToPage(
-      //             //       index,
-      //             //       duration: const Duration(milliseconds: 500),
-      //             //       curve: Curves.easeIn,
-      //             //     ),
-      //             //   ),
-      //             // ),
-      //             // TextButton(
-      //             //   onPressed: () async {
-      //             //     if (isNotifyPage) {
-      //             //       await PermissionNotify.notification.allowNotification();
-      //             //     }
-
-      //             //     pageviewController.nextPage(
-      //             //         duration: const Duration(milliseconds: 500),
-      //             //         curve: Curves.easeInOut);
-      //             //   },
-      //             //   child: const Text('SIGUIENTE'),
-      //             // ),
-      //           ],
-      //         ),
-      //       ),
+          },
+        ),
+      ),
     );
   }
 }

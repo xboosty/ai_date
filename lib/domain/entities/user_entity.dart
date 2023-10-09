@@ -31,6 +31,8 @@ class UserEntity {
     this.token,
   });
 
+  get isVerify => null;
+
   // factory UserEntity.fromJson(Map<String, dynamic> json) => UserEntity(
   //     id: json["id"],
   //     birthDate: DateTime.parse(json["birthDate"]),
