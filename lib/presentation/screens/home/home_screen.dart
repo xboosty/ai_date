@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 import '../../../config/config.dart' show AppTheme, Strings;
 import '../../widgets/widgets.dart'
     show CustomDropdownButton, DatePickerFormField;
+import '../screens.dart' show SignInScreen;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -485,6 +487,107 @@ class _AppBarAIDate extends StatelessWidget {
                           _NotificationsSetting(size: size),
                           _LegalSetting(size: size),
                           _HelpSupportSetting(size: size),
+                          SizedBox(height: size.height * 0.02),
+                          Center(
+                            child: Image.asset('assets/imgs/aidate-logo.png'),
+                          ),
+                          SizedBox(height: size.height * 0.05),
+                          SizedBox(
+                            width: size.width * 0.90,
+                            child: FilledButton.icon(
+                              onPressed: () {
+                                // Navigator.of(context).pop();
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) => AlertDialog(
+                                    icon: const Icon(
+                                      Icons.info_outline_rounded,
+                                      size: 40,
+                                    ),
+                                    title: const Text('Exit AI Date'),
+                                    content: const Text(
+                                        'Are you sure you want to exit the app?'),
+                                    actions: [
+                                      FilledButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                        child: const Text('Cancel'),
+                                      ),
+                                      FilledButton(
+                                        onPressed: () => Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                                PageRouteBuilder(
+                                                  pageBuilder: (context,
+                                                          animation,
+                                                          secondaryAnimation) =>
+                                                      const SignInScreen(),
+                                                  transitionsBuilder: (context,
+                                                      animation,
+                                                      secondaryAnimation,
+                                                      child) {
+                                                    return SlideInRight(
+                                                        child: child);
+                                                  },
+                                                ),
+                                                (route) => false),
+                                        child: const Text('Ok'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.login,
+                                color: Color(0xFF6C2EBC),
+                              ),
+                              style: FilledButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: Color(0xFF6C2EBC),
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 10,
+                                  horizontal: 15,
+                                ),
+                              ),
+                              label: Text(
+                                'LOG OUT',
+                                style: TextStyle(
+                                  color: Color(0xFF6C2EBC),
+                                  fontSize: 16,
+                                  fontFamily: Strings.fontFamily,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: size.height * 0.02),
+                          SizedBox(
+                            width: size.width * 0.90,
+                            child: FilledButton.icon(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.delete_forever_outlined,
+                                color: Color(0xFF6C2EBC),
+                              ),
+                              style: FilledButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: Color(0xFF6C2EBC),
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 10,
+                                  horizontal: 15,
+                                ),
+                              ),
+                              label: Text(
+                                'DELETE ACCOUNT',
+                                style: TextStyle(
+                                  color: Color(0xFF6C2EBC),
+                                  fontSize: 16,
+                                  fontFamily: Strings.fontFamily,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
                           SizedBox(height: size.height * 0.02),
                         ],
                       ),
