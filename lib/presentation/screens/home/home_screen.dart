@@ -18,6 +18,46 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  int _selectedPage = 0;
+
+  List<BottomNavigationBarItem> _itemsButtonBar = const [
+    BottomNavigationBarItem(
+      label: 'Profile',
+      icon: Icon(
+        Icons.contacts,
+        size: 32,
+      ),
+    ),
+    BottomNavigationBarItem(
+      label: 'Interview',
+      icon: Icon(
+        Icons.receipt_long,
+        size: 32,
+      ),
+    ),
+    BottomNavigationBarItem(
+      label: 'Premium',
+      icon: Icon(
+        Icons.diamond,
+        size: 32,
+      ),
+    ),
+    BottomNavigationBarItem(
+      label: 'Discover',
+      icon: Icon(
+        Icons.swipe_right,
+        size: 32,
+      ),
+    ),
+    BottomNavigationBarItem(
+      label: 'Chat',
+      icon: Icon(
+        Icons.message,
+        size: 32,
+      ),
+    ),
+  ];
+
   static const List<Tab> tabs = <Tab>[
     Tab(
       icon: Row(
@@ -75,86 +115,88 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     return SafeArea(
       child: Scaffold(
-        body: Container(
-          width: double.infinity,
-          height: size.height,
-          padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              const _AppBarAIDate(),
-              SizedBox(height: size.height * 0.02),
-              const _ProfileToggle(),
-              SizedBox(height: size.height * 0.02),
-              TabBar(
-                controller: _tabController,
-                tabs: tabs,
-              ),
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: const [
-                    _ProfileEditPage(),
-                    Icon(Icons.directions_transit),
-                  ],
-                ),
-              ),
-            ],
-          ),
+        body: IndexedStack(
+          index: _selectedPage,
+          children: [
+            _ProfilePage(size: size, tabController: _tabController, tabs: tabs),
+            const Center(
+              child: Text('Interview'),
+            ),
+            const Center(
+              child: Text('Premium'),
+            ),
+            const Center(
+              child: Text('Discover'),
+            ),
+            const Center(
+              child: Text('Chat'),
+            ),
+          ],
         ),
         bottomNavigationBar: BottomNavigationBar(
-            elevation: 18.0,
-            selectedItemColor: AppTheme.secondaryColor,
-            selectedLabelStyle: const TextStyle(
-              color: Color(0xFF261638),
-              fontSize: 11,
-              fontFamily: Strings.fontFamily,
-              fontWeight: FontWeight.w600,
+          currentIndex: _selectedPage,
+          onTap: (index) {
+            setState(() {
+              _selectedPage = index;
+            });
+          },
+          elevation: 18.0,
+          selectedItemColor: AppTheme.secondaryColor,
+          selectedLabelStyle: const TextStyle(
+            color: Color(0xFF261638),
+            fontSize: 11,
+            fontFamily: Strings.fontFamily,
+            fontWeight: FontWeight.w600,
+          ),
+          unselectedItemColor: AppTheme.disabledColor,
+          items: _itemsButtonBar,
+        ),
+      ),
+    );
+  }
+}
+
+class _ProfilePage extends StatelessWidget {
+  const _ProfilePage({
+    super.key,
+    required this.size,
+    required TabController tabController,
+    required this.tabs,
+  }) : _tabController = tabController;
+
+  final Size size;
+  final TabController _tabController;
+  final List<Tab> tabs;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: size.height,
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          const _AppBarAIDate(),
+          SizedBox(height: size.height * 0.02),
+          const _ProfileToggle(),
+          SizedBox(height: size.height * 0.02),
+          TabBar(
+            controller: _tabController,
+            tabs: tabs,
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: const [
+                _ProfileEditPage(),
+                Icon(Icons.directions_transit),
+              ],
             ),
-            unselectedItemColor: AppTheme.disabledColor,
-            items: const [
-              BottomNavigationBarItem(
-                label: 'Profile',
-                icon: Icon(
-                  Icons.contacts,
-                  size: 32,
-                ),
-              ),
-              BottomNavigationBarItem(
-                label: 'Interview',
-                icon: Icon(
-                  Icons.receipt_long,
-                  size: 32,
-                ),
-              ),
-              BottomNavigationBarItem(
-                label: 'Premium',
-                icon: Icon(
-                  Icons.diamond,
-                  size: 32,
-                ),
-              ),
-              BottomNavigationBarItem(
-                label: 'Discover',
-                icon: Icon(
-                  Icons.swipe_right,
-                  size: 32,
-                ),
-              ),
-              BottomNavigationBarItem(
-                label: 'Chat',
-                icon: Icon(
-                  Icons.message,
-                  size: 32,
-                ),
-              ),
-            ]),
-        // bottomSheet: BottomSheet(
-        //   onClosing: () => {},
-        //   builder: (context) => Container(),
-        // ),
+          ),
+        ],
       ),
     );
   }
