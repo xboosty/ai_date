@@ -7,22 +7,25 @@ class PasswordInput extends StatelessWidget {
     super.key,
     this.controller,
     this.obscureText = false,
-    this.onPressed,
+    this.onPressedSuffixIcon,
     this.validator,
     required this.labelText,
+    this.style,
   });
 
   final TextEditingController? controller;
   final bool obscureText;
-  final VoidCallback? onPressed;
+  final VoidCallback? onPressedSuffixIcon;
   final FormFieldValidator<String?>? validator;
   final String labelText;
+  final TextStyle? style;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
+      style: style,
       decoration: InputDecoration(
         labelText: labelText,
         // hintText: 'Password',
@@ -42,7 +45,7 @@ class PasswordInput extends StatelessWidget {
           icon: Icon(
             obscureText ? Icons.visibility_outlined : Icons.visibility_off,
           ),
-          onPressed: onPressed,
+          onPressed: onPressedSuffixIcon,
         ),
       ),
       validator: validator,

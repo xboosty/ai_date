@@ -11,6 +11,7 @@ class AppRouter {
         OnBoardingScreen.routeName: (_) => const OnBoardingScreen(),
         SignInScreen.routeName: (_) => const SignInScreen(),
         ForgotPasswordScreen.routeName: (_) => const ForgotPasswordScreen(),
+        ChangePasswordScreen.routeName: (_) => const ChangePasswordScreen(),
         SuccessChangePasswordScreen.routeName: (_) =>
             const SuccessChangePasswordScreen(),
         HomeScreen.routeName: (_) => const HomeScreen(),

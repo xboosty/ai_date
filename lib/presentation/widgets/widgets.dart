@@ -12,4 +12,5 @@ export 'inputs/email_input.dart';
 export 'inputs/code_verification_input.dart';
 export 'inputs/password_input.dart';
 export 'inputs/date_picker_form_field.dart';
+export 'inputs/configuration_input_field.dart';
 export 'dropdown/custom_dropdown_button.dart';

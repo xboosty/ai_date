@@ -351,7 +351,7 @@ class _SignInFormState extends State<SignInForm> {
                     PasswordInput(
                       controller: _passwordCtrl,
                       obscureText: _obscureText,
-                      onPressed: () => {
+                      onPressedSuffixIcon: () => {
                         setState(() {
                           _obscureText = !_obscureText;
                         }),
