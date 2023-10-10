@@ -1,10 +1,10 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 import '../../../config/config.dart' show AppTheme, Strings;
 import '../../widgets/widgets.dart'
-    show CustomDropdownButton, DatePickerFormField, GenderDropdownButton;
+    show CustomDropdownButton, DatePickerFormField;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,22 +18,23 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   static const List<Tab> tabs = <Tab>[
     Tab(
-        icon: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(Icons.edit_square),
-        SizedBox(width: 8),
-        Text(
-          'Edit',
-          style: TextStyle(
-            color: Color(0xFF9CA4BF),
-            fontSize: 16,
-            fontFamily: Strings.fontFamily,
-            fontWeight: FontWeight.w600,
-          ),
-        )
-      ],
-    )),
+      icon: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.edit_square),
+          SizedBox(width: 8),
+          Text(
+            'Edit',
+            style: TextStyle(
+              color: Color(0xFF9CA4BF),
+              fontSize: 16,
+              fontFamily: Strings.fontFamily,
+              fontWeight: FontWeight.w600,
+            ),
+          )
+        ],
+      ),
+    ),
     Tab(
         icon: Row(
       mainAxisSize: MainAxisSize.min,
@@ -274,7 +275,7 @@ class _CardGenderInfo extends StatelessWidget {
             CheckboxListTile(
               controlAffinity: ListTileControlAffinity.leading,
               contentPadding: EdgeInsets.zero,
-              title: Text(
+              title: const Text(
                 'Show my gender in my profile',
                 style: TextStyle(
                   color: Color(0xFF261638),
@@ -469,20 +470,22 @@ class _AppBarAIDate extends StatelessWidget {
                       controller: scrollController,
                       child: Column(
                         children: [
-                          const Text("Opciones del menú"),
-                          Container(
-                            height: 200,
-                            child: ListView.builder(
-                              controller: scrollController,
-                              itemCount: 3,
-                              itemBuilder: (BuildContext context, int index) {
-                                return ListTile(
-                                  title: Text("Opción $index"),
-                                  trailing: Icon(Icons.arrow_right),
-                                );
-                              },
+                          const Text(
+                            'Settings',
+                            style: TextStyle(
+                              color: Color(0xFF261638),
+                              fontSize: 20,
+                              fontFamily: Strings.fontFamily,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
+                          _AccountSettings(size: size),
+                          _PrivacyAndSecuritySetting(size: size),
+                          _LocationSetting(size: size),
+                          _NotificationsSetting(size: size),
+                          _LegalSetting(size: size),
+                          _HelpSupportSetting(size: size),
+                          SizedBox(height: size.height * 0.02),
                         ],
                       ),
                     );
@@ -498,6 +501,681 @@ class _AppBarAIDate extends StatelessWidget {
             color: Color(0xFFD9D9D9),
           ),
         )
+      ],
+    );
+  }
+}
+
+class _HelpSupportSetting extends StatelessWidget {
+  const _HelpSupportSetting({
+    super.key,
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const ListTile(
+          leading: Icon(Icons.receipt_long),
+          title: Text(
+            'HELP AND SUPPORT',
+            style: TextStyle(
+              color: Color(0xFF686E8C),
+              fontSize: 14,
+              fontFamily: Strings.fontFamily,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        Container(
+          width: size.width * 0.90,
+          padding: const EdgeInsets.symmetric(
+            vertical: 15,
+            horizontal: 20,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            children: [
+              ListTile(
+                title: const Text(
+                  'Contact us',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 15.0,
+                ),
+                onTap: () {},
+              ),
+              const Divider(),
+              ListTile(
+                title: const Text(
+                  'FAQ',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 15.0,
+                ),
+                onTap: () {},
+              ),
+              const Divider(),
+              ListTile(
+                title: const Text(
+                  'Follow us',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 15.0,
+                ),
+                onTap: () {},
+              ),
+              const Divider(),
+              ListTile(
+                title: const Text(
+                  'Give us feedback',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 15.0,
+                ),
+                onTap: () {},
+              ),
+              const Divider(),
+              ListTile(
+                title: const Text(
+                  'Rate us',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 15.0,
+                ),
+                onTap: () {},
+              ),
+              const Divider(),
+              ListTile(
+                title: const Text(
+                  'App Version',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                trailing: const SizedBox(
+                  width: 61,
+                  child: Row(
+                    children: [
+                      Text(
+                        'V1.03',
+                        style: TextStyle(
+                          color: Color(0xFFCCC1EA),
+                          fontSize: 12,
+                          fontFamily: Strings.fontFamily,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        size: 15.0,
+                      ),
+                    ],
+                  ),
+                ),
+                onTap: () {},
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _LegalSetting extends StatelessWidget {
+  const _LegalSetting({
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const ListTile(
+          leading: Icon(Icons.receipt_long),
+          title: Text(
+            'LEGAL',
+            style: TextStyle(
+              color: Color(0xFF686E8C),
+              fontSize: 14,
+              fontFamily: Strings.fontFamily,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        Container(
+          width: size.width * 0.90,
+          padding: const EdgeInsets.symmetric(
+            vertical: 15,
+            horizontal: 20,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            children: [
+              ListTile(
+                title: const Text(
+                  'Terms of use',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 15.0,
+                ),
+                onTap: () {},
+              ),
+              const Divider(),
+              ListTile(
+                title: const Text(
+                  'Cookie Policy',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 15.0,
+                ),
+                onTap: () {},
+              ),
+              const Divider(),
+              ListTile(
+                title: const Text(
+                  'Community Rules',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 15.0,
+                ),
+                onTap: () {},
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _NotificationsSetting extends StatelessWidget {
+  const _NotificationsSetting({
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const ListTile(
+          leading: Icon(Icons.notifications),
+          title: Text(
+            'NOTIFICATIONS',
+            style: TextStyle(
+              color: Color(0xFF686E8C),
+              fontSize: 14,
+              fontFamily: Strings.fontFamily,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        Container(
+          width: size.width * 0.90,
+          padding: const EdgeInsets.symmetric(
+            vertical: 15,
+            horizontal: 20,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            children: [
+              ListTile(
+                title: const Text(
+                  'Push notifications',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 15.0,
+                ),
+                onTap: () {},
+              ),
+              const Divider(),
+              ListTile(
+                title: const Text(
+                  'In-app notifications',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 15.0,
+                ),
+                onTap: () {},
+              ),
+              const Divider(),
+              ListTile(
+                title: const Text(
+                  'Email',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 15.0,
+                ),
+                onTap: () {},
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _LocationSetting extends StatelessWidget {
+  const _LocationSetting({
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const ListTile(
+          leading: Icon(Icons.person_pin_circle),
+          title: Text(
+            'LOCATION',
+            style: TextStyle(
+              color: Color(0xFF686E8C),
+              fontSize: 14,
+              fontFamily: Strings.fontFamily,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        Container(
+          width: size.width * 0.90,
+          padding: const EdgeInsets.symmetric(
+            vertical: 15,
+            horizontal: 20,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            children: [
+              SwitchListTile(
+                title: const Text(
+                  'Allow app use my location',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                value: true,
+                onChanged: (value) {},
+              ),
+              const Divider(),
+              ListTile(
+                title: Text(
+                  'My location',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                trailing: SizedBox(
+                  width: 121,
+                  child: Row(
+                    children: [
+                      Text(
+                        'New York, USA',
+                        style: TextStyle(
+                          color: Color(0xFFCCC1EA),
+                          fontSize: 12,
+                          fontFamily: Strings.fontFamily,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(width: 5.0),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        size: 15.0,
+                      ),
+                    ],
+                  ),
+                ),
+                onTap: () {},
+              ),
+              const Divider(),
+              SwitchListTile(
+                title: const Text(
+                  'Only people near me',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                value: false,
+                onChanged: (value) {},
+              ),
+              const Divider(),
+              ListTile(
+                title: Text(
+                  'Bloqued list',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                trailing: Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 15.0,
+                ),
+                onTap: () {},
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _PrivacyAndSecuritySetting extends StatelessWidget {
+  const _PrivacyAndSecuritySetting({
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(height: size.height * 0.02),
+        const ListTile(
+          leading: Icon(Icons.privacy_tip),
+          title: Text(
+            'PRIVACY AND SECURITY',
+            style: TextStyle(
+              color: Color(0xFF686E8C),
+              fontSize: 14,
+              fontFamily: Strings.fontFamily,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        Container(
+          width: size.width * 0.90,
+          padding: const EdgeInsets.symmetric(
+            vertical: 15,
+            horizontal: 20,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            children: [
+              ListTile(
+                title: const Text(
+                  'Sign-in methods',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 15.0,
+                ),
+                onTap: () {},
+              ),
+              const Divider(),
+              ListTile(
+                title: const Text(
+                  'Change Password',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 15.0,
+                ),
+                onTap: () {},
+              ),
+              const Divider(),
+              ListTile(
+                title: const Text(
+                  'Privacy Policy',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 15.0,
+                ),
+                onTap: () {},
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AccountSettings extends StatelessWidget {
+  const _AccountSettings({
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const ListTile(
+          leading: Icon(Icons.person_pin),
+          title: Text(
+            'ACCOUNT',
+            style: TextStyle(
+              color: Color(0xFF686E8C),
+              fontSize: 14,
+              fontFamily: Strings.fontFamily,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        Container(
+          width: size.width * 0.90,
+          padding: const EdgeInsets.symmetric(
+            vertical: 15,
+            horizontal: 20,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            children: [
+              SwitchListTile(
+                title: const Text(
+                  'Pause Account',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                subtitle: const Text(
+                  'Pausing prevents your profile from being shown to new people',
+                  style: TextStyle(
+                    color: Color(0xFFBDC0D6),
+                    fontSize: 12,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                value: false,
+                onChanged: (value) {},
+              ),
+              const Divider(),
+              SwitchListTile(
+                title: const Text(
+                  'Active Dark Mode',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                value: false,
+                onChanged: (value) {},
+              ),
+              const Divider(),
+              ListTile(
+                title: Text(
+                  'Profile Control',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                trailing: Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 15.0,
+                ),
+                onTap: () {},
+              ),
+              const Divider(),
+              ListTile(
+                title: Text(
+                  'Bloqued list',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                trailing: Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 15.0,
+                ),
+                onTap: () {},
+              )
+            ],
+          ),
+        ),
       ],
     );
   }
