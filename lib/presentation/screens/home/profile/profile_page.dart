@@ -1,9 +1,10 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
-import '../../../../config/config.dart' show Strings;
+import '../../../../config/config.dart' show AccountCubit, Strings;
 import '../../screens.dart' show ChangePasswordScreen, SignInScreen;
 import '../../../widgets/widgets.dart'
     show ConfigurationInputField, CustomDropdownButton, DatePickerFormField;
@@ -56,6 +57,51 @@ class ProfilePage extends StatelessWidget {
 
 class _AppBarAIDate extends StatelessWidget {
   const _AppBarAIDate();
+
+  Future<void> _logOut(BuildContext context) async {
+    Navigator.of(context).pushAndRemoveUntil(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              const SignInScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return SlideInRight(child: child);
+          },
+        ),
+        (route) => false);
+
+    // try {
+    //     await context.read<AccountCubit>();
+
+    //     Navigator.of(context).pushAndRemoveUntil(
+    //     PageRouteBuilder(
+    //       pageBuilder: (context, animation, secondaryAnimation) =>
+    //           const SignInScreen(),
+    //       transitionsBuilder: (context, animation, secondaryAnimation, child) {
+    //         return SlideInRight(child: child);
+    //       },
+    //     ),
+    //     (route) => false);
+    //   } catch (e) {
+    //     print('Esto es un error: ${e.toString()}');
+    //     if (!mounted) return;
+    //     ElegantNotification.error(
+    //       notificationPosition: NotificationPosition.bottomCenter,
+    //       animation: AnimationType.fromBottom,
+    //       background: Colors.red.shade100,
+    //       showProgressIndicator: true,
+    //       title: const Text(
+    //         "Error try again",
+    //         style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+    //       ),
+    //       description: const Text(
+    //         "Something happend!",
+    //         style: TextStyle(
+    //           color: Colors.black,
+    //         ),
+    //       ),
+    //     ).show(context);
+    //   }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,22 +173,7 @@ class _AppBarAIDate extends StatelessWidget {
                                         child: const Text('Cancel'),
                                       ),
                                       FilledButton(
-                                        onPressed: () => Navigator.of(context)
-                                            .pushAndRemoveUntil(
-                                                PageRouteBuilder(
-                                                  pageBuilder: (context,
-                                                          animation,
-                                                          secondaryAnimation) =>
-                                                      const SignInScreen(),
-                                                  transitionsBuilder: (context,
-                                                      animation,
-                                                      secondaryAnimation,
-                                                      child) {
-                                                    return SlideInRight(
-                                                        child: child);
-                                                  },
-                                                ),
-                                                (route) => false),
+                                        onPressed: () => _logOut(context),
                                         child: const Text('Ok'),
                                       ),
                                     ],
