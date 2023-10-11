@@ -9,4 +9,11 @@ abstract class AccountRepository<T> {
   Future<T> signInUserRepository(Map<String, dynamic> credentials);
 
   Future<bool> verificationCodeRepository(Map<String, dynamic> verify);
+
+  Future<bool> logOutRepository();
+
+  Future<bool> changePasswordRepository(Map<String, dynamic> passwords);
+
+  Future<bool> forgotPasswordRepository(
+      {required String code, required String number});
 }

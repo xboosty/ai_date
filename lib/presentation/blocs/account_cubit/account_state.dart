@@ -8,16 +8,14 @@ class AccountState extends Equatable {
     required this.status,
     this.errorMessage = '',
     this.user,
-    this.isVerify,
   });
 
   final UserRegisterStatus status;
   final String errorMessage;
   final UserEntity? user;
-  final bool? isVerify;
 
   @override
-  List<Object?> get props => [user];
+  List<Object?> get props => [user, errorMessage, status];
 }
 
 // final class AccountData extends AccountState {}
