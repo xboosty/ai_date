@@ -22,6 +22,11 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
       '/api/account/register',
       data: user,
       options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'User-Agent':
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.60',
+        },
         followRedirects: false,
         // will not throw errors
         validateStatus: (status) => true,
@@ -44,6 +49,11 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
       '/api/account/login',
       data: credential,
       options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'User-Agent':
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.60',
+        },
         followRedirects: false,
         // will not throw errors
         validateStatus: (status) => true,
@@ -51,9 +61,20 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
       ),
     );
 
+    print('esto es response $rs');
+    print('esto es response string ${rs.toString()}');
+    print('esto es response string ${rs.statusCode.toString()}');
+
+    // if ( rs.statusCode ) {
+
+    // }
+
     final userResponse = NtsUserResponse.fromJson(rs.data);
-    // TODO: implement logOut
-    throw UnimplementedError();
+
+    // Parsed to model response to entity
+    final UserEntity userResult = UserMapper.userResponseToEntity(userResponse);
+
+    return userResult;
   }
 
   @override
@@ -62,15 +83,24 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
     final rs = await dio.post(
       '/api/account/logout',
       options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'User-Agent':
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.60',
+        },
         followRedirects: false,
         // will not throw errors
         validateStatus: (status) => true,
-        // headers: headers,
       ),
     );
 
-    // TODO: implement logOut
-    throw UnimplementedError();
+    final isLogOutResponse = NtsVerificationResponse.fromJson(rs.data);
+
+    if (isLogOutResponse.result ?? false) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @override
@@ -80,6 +110,11 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
       '/api/account/verify-code',
       data: verification,
       options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'User-Agent':
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.60',
+        },
         followRedirects: false,
         // will not throw errors
         validateStatus: (status) => true,
@@ -94,5 +129,54 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
     } else {
       return false;
     }
+  }
+
+  @override
+  Future<bool> changePasswordAccount(Map<String, dynamic> passwords) async {
+    final rs = await dio.post(
+      '/api/account/verify-code',
+      data: passwords,
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'User-Agent':
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.60',
+        },
+        followRedirects: false,
+        // will not throw errors
+        validateStatus: (status) => true,
+        // headers: headers,
+      ),
+    );
+
+    final bool isChangePassword = rs.data as bool;
+
+    return isChangePassword;
+  }
+
+  @override
+  Future<bool> forgotPasswordAccount(
+      {required String code, required String number}) async {
+    final rs = await dio.post(
+      '/api/account/forgot-password',
+      data: {
+        "phone": {"code": code, "number": number}
+      },
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'User-Agent':
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.60',
+        },
+        followRedirects: false,
+        // will not throw errors
+        validateStatus: (status) => true,
+        // headers: headers,
+      ),
+    );
+
+    final bool isSendCode = rs.data as bool;
+
+    return isSendCode;
   }
 }

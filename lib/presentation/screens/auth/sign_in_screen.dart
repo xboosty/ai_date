@@ -1,3 +1,5 @@
+import 'package:elegant_notification/elegant_notification.dart';
+import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -200,11 +202,32 @@ class _SignInFormState extends State<SignInForm> {
         "password": _passwordCtrl.text
       };
 
-      final user = await context.read<AccountCubit>().signInUser(credentials);
+      try {
+        await context.read<AccountCubit>().signInUser(credentials);
 
-      if (user != null) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          HomeScreen.routeName,
+          (route) => false,
+        );
+      } catch (e) {
+        print('Esto es un error: ${e.toString()}');
         if (!mounted) return;
-        Navigator.of(context).pushNamed(HomeScreen.routeName);
+        ElegantNotification.error(
+          notificationPosition: NotificationPosition.bottomCenter,
+          animation: AnimationType.fromBottom,
+          background: Colors.red.shade100,
+          showProgressIndicator: true,
+          title: const Text(
+            "Error try again",
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          description: const Text(
+            "Something happend!",
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+        ).show(context);
       }
     }
   }
@@ -351,7 +374,7 @@ class _SignInFormState extends State<SignInForm> {
                     PasswordInput(
                       controller: _passwordCtrl,
                       obscureText: _obscureText,
-                      onPressed: () => {
+                      onPressedSuffixIcon: () => {
                         setState(() {
                           _obscureText = !_obscureText;
                         }),
@@ -411,13 +434,24 @@ class _SignInFormState extends State<SignInForm> {
                             isTrailingIcon: false,
                             onTap: () => _startSession(context),
                           ),
-                        // TODO: Handle this case.
                         UserRegisterStatus.loading =>
-                          CircularProgressIndicator(),
-                        // TODO: Handle this case.
-                        UserRegisterStatus.success => Container(),
-                        // TODO: Handle this case.
-                        UserRegisterStatus.failure => Container(),
+                          const CircularProgressIndicator(),
+                        UserRegisterStatus.failure =>
+                          FilledColorizedOutlineButton(
+                            width: 150,
+                            height: 50,
+                            title: 'SIGN IN',
+                            isTrailingIcon: false,
+                            onTap: () => _startSession(context),
+                          ),
+                        UserRegisterStatus.success =>
+                          FilledColorizedOutlineButton(
+                            width: 150,
+                            height: 50,
+                            title: 'SIGN IN',
+                            isTrailingIcon: false,
+                            onTap: () => _startSession(context),
+                          ),
                       }),
             ],
           ),

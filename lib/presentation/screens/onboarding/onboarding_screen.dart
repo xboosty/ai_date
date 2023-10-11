@@ -1,6 +1,9 @@
+import 'package:elegant_notification/elegant_notification.dart';
+import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:location/location.dart';
 
 import '../../../config/config.dart'
     show AccountCubit, AccountState, AppTheme, Strings, UserRegisterStatus;
@@ -192,9 +195,28 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       "gender": _genderSelected?.id ?? -1,
       "sexualOrientation": _sexualitySelected?.id ?? -1
     };
-
-    await context.read<AccountCubit>().registerUser(user);
-    _netxPage();
+    try {
+      await context.read<AccountCubit>().registerUser(user);
+      _netxPage();
+    } catch (e) {
+      if (!mounted) return;
+      ElegantNotification.error(
+        notificationPosition: NotificationPosition.bottomCenter,
+        animation: AnimationType.fromBottom,
+        background: Colors.red.shade100,
+        showProgressIndicator: true,
+        title: const Text(
+          "Error",
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        description: const Text(
+          "Error when trying to register!",
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+      ).show(context);
+    }
   }
 
   Future<void> _submitVerificationCode(BuildContext context) async {
@@ -205,9 +227,46 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         "verificationCode": _verificationCtrl.text
       };
 
-      await context.read<AccountCubit>().verificationCode(verification);
-      if (!mounted) return;
-      Navigator.of(context).pushNamed(HomeScreen.routeName);
+      try {
+        await context.read<AccountCubit>().verificationCode(verification);
+        if (!mounted) return;
+        Navigator.of(context).pushNamed(HomeScreen.routeName);
+        ElegantNotification.error(
+          notificationPosition: NotificationPosition.bottomCenter,
+          animation: AnimationType.fromBottom,
+          background: Colors.green.shade100,
+          showProgressIndicator: true,
+          title: const Text(
+            "Register Successfull",
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          description: const Text(
+            "You register is completed!",
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+        ).show(context);
+      } catch (e) {
+        if (!mounted) return;
+        Navigator.of(context).pushNamed(SignInScreen.routeName);
+        ElegantNotification.error(
+          notificationPosition: NotificationPosition.bottomCenter,
+          animation: AnimationType.fromBottom,
+          background: Colors.red.shade100,
+          showProgressIndicator: true,
+          title: const Text(
+            "Register Failed",
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          description: const Text(
+            "Something happend!",
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+        ).show(context);
+      }
     }
   }
 
@@ -1093,16 +1152,18 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   height: size.height * 0.08,
                   title: 'ALLOW LOCATION ACCESS',
                   isTrailingIcon: false,
-                  onTap: () => Navigator.of(context)
-                      .pushReplacementNamed(SignInScreen.routeName),
+                  onTap: () async => await _accessLocation(),
                 ),
                 SizedBox(height: size.height * 0.02),
                 FilledColorizedOutlineButton(
-                  width: size.width * 0.90,
-                  height: size.height * 0.08,
-                  title: 'DON\'T ALLOW',
-                  isTrailingIcon: false,
-                ),
+                    width: size.width * 0.90,
+                    height: size.height * 0.08,
+                    title: 'DON\'T ALLOW',
+                    isTrailingIcon: false,
+                    onTap: () {
+                      _formRegisterSubmit(context,
+                          page: pageviewController.page ?? 0.0);
+                    }),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 20.0),
                   child: Text(
@@ -1121,6 +1182,30 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _accessLocation() async {
+    final Location location = Location();
+
+    bool _serviceEnabled = false;
+    PermissionStatus _permissionGranted;
+    // LocationData _locationData;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
   }
 
   void _pageListener() {
@@ -1156,7 +1241,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             onPageChanged: (index) {
               setState(() {
                 _currentPage = index;
-                print(_currentPage);
                 // isLastPage = index == 3;
                 // isNotifyPage = index == 1;
               });

@@ -21,4 +21,25 @@ class NtsAccountAuthRepository extends AccountRepository<UserEntity> {
     final UserEntity user = await datasource.logIn(credentials);
     return user;
   }
+
+  @override
+  Future<bool> logOutRepository() async {
+    final bool isLogOut = await datasource.logOut();
+    return isLogOut;
+  }
+
+  @override
+  Future<bool> changePasswordRepository(Map<String, dynamic> passwords) async {
+    final bool isChangedPassword =
+        await datasource.changePasswordAccount(passwords);
+    return isChangedPassword;
+  }
+
+  @override
+  Future<bool> forgotPasswordRepository(
+      {required String code, required String number}) async {
+    final bool isForgetChangedPassword =
+        await datasource.forgotPasswordAccount(code: code, number: number);
+    return isForgetChangedPassword;
+  }
 }

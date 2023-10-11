@@ -27,15 +27,15 @@ class AccountCubit extends Cubit<AccountState> {
         ),
       );
       print('Hubo un error');
+      rethrow;
     }
   }
 
   Future<void> verificationCode(Map<String, dynamic> verification) async {
     emit(const AccountState(status: UserRegisterStatus.loading));
     try {
-      final isVerify = await repo.verificationCodeRepository(verification);
-      emit(
-          AccountState(status: UserRegisterStatus.success, isVerify: isVerify));
+      await repo.verificationCodeRepository(verification);
+      emit(const AccountState(status: UserRegisterStatus.success));
       print('Se verifico perfecto');
     } catch (e) {
       print(e.toString());
@@ -43,20 +43,19 @@ class AccountCubit extends Cubit<AccountState> {
         AccountState(
           status: UserRegisterStatus.failure,
           errorMessage: e.toString(),
-          isVerify: false,
         ),
       );
       print('Hubo un error en verificacion');
+      rethrow;
     }
   }
 
-  Future<UserEntity?> signInUser(Map<String, dynamic> credentials) async {
+  Future<void> signInUser(Map<String, dynamic> credentials) async {
     emit(const AccountState(status: UserRegisterStatus.loading));
     try {
       final user = await repo.signInUserRepository(credentials);
       emit(AccountState(status: UserRegisterStatus.success, user: user));
       print('SignIn Success');
-      return user;
     } catch (e) {
       print(e.toString());
       emit(
@@ -66,7 +65,63 @@ class AccountCubit extends Cubit<AccountState> {
         ),
       );
       print('SignIn Failure');
-      return null;
+      rethrow;
+    }
+  }
+
+  Future<void> logOutUser() async {
+    emit(const AccountState(status: UserRegisterStatus.loading));
+    try {
+      await repo.logOutRepository();
+    } catch (e) {
+      print(e.toString());
+      emit(
+        AccountState(
+          status: UserRegisterStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
+      print('SignIn Failure');
+      rethrow;
+    }
+  }
+
+  Future<void> changePasswordUser(Map<String, dynamic> passwords) async {
+    emit(const AccountState(status: UserRegisterStatus.loading));
+    try {
+      await repo.changePasswordRepository(passwords);
+      emit(const AccountState(status: UserRegisterStatus.success));
+      print('SignIn Success');
+    } catch (e) {
+      print(e.toString());
+      emit(
+        AccountState(
+          status: UserRegisterStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
+      print('SignIn Failure');
+      rethrow;
+    }
+  }
+
+  Future<void> forgotPasswordUser(
+      {required String code, required String number}) async {
+    emit(const AccountState(status: UserRegisterStatus.loading));
+    try {
+      await repo.forgotPasswordRepository(code: code, number: number);
+      emit(const AccountState(status: UserRegisterStatus.success));
+      print('SignIn Success');
+    } catch (e) {
+      print(e.toString());
+      emit(
+        AccountState(
+          status: UserRegisterStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
+      print('SignIn Failure');
+      rethrow;
     }
   }
 }
