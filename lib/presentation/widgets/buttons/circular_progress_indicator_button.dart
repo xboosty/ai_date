@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import '../../../config/config.dart' show AppTheme;
 
 class CircularProgressIndicatorButton extends StatelessWidget {
-  const CircularProgressIndicatorButton(
-      {super.key,
-      required this.onPressed,
-      required this.percent,
-      required this.backgroundColor});
+  const CircularProgressIndicatorButton({
+    super.key,
+    required this.onPressed,
+    required this.percent,
+    required this.backgroundColor,
+  });
 
   final VoidCallback? onPressed;
   final double percent;

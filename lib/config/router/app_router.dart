@@ -9,7 +9,11 @@ class AppRouter {
         SplashScreen.routeName: (_) => const SplashScreen(),
         IntroductionScreen.routeName: (_) => const IntroductionScreen(),
         OnBoardingScreen.routeName: (_) => const OnBoardingScreen(),
-        HomeScreen.routeName: (_) => const HomeScreen(),
         SignInScreen.routeName: (_) => const SignInScreen(),
+        ForgotPasswordScreen.routeName: (_) => const ForgotPasswordScreen(),
+        ChangePasswordScreen.routeName: (_) => const ChangePasswordScreen(),
+        SuccessChangePasswordScreen.routeName: (_) =>
+            const SuccessChangePasswordScreen(),
+        HomeScreen.routeName: (_) => const HomeScreen(),
       };
 }

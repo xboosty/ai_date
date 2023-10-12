@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../config/config.dart' show AppTheme, Strings;
 import '../../widgets/widgets.dart' show FilledColorizedButton, OutlineText;
-import '../screens.dart' show OnBoardingScreen, SignInScreen;
+import '../screens.dart' show OnBoardingScreen;
 
 class IntroductionScreen extends StatelessWidget {
   const IntroductionScreen({super.key});
