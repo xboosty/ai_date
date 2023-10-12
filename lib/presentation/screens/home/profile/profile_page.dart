@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:toggle_switch/toggle_switch.dart';
-import 'package:appinio_swiper/appinio_swiper.dart'
-    show AppinioSwiper, AppinioSwiperDirection;
+import 'package:appinio_swiper/appinio_swiper.dart';
 
 import '../../../../config/config.dart' show AppTheme, Strings;
 import '../../screens.dart' show ChangePasswordScreen, SignInScreen;
 import '../../../widgets/widgets.dart'
     show
+        ButtonsInfoProfile,
+        CardGradientPicture,
+        CardInfoProfile,
         CircularOutlineGradientButton,
         ConfigurationInputField,
         CustomDropdownButton,
@@ -50,9 +52,9 @@ class ProfilePage extends StatelessWidget {
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: [
-                const _ProfileEditPage(),
-                const _UserCard(),
+              children: const [
+                _ProfileEditPage(),
+                _UserCard(),
               ],
             ),
           ),
@@ -444,7 +446,7 @@ class _CardGenderInfo extends StatelessWidget {
             SizedBox(height: size.height * 0.02),
             CustomDropdownButton(
               hintText: const Text('Gender'),
-              listValues: ['Non-Binary', 'Women', 'Men'],
+              listValues: const ['Non-Binary', 'Women', 'Men'],
               dropdownValue: 'Non-Binary',
               onChanged: (value) {
                 print(value);
@@ -453,7 +455,7 @@ class _CardGenderInfo extends StatelessWidget {
             SizedBox(height: size.height * 0.03),
             CustomDropdownButton(
               hintText: const Text('Sexual Orientation'),
-              listValues: ['Straight', 'Gay', 'Bisexual'],
+              listValues: const ['Straight', 'Gay', 'Bisexual'],
               dropdownValue: 'Straight',
               onChanged: (value) {
                 print(value);
@@ -1226,8 +1228,23 @@ class _AccountSettings extends StatelessWidget {
   }
 }
 
-class _UserCard extends StatelessWidget {
-  const _UserCard({super.key});
+class _UserCard extends StatefulWidget {
+  const _UserCard();
+
+  @override
+  State<_UserCard> createState() => _UserCardState();
+}
+
+class _UserCardState extends State<_UserCard> {
+  final AppinioSwiperController controller = AppinioSwiperController();
+
+  final List<String> _hobbies = [
+    'Sushi',
+    'Books',
+    'Basketball',
+    'Travel',
+    'Movie'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -1237,87 +1254,265 @@ class _UserCard extends StatelessWidget {
       child: SizedBox(
         height: size.height * 0.75,
         child: AppinioSwiper(
+          controller: controller,
           cardsCount: 10,
           cardsSpacing: 0.0,
           onSwiping: (AppinioSwiperDirection direction) {
             print(direction.toString());
           },
           cardsBuilder: (BuildContext context, int index) {
-            return Container(
-              width: size.width * 0.80,
-              height: size.height,
-              alignment: Alignment.center,
-              // color: Colors.blue,
-              child: Stack(
-                alignment: Alignment.bottomCenter,
-                clipBehavior: Clip.none,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(1.5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      gradient: AppTheme.linearGradient,
-                    ),
-                    child: Container(
-                      width: size.width * 0.78,
-                      height: size.height * 0.50,
-                      padding: const EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: const Color(0xFFEFF0FB),
-                        image: const DecorationImage(
-                          image:
-                              AssetImage('assets/imgs/photo_camera_front.png'),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Row(
+            return GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  // showDragHandle: true,
+                  // enableDrag: true,
+                  // useSafeArea: true,
+                  isScrollControlled: true,
+                  builder: (BuildContext context) {
+                    return DraggableScrollableSheet(
+                      initialChildSize: 1.0,
+                      minChildSize: 1.0,
+                      maxChildSize: 1.0,
+                      builder: (BuildContext context,
+                          ScrollController scrollController) {
+                        return SingleChildScrollView(
+                          controller: scrollController,
+                          child: Column(
                             children: [
-                              IconButton(
-                                onPressed: () {},
-                                style: IconButton.styleFrom(
-                                  backgroundColor: Colors.white,
+                              _CardSeeProfileDetails(size: size),
+                              SizedBox(height: size.height * 0.02),
+                              _SmallDescriptionProfile(size: size),
+                              const ButtonsInfoProfile(
+                                titleOne: '31 years old',
+                                titleTwo: '165 cm',
+                                titleThree: 'Virgo',
+                                iconOne: Icons.cake,
+                                iconTwo: Icons.straighten,
+                                iconThree: Icons.calendar_month,
+                              ),
+                              CardGradientPicture(
+                                image: const DecorationImage(
+                                  image: AssetImage('assets/imgs/girl2.png'),
+                                  fit: BoxFit.cover,
                                 ),
-                                icon: const Icon(
-                                  Icons.note_add_rounded,
-                                  color: Color(0xFFD9D9D9),
+                                width: size.width * 0.90,
+                                height: size.height * 0.55,
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.only(top: 15.0),
+                                child: Text(
+                                  'Personal questions & background',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Color(0xFF6C2EBC),
+                                    fontSize: 18,
+                                    fontFamily: Strings.fontFamily,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                              )
+                              ),
+                              const ButtonsInfoProfile(
+                                titleOne: 'Vaccinated',
+                                titleTwo: 'Sometimes',
+                                titleThree: 'No',
+                                iconOne: Icons.vaccines,
+                                iconTwo: Icons.smoking_rooms,
+                                iconThree: Icons.medication,
+                              ),
+                              _PersonalQuestionInfo(size: size),
+                              SizedBox(height: size.height * 0.02),
+                              _OthersPicturesProfile(size: size),
+                              const Padding(
+                                padding: EdgeInsets.only(top: 15.0),
+                                child: Text(
+                                  'Interests & lifestyle',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Color(0xFF6C2EBC),
+                                    fontSize: 18,
+                                    fontFamily: Strings.fontFamily,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              _HobbiesProfile(size: size, hobbies: _hobbies),
+                              SizedBox(height: size.height * 0.02),
+                              CardInfoProfile(
+                                width: size.width * 0.95,
+                                height: size.height * 0.42,
+                                child: const Column(
+                                  children: [
+                                    ListTile(
+                                      leading: Icon(
+                                        Icons.eco,
+                                        color: Color(0xFFD9D9D9),
+                                      ),
+                                      title: Text(
+                                        'Vegetarian',
+                                        style: TextStyle(
+                                          color: Color(0xFF7F87A6),
+                                          fontSize: 14,
+                                          fontFamily: Strings.fontFamily,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                    Divider(),
+                                    ListTile(
+                                      leading: Icon(
+                                        Icons.fitness_center,
+                                        color: Color(0xFFD9D9D9),
+                                      ),
+                                      title: Text(
+                                        'Vegetarian',
+                                        style: TextStyle(
+                                          color: Color(0xFF7F87A6),
+                                          fontSize: 14,
+                                          fontFamily: Strings.fontFamily,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                    Divider(),
+                                    ListTile(
+                                      leading: Icon(
+                                        Icons.child_friendly,
+                                        color: Color(0xFFD9D9D9),
+                                      ),
+                                      title: Text(
+                                        'Has children',
+                                        style: TextStyle(
+                                          color: Color(0xFF7F87A6),
+                                          fontSize: 14,
+                                          fontFamily: Strings.fontFamily,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                    Divider(),
+                                    ListTile(
+                                      leading: Icon(
+                                        Icons.pets,
+                                        color: Color(0xFFD9D9D9),
+                                      ),
+                                      title: Text(
+                                        'Dog',
+                                        style: TextStyle(
+                                          color: Color(0xFF7F87A6),
+                                          fontSize: 14,
+                                          fontFamily: Strings.fontFamily,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: size.height * 0.02),
+                              CardGradientPicture(
+                                width: size.width * 0.90,
+                                height: size.height * 0.55,
+                                image: const DecorationImage(
+                                  image: AssetImage('assets/imgs/girl7.png'),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              SizedBox(height: size.height * 0.02),
+                              const Text(
+                                'Vision for the future',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Color(0xFF6C2EBC),
+                                  fontSize: 20,
+                                  fontFamily: Strings.fontFamily,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(height: size.height * 0.02),
+                              _OverviewProfileCard(
+                                size: size,
+                                title: 'FINANCIAL HABITS AND GOALS',
+                                description:
+                                    'Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper',
+                              ),
+                              SizedBox(height: size.height * 0.02),
+                              _OverviewProfileCard(
+                                size: size,
+                                title: 'RELATIONSHIP HISTORY AND VIEWS',
+                                description:
+                                    'Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper',
+                              ),
+                              SizedBox(height: size.height * 0.02),
                             ],
                           ),
-                          const Spacer(),
-                          const Text(
-                            'Jennifer (24)',
-                            style: TextStyle(
-                              color: Color(0xFF9CA4BF),
-                              fontSize: 22,
-                              fontFamily: Strings.fontFamily,
-                              fontWeight: FontWeight.w600,
-                            ),
+                        );
+                      },
+                      controller: DraggableScrollableController(),
+                    );
+                  },
+                );
+              },
+              child: Container(
+                width: size.width * 0.80,
+                height: size.height,
+                alignment: Alignment.center,
+                // color: Colors.blue,
+                child: Stack(
+                  alignment: Alignment.bottomCenter,
+                  clipBehavior: Clip.none,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(1.5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        gradient: AppTheme.linearGradient,
+                      ),
+                      child: Container(
+                        width: size.width * 0.78,
+                        height: size.height * 0.50,
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: const Color(0xFFEFF0FB),
+                          image: const DecorationImage(
+                            image: AssetImage(
+                                'assets/imgs/photo_camera_front.png'),
+                            fit: BoxFit.contain,
                           ),
-                          SizedBox(height: size.height * 0.02),
-                          const Text(
-                            'Lives in New York',
-                            style: TextStyle(
-                              color: Color(0xFF9CA4BF),
-                              fontSize: 12,
-                              fontFamily: Strings.fontFamily,
-                              fontWeight: FontWeight.w600,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Row(
+                              children: [
+                                IconButton(
+                                  onPressed: () {},
+                                  style: IconButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                  ),
+                                  icon: const Icon(
+                                    Icons.note_add_rounded,
+                                    color: Color(0xFFD9D9D9),
+                                  ),
+                                )
+                              ],
                             ),
-                          ),
-                          SizedBox(height: size.height * 0.02),
-                          FilledButton(
-                            onPressed: () {},
-                            style: FilledButton.styleFrom(
-                              backgroundColor: Colors.white,
+                            const Spacer(),
+                            const Text(
+                              'Jennifer (24)',
+                              style: TextStyle(
+                                color: Color(0xFF9CA4BF),
+                                fontSize: 22,
+                                fontFamily: Strings.fontFamily,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                            child: const Text(
-                              '95% match',
+                            SizedBox(height: size.height * 0.02),
+                            const Text(
+                              'Lives in New York',
                               style: TextStyle(
                                 color: Color(0xFF9CA4BF),
                                 fontSize: 12,
@@ -1325,39 +1520,530 @@ class _UserCard extends StatelessWidget {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                          )
-                        ],
+                            SizedBox(height: size.height * 0.02),
+                            FilledButton(
+                              onPressed: () {},
+                              style: FilledButton.styleFrom(
+                                backgroundColor: Colors.white,
+                              ),
+                              child: const Text(
+                                '95% match',
+                                style: TextStyle(
+                                  color: Color(0xFF9CA4BF),
+                                  fontSize: 12,
+                                  fontFamily: Strings.fontFamily,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Positioned(
-                    bottom: -25.0,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const CircularOutlineGradientButton(
-                          width: 56.0,
-                          height: 56.0,
-                          child: Icon(
-                            Icons.close,
-                            color: Color.fromARGB(255, 209, 70, 15),
-                            size: 32,
+                    Positioned(
+                      bottom: -25.0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularOutlineGradientButton(
+                            onTap: () {
+                              controller.swipeLeft();
+                            },
+                            width: 56.0,
+                            height: 56.0,
+                            child: const Icon(
+                              Icons.close,
+                              color: Color.fromARGB(255, 209, 70, 15),
+                              size: 32,
+                            ),
                           ),
-                        ),
-                        SizedBox(width: size.width * 0.30),
-                        CircularGradientButton(
-                          heroTag: 'Like',
-                          child: const Icon(Icons.favorite, size: 32),
-                          callback: () {},
-                          gradient: AppTheme.linearGradientReverse,
-                        ),
-                      ],
-                    ),
-                  )
-                ],
+                          SizedBox(width: size.width * 0.30),
+                          CircularGradientButton(
+                            heroTag: 'Like',
+                            child: const Icon(Icons.favorite, size: 32),
+                            callback: () {
+                              controller.swipeRight();
+                            },
+                            gradient: AppTheme.linearGradientReverse,
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             );
           },
+        ),
+      ),
+    );
+  }
+}
+
+class _OverviewProfileCard extends StatelessWidget {
+  const _OverviewProfileCard({
+    super.key,
+    required this.size,
+    required this.title,
+    required this.description,
+  });
+
+  final Size size;
+  final String title;
+  final String description;
+
+  @override
+  Widget build(BuildContext context) {
+    return CardInfoProfile(
+      width: size.width * 0.95,
+      height: size.height * 0.20,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              color: Color(0xFF686E8C),
+              fontSize: 14,
+              fontFamily: Strings.fontFamily,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 5.0),
+          Text(
+            description,
+            style: const TextStyle(
+              color: Color(0xFF7F87A6),
+              fontSize: 14,
+              fontFamily: Strings.fontFamily,
+              fontWeight: FontWeight.w500,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class _HobbiesProfile extends StatelessWidget {
+  const _HobbiesProfile({
+    super.key,
+    required this.size,
+    required List<String> hobbies,
+  }) : _hobbies = hobbies;
+
+  final Size size;
+  final List<String> _hobbies;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 5.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Container(
+        width: size.width * 0.95,
+        height: size.height * 0.30,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          children: [
+            const Row(
+              children: [
+                Text(
+                  'HOBBIES',
+                  style: TextStyle(
+                    color: Color(0xFF686E8C),
+                    fontSize: 14,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 5.0),
+            Expanded(
+                child: GridView.builder(
+              itemCount: _hobbies.length,
+              padding: EdgeInsets.zero,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                childAspectRatio: 1.5 / 1,
+                crossAxisCount: 3, // number of items in each row
+                mainAxisSpacing: 0.5, // spacing between rows
+                crossAxisSpacing: 0.1, // spacing between columns
+              ),
+              itemBuilder: (context, index) {
+                return ActionChip(
+                  padding: const EdgeInsets.all(15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  label: Text(_hobbies[index]),
+                );
+              },
+            )
+                // ButtonBar(
+                //   children: [
+                //     ActionChip(
+                //       // avatar: Icon(favorite ? Icons.favorite : Icons.favorite_border),
+                //       label: const Text(
+                //           'Save to favorites'),
+                //       onPressed: () => {},
+                //     ),
+                //     ActionChip(
+                //       // avatar: Icon(favorite ? Icons.favorite : Icons.favorite_border),
+                //       label: const Text('Save to pepe'),
+                //       onPressed: () => {},
+                //     ),
+                //     ActionChip(
+                //       // avatar: Icon(favorite ? Icons.favorite : Icons.favorite_border),
+                //       label: const Text(
+                //           'Save to favorites'),
+                //       onPressed: () => {},
+                //     ),
+                //     ActionChip(
+                //       // avatar: Icon(favorite ? Icons.favorite : Icons.favorite_border),
+                //       label: const Text(
+                //           'Save to favorites'),
+                //       onPressed: () => {},
+                //     ),
+                //     ActionChip(
+                //       // avatar: Icon(favorite ? Icons.favorite : Icons.favorite_border),
+                //       label: const Text(
+                //           'Save to favorites'),
+                //       onPressed: () => {},
+                //     ),
+                //     ActionChip(
+                //       // avatar: Icon(favorite ? Icons.favorite : Icons.favorite_border),
+                //       label: const Text(
+                //           'Save to favorites'),
+                //       onPressed: () => {},
+                //     ),
+                //   ],
+                // ),
+
+                )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _OthersPicturesProfile extends StatelessWidget {
+  const _OthersPicturesProfile({
+    super.key,
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        CardGradientPicture(
+          image: const DecorationImage(
+            image: AssetImage('assets/imgs/girl8.png'),
+            fit: BoxFit.cover,
+          ),
+          width: size.width * 0.45,
+          height: size.height * 0.35,
+        ),
+        CardGradientPicture(
+          image: const DecorationImage(
+            image: AssetImage('assets/imgs/girl9.png'),
+            fit: BoxFit.cover,
+          ),
+          width: size.width * 0.45,
+          height: size.height * 0.35,
+        ),
+      ],
+    );
+  }
+}
+
+class _PersonalQuestionInfo extends StatelessWidget {
+  const _PersonalQuestionInfo({
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      elevation: 5.0,
+      margin: EdgeInsets.zero,
+      child: Container(
+        width: size.width * 0.95,
+        height: size.height * 0.48,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+        ),
+        child: const Column(
+          children: [
+            ListTile(
+              leading: Icon(
+                Icons.liquor_outlined,
+                color: AppTheme.disabledColor,
+              ),
+              title: Text(
+                'Short Term relationship',
+                style: TextStyle(
+                  color: Color(0xFF7F87A6),
+                  fontSize: 14,
+                  fontFamily: Strings.fontFamily,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Divider(),
+            ListTile(
+              leading: Icon(
+                Icons.import_contacts_outlined,
+                color: AppTheme.disabledColor,
+              ),
+              title: Text(
+                'Agnostic',
+                style: TextStyle(
+                  color: Color(0xFF7F87A6),
+                  fontSize: 14,
+                  fontFamily: Strings.fontFamily,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Divider(),
+            ListTile(
+              leading: Icon(
+                Icons.masks,
+                color: AppTheme.disabledColor,
+              ),
+              title: Text(
+                'SDM',
+                style: TextStyle(
+                  color: Color(0xFF7F87A6),
+                  fontSize: 14,
+                  fontFamily: Strings.fontFamily,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Divider(),
+            ListTile(
+              leading: Icon(
+                Icons.diversity_1_outlined,
+                color: AppTheme.disabledColor,
+              ),
+              title: Text(
+                'Monogamy',
+                style: TextStyle(
+                  color: Color(0xFF7F87A6),
+                  fontSize: 14,
+                  fontFamily: Strings.fontFamily,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Divider(),
+            ListTile(
+              leading: Icon(
+                Icons.bed,
+                color: AppTheme.disabledColor,
+              ),
+              title: Text(
+                'Bottom',
+                style: TextStyle(
+                  color: Color(0xFF7F87A6),
+                  fontSize: 14,
+                  fontFamily: Strings.fontFamily,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SmallDescriptionProfile extends StatelessWidget {
+  const _SmallDescriptionProfile({
+    super.key,
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      elevation: 5.0,
+      margin: EdgeInsets.zero,
+      child: Container(
+        width: size.width * 0.95,
+        height: size.height * 0.28,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+        ),
+        child: const Column(
+          children: [
+            ListTile(
+              leading: Icon(
+                Icons.person_outlined,
+                color: AppTheme.disabledColor,
+              ),
+              title: Text(
+                'Female / Lesbian',
+                style: TextStyle(
+                  color: Color(0xFF7F87A6),
+                  fontSize: 14,
+                  fontFamily: Strings.fontFamily,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Divider(),
+            ListTile(
+              leading: Icon(
+                Icons.location_on_outlined,
+                color: AppTheme.disabledColor,
+              ),
+              title: Text(
+                'Lives in New York / 15 min away',
+                style: TextStyle(
+                  color: Color(0xFF7F87A6),
+                  fontSize: 14,
+                  fontFamily: Strings.fontFamily,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Divider(),
+            ListTile(
+              leading: Icon(
+                Icons.panorama_fish_eye_sharp,
+                color: AppTheme.disabledColor,
+              ),
+              title: Text(
+                'Female / Lesbian',
+                style: TextStyle(
+                  color: Color(0xFF7F87A6),
+                  fontSize: 14,
+                  fontFamily: Strings.fontFamily,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CardSeeProfileDetails extends StatelessWidget {
+  const _CardSeeProfileDetails({
+    super.key,
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(28),
+      ),
+      margin: EdgeInsets.zero,
+      elevation: 8.0,
+      child: Container(
+        width: size.width,
+        height: size.height * 0.55,
+        padding:
+            const EdgeInsets.only(top: 20, bottom: 25, left: 15, right: 15),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(28),
+          color: Colors.white,
+          image: const DecorationImage(
+              image: AssetImage('assets/imgs/girl1.png'), fit: BoxFit.cover),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                      size: 32,
+                    )),
+                const Text(
+                  'Melissandre (31)',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.no_accounts_outlined,
+                    color: Colors.white,
+                    size: 32,
+                  ),
+                )
+              ],
+            ),
+            Container(
+              height: 25,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.6000000238418579),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    '95% match',
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 231, 77, 16),
+                      fontSize: 12,
+                      fontFamily: Strings.fontFamily,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );
