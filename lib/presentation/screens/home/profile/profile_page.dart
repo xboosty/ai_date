@@ -51,6 +51,7 @@ class ProfilePage extends StatelessWidget {
           ),
           Expanded(
             child: TabBarView(
+              physics: const NeverScrollableScrollPhysics(),
               controller: _tabController,
               children: const [
                 _ProfileEditPage(),
