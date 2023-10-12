@@ -17,16 +17,13 @@ class AccountCubit extends Cubit<AccountState> {
     try {
       final user = await repo.registerUserRepository(userRegister);
       emit(AccountState(status: UserRegisterStatus.success, user: user));
-      print('Se Inserto perfecto');
     } catch (e) {
-      print(e.toString());
       emit(
         AccountState(
           status: UserRegisterStatus.failure,
           errorMessage: e.toString(),
         ),
       );
-      print('Hubo un error');
       rethrow;
     }
   }
@@ -73,6 +70,7 @@ class AccountCubit extends Cubit<AccountState> {
     emit(const AccountState(status: UserRegisterStatus.loading));
     try {
       await repo.logOutRepository();
+      emit(const AccountState(status: UserRegisterStatus.success, user: null));
     } catch (e) {
       print(e.toString());
       emit(

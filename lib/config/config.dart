@@ -8,3 +8,5 @@ export 'router/app_router.dart';
 export 'constants/strings.dart';
 // Services Locator
 export 'core/services/services_locator.dart';
+// Helpers
+export 'helpers/handler_notifications.dart';

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,15 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:location/location.dart';
 
 import '../../../config/config.dart'
-    show AccountCubit, AccountState, AppTheme, Strings, UserRegisterStatus;
+    show
+        AccountCubit,
+        AccountState,
+        AppTheme,
+        HandlerNotification,
+        NtsErrorResponse,
+        Strings,
+        UserRegisterStatus,
+        getIt;
 import '../../widgets/widgets.dart'
     show
         CircularProgressIndicatorButton,
@@ -43,6 +52,7 @@ class OnBoardingScreen extends StatefulWidget {
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final PageController pageviewController = PageController();
+  final _notifications = getIt<HandlerNotification>();
   final TextEditingController _fullNameCtrl = TextEditingController();
   final TextEditingController _emailUserCtrl = TextEditingController();
   final TextEditingController _passwordCtrl = TextEditingController();
@@ -83,7 +93,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     if (value.length < 4) {
       return 'Username must be at least 4 characters long';
     }
-    // You can add more validation rules as needed.
+    if (!RegExp(r'^[a-zA-Z0-9_-]+$').hasMatch(value)) {
+      return 'Enter a valid username Ex: jennifer95';
+    }
     return null; // Return null if the input is valid.
   }
 
@@ -94,9 +106,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     }
     // You can use regular expressions or other methods to validate phone numbers.
     // Here, we're checking if the input consists of 10 digits.
-    // if (!RegExp(r'^[0-9]{10}$').hasMatch(value)) {
-    //   return 'Invalid phone number. Please enter 10 digits.';
-    // }
+    if (!RegExp(r'^[0-9 ]+$').hasMatch(value)) {
+      return 'Invalid phone number.';
+    }
     return null; // Return null if the input is valid.
   }
 
@@ -150,7 +162,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       _formKey.currentState!.save();
       // Here, you can use the _username variable for further processing.
       print('Username: ${_fullNameCtrl.text}');
-      _netxPage();
+      _nextPage();
     }
   }
 
@@ -160,7 +172,20 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       _formKey.currentState!.save();
       // Here, you can use the _phoneNumber variable for further processing.
       print('Phone Number: $phoneNumberUser');
-      _netxPage();
+      _nextPage();
+    } else {
+      ElegantNotification.error(
+        notificationPosition: NotificationPosition.bottomCenter,
+        animation: AnimationType.fromBottom,
+        background: Colors.red.shade100,
+        showProgressIndicator: true,
+        description: const Text(
+          "The phone number must be at least 11 digits.",
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
+      ).show(context);
     }
   }
 
@@ -170,7 +195,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       _formKey.currentState!.save();
       // Here, you can use the _email variable for further processing.
       print('Email: ${_emailUserCtrl.text}');
-      _netxPage();
+      _nextPage();
     }
   }
 
@@ -180,7 +205,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       _formKey.currentState!.save();
       // Here, you can use the _email variable for further processing.
       print('Password: ${_passwordCtrl.text}');
-      _netxPage();
+      _nextPage();
     }
   }
 
@@ -197,25 +222,21 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     };
     try {
       await context.read<AccountCubit>().registerUser(user);
-      _netxPage();
+      _nextPage();
     } catch (e) {
       if (!mounted) return;
-      ElegantNotification.error(
-        notificationPosition: NotificationPosition.bottomCenter,
-        animation: AnimationType.fromBottom,
-        background: Colors.red.shade100,
-        showProgressIndicator: true,
-        title: const Text(
-          "Error",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-        description: const Text(
-          "Error when trying to register!",
-          style: TextStyle(
-            color: Colors.black,
-          ),
-        ),
-      ).show(context);
+      if (e is NtsErrorResponse) {
+        _notifications.ntsErrorNotification(
+          context,
+          title: "Error",
+          message: e.message ?? '',
+        );
+      }
+
+      if (e is DioException) {
+        _notifications.errorDioNotification(context);
+      }
+      // e as NtsErrorResponse;
     }
   }
 
@@ -231,41 +252,19 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         await context.read<AccountCubit>().verificationCode(verification);
         if (!mounted) return;
         Navigator.of(context).pushNamed(HomeScreen.routeName);
-        ElegantNotification.error(
-          notificationPosition: NotificationPosition.bottomCenter,
-          animation: AnimationType.fromBottom,
-          background: Colors.green.shade100,
-          showProgressIndicator: true,
-          title: const Text(
-            "Register Successfull",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-          description: const Text(
-            "You register is completed!",
-            style: TextStyle(
-              color: Colors.black,
-            ),
-          ),
-        ).show(context);
       } catch (e) {
         if (!mounted) return;
         Navigator.of(context).pushNamed(SignInScreen.routeName);
-        ElegantNotification.error(
-          notificationPosition: NotificationPosition.bottomCenter,
-          animation: AnimationType.fromBottom,
-          background: Colors.red.shade100,
-          showProgressIndicator: true,
-          title: const Text(
-            "Register Failed",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-          description: const Text(
-            "Something happend!",
-            style: TextStyle(
-              color: Colors.black,
-            ),
-          ),
-        ).show(context);
+        if (e is NtsErrorResponse) {
+          _notifications.ntsErrorNotification(
+            context,
+            title: "Verification Error",
+            message: e.message ?? '',
+          );
+        }
+        if (e is DioException) {
+          _notifications.errorDioNotification(context);
+        }
       }
     }
   }
@@ -286,10 +285,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         _submitPassword();
         break;
       case 4:
-        _netxPage();
+        _nextPage();
         break;
       case 5:
-        _netxPage();
+        _nextPage();
         break;
       case 6:
         await _submitRegisterUser(context);
@@ -303,7 +302,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     }
   }
 
-  void _netxPage() {
+  void _nextPage() {
     pageviewController.nextPage(
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
@@ -507,6 +506,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         width: size.width * 0.90,
                         // height: size.height * 0.20,
                         child: InternationalPhoneNumberInput(
+                          countrySelectorScrollControlled: false,
+                          autoValidateMode: AutovalidateMode.disabled,
+                          maxLength: 11,
                           onInputChanged: (PhoneNumber number) {
                             codeNumber = number.dialCode ?? '-1';
                             phoneNumberUser = number.parseNumber();
@@ -1161,8 +1163,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     title: 'DON\'T ALLOW',
                     isTrailingIcon: false,
                     onTap: () {
-                      _formRegisterSubmit(context,
-                          page: pageviewController.page ?? 0.0);
+                      _formRegisterSubmit(
+                        context,
+                        page: pageviewController.page ?? 0.0,
+                      );
                     }),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 20.0),
@@ -1241,8 +1245,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             onPageChanged: (index) {
               setState(() {
                 _currentPage = index;
-                // isLastPage = index == 3;
-                // isNotifyPage = index == 1;
               });
             },
             children: [
@@ -1268,11 +1270,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 pageviewController: pageviewController,
                 onNextPage: (page) => _formRegisterSubmit(context, page: page),
               ),
-            UserRegisterStatus.failure => Container(
-                height: 50,
-                width: 100,
-                color: Colors.red.shade200,
-                child: const Text('Error'),
+            UserRegisterStatus.failure => ButtonCircularProgress(
+                pageviewController: pageviewController,
+                onNextPage: (page) => _formRegisterSubmit(context, page: page),
               ),
           },
         ),
@@ -1322,7 +1322,7 @@ class _ButtonCircularProgressState extends State<ButtonCircularProgress> {
       percent: percent,
       backgroundColor: percent < 1
           ? AppTheme.disabledColor
-          : Color.fromARGB(255, 204, 66, 24),
+          : const Color.fromARGB(255, 204, 66, 24),
       // Relleno de color en los bordes basado en la página actual
     );
   }

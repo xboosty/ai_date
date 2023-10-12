@@ -1,13 +1,20 @@
-import 'package:animate_do/animate_do.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:toggle_switch/toggle_switch.dart';
+import 'package:appinio_swiper/appinio_swiper.dart'
+    show AppinioSwiper, AppinioSwiperDirection;
 
-import '../../../../config/config.dart' show AccountCubit, Strings;
+import '../../../../config/config.dart' show AppTheme, Strings;
 import '../../screens.dart' show ChangePasswordScreen, SignInScreen;
 import '../../../widgets/widgets.dart'
-    show ConfigurationInputField, CustomDropdownButton, DatePickerFormField;
+    show
+        CircularOutlineGradientButton,
+        ConfigurationInputField,
+        CustomDropdownButton,
+        DatePickerFormField,
+        FilledColorizedButton,
+        ProfilePicturePhoto;
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({
@@ -43,9 +50,9 @@ class ProfilePage extends StatelessWidget {
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: const [
-                _ProfileEditPage(),
-                Icon(Icons.directions_transit),
+              children: [
+                const _ProfileEditPage(),
+                const _UserCard(),
               ],
             ),
           ),
@@ -186,13 +193,13 @@ class _AppBarAIDate extends StatelessWidget {
                               ),
                               style: FilledButton.styleFrom(
                                 backgroundColor: Colors.white,
-                                foregroundColor: Color(0xFF6C2EBC),
-                                padding: EdgeInsets.symmetric(
+                                foregroundColor: const Color(0xFF6C2EBC),
+                                padding: const EdgeInsets.symmetric(
                                   vertical: 10,
                                   horizontal: 15,
                                 ),
                               ),
-                              label: Text(
+                              label: const Text(
                                 'LOG OUT',
                                 style: TextStyle(
                                   color: Color(0xFF6C2EBC),
@@ -208,19 +215,19 @@ class _AppBarAIDate extends StatelessWidget {
                             width: size.width * 0.90,
                             child: FilledButton.icon(
                               onPressed: () {},
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.delete_forever_outlined,
                                 color: Color(0xFF6C2EBC),
                               ),
                               style: FilledButton.styleFrom(
                                 backgroundColor: Colors.white,
-                                foregroundColor: Color(0xFF6C2EBC),
-                                padding: EdgeInsets.symmetric(
+                                foregroundColor: const Color(0xFF6C2EBC),
+                                padding: const EdgeInsets.symmetric(
                                   vertical: 10,
                                   horizontal: 15,
                                 ),
                               ),
-                              label: Text(
+                              label: const Text(
                                 'DELETE ACCOUNT',
                                 style: TextStyle(
                                   color: Color(0xFF6C2EBC),
@@ -355,26 +362,52 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
             ),
           ),
         ),
-        Row(
-          children: [
-            Container(
-              width: size.width * 0.50,
-              height: size.height * 0.30,
-              decoration: BoxDecoration(
-                color: const Color(0xFFEFF0FB),
-                borderRadius: BorderRadius.circular(15),
+        Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ProfilePicturePhoto(
+                    width: size.width * 0.50,
+                    height: size.height * 0.31,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ProfilePicturePhoto(
+                          width: size.width * 0.25, height: size.height * 0.15),
+                      const SizedBox(height: 5.0),
+                      ProfilePicturePhoto(
+                          width: size.width * 0.25, height: size.height * 0.15),
+                    ],
+                  )
+                ],
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(5),
-                child: DottedBorder(
-                  color: Color(0xFF9CA4BF),
-                  strokeWidth: 3,
-                  child: Column(),
-                ),
+              SizedBox(height: size.height * 0.02),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ProfilePicturePhoto(
+                      width: size.width * 0.25, height: size.height * 0.15),
+                  ProfilePicturePhoto(
+                      width: size.width * 0.25, height: size.height * 0.15),
+                  ProfilePicturePhoto(
+                      width: size.width * 0.25, height: size.height * 0.15),
+                ],
               ),
-            ),
-          ],
-        )
+              SizedBox(height: size.height * 0.02),
+              FilledColorizedButton(
+                width: size.width,
+                height: 50,
+                title: 'SAVE CHANGES',
+                isTrailingIcon: false,
+              ),
+              SizedBox(height: size.height * 0.02),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -904,7 +937,7 @@ class _LocationSetting extends StatelessWidget {
               ),
               const Divider(),
               ListTile(
-                title: Text(
+                title: const Text(
                   'My location',
                   style: TextStyle(
                     color: Color(0xFF686E8C),
@@ -913,7 +946,7 @@ class _LocationSetting extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                trailing: SizedBox(
+                trailing: const SizedBox(
                   width: 121,
                   child: Row(
                     children: [
@@ -952,7 +985,7 @@ class _LocationSetting extends StatelessWidget {
               ),
               const Divider(),
               ListTile(
-                title: Text(
+                title: const Text(
                   'Bloqued list',
                   style: TextStyle(
                     color: Color(0xFF686E8C),
@@ -961,7 +994,7 @@ class _LocationSetting extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                trailing: Icon(
+                trailing: const Icon(
                   Icons.arrow_forward_ios_rounded,
                   size: 15.0,
                 ),
@@ -1153,7 +1186,7 @@ class _AccountSettings extends StatelessWidget {
               ),
               const Divider(),
               ListTile(
-                title: Text(
+                title: const Text(
                   'Profile Control',
                   style: TextStyle(
                     color: Color(0xFF686E8C),
@@ -1162,7 +1195,7 @@ class _AccountSettings extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                trailing: Icon(
+                trailing: const Icon(
                   Icons.arrow_forward_ios_rounded,
                   size: 15.0,
                 ),
@@ -1170,7 +1203,7 @@ class _AccountSettings extends StatelessWidget {
               ),
               const Divider(),
               ListTile(
-                title: Text(
+                title: const Text(
                   'Bloqued list',
                   style: TextStyle(
                     color: Color(0xFF686E8C),
@@ -1179,7 +1212,7 @@ class _AccountSettings extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                trailing: Icon(
+                trailing: const Icon(
                   Icons.arrow_forward_ios_rounded,
                   size: 15.0,
                 ),
@@ -1189,6 +1222,144 @@ class _AccountSettings extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _UserCard extends StatelessWidget {
+  const _UserCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+    return Center(
+      child: SizedBox(
+        height: size.height * 0.75,
+        child: AppinioSwiper(
+          cardsCount: 10,
+          cardsSpacing: 0.0,
+          onSwiping: (AppinioSwiperDirection direction) {
+            print(direction.toString());
+          },
+          cardsBuilder: (BuildContext context, int index) {
+            return Container(
+              width: size.width * 0.80,
+              height: size.height,
+              alignment: Alignment.center,
+              // color: Colors.blue,
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(1.5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      gradient: AppTheme.linearGradient,
+                    ),
+                    child: Container(
+                      width: size.width * 0.78,
+                      height: size.height * 0.50,
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: const Color(0xFFEFF0FB),
+                        image: const DecorationImage(
+                          image:
+                              AssetImage('assets/imgs/photo_camera_front.png'),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {},
+                                style: IconButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                ),
+                                icon: const Icon(
+                                  Icons.note_add_rounded,
+                                  color: Color(0xFFD9D9D9),
+                                ),
+                              )
+                            ],
+                          ),
+                          const Spacer(),
+                          const Text(
+                            'Jennifer (24)',
+                            style: TextStyle(
+                              color: Color(0xFF9CA4BF),
+                              fontSize: 22,
+                              fontFamily: Strings.fontFamily,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(height: size.height * 0.02),
+                          const Text(
+                            'Lives in New York',
+                            style: TextStyle(
+                              color: Color(0xFF9CA4BF),
+                              fontSize: 12,
+                              fontFamily: Strings.fontFamily,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(height: size.height * 0.02),
+                          FilledButton(
+                            onPressed: () {},
+                            style: FilledButton.styleFrom(
+                              backgroundColor: Colors.white,
+                            ),
+                            child: const Text(
+                              '95% match',
+                              style: TextStyle(
+                                color: Color(0xFF9CA4BF),
+                                fontSize: 12,
+                                fontFamily: Strings.fontFamily,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: -25.0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const CircularOutlineGradientButton(
+                          width: 56.0,
+                          height: 56.0,
+                          child: Icon(
+                            Icons.close,
+                            color: Color.fromARGB(255, 209, 70, 15),
+                            size: 32,
+                          ),
+                        ),
+                        SizedBox(width: size.width * 0.30),
+                        CircularGradientButton(
+                          heroTag: 'Like',
+                          child: const Icon(Icons.favorite, size: 32),
+                          callback: () {},
+                          gradient: AppTheme.linearGradientReverse,
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

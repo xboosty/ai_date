@@ -8,11 +8,13 @@ import 'config/config.dart'
         AppTheme,
         getIt,
         serviceLocatorBlocsInit,
+        serviceLocatorNotificationInit,
         serviceLocatorRepositoryInit;
 
 void main() async {
   serviceLocatorRepositoryInit();
   serviceLocatorBlocsInit();
+  serviceLocatorNotificationInit();
 
   runApp(const BlocsProviders());
 }
