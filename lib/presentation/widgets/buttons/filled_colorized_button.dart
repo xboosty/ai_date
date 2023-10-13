@@ -10,12 +10,14 @@ class FilledColorizedButton extends StatelessWidget {
     required this.title,
     required this.isTrailingIcon,
     this.onTap,
+    required this.icon,
   });
 
   final double width;
   final double height;
   final String title;
   final bool isTrailingIcon;
+  final Icon icon;
   final GestureTapCallback? onTap;
 
   @override
@@ -48,12 +50,7 @@ class FilledColorizedButton extends StatelessWidget {
               ),
             ),
             isTrailingIcon ? const SizedBox(width: 5.0) : Container(),
-            isTrailingIcon
-                ? const Icon(
-                    Icons.arrow_right_alt,
-                    color: Colors.white,
-                  )
-                : Container()
+            isTrailingIcon ? icon : Container()
           ],
         ),
       ),

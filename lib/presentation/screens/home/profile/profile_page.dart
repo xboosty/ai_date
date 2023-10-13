@@ -5,7 +5,8 @@ import 'package:toggle_switch/toggle_switch.dart';
 import 'package:appinio_swiper/appinio_swiper.dart';
 
 import '../../../../config/config.dart' show AppTheme, Strings;
-import '../../screens.dart' show ChangePasswordScreen, SignInScreen;
+import '../../screens.dart'
+    show BloquedListScreen, ChangePasswordScreen, SignInScreen;
 import '../../../widgets/widgets.dart'
     show
         ButtonsInfoProfile,
@@ -407,6 +408,10 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                 height: 50,
                 title: 'SAVE CHANGES',
                 isTrailingIcon: false,
+                icon: const Icon(
+                  Icons.arrow_right_alt,
+                  color: Colors.white,
+                ),
               ),
               SizedBox(height: size.height * 0.02),
             ],
@@ -1220,7 +1225,14 @@ class _AccountSettings extends StatelessWidget {
                   Icons.arrow_forward_ios_rounded,
                   size: 15.0,
                 ),
-                onTap: () {},
+                onTap: () => Navigator.of(context).push(PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      const BloquedListScreen(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    return SlideInRight(child: child);
+                  },
+                )),
               )
             ],
           ),

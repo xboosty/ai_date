@@ -99,6 +99,10 @@ class IntroductionScreen extends StatelessWidget {
                           ),
                         );
                       },
+                      icon: const Icon(
+                        Icons.arrow_right_alt,
+                        color: Colors.white,
+                      ),
                     )
                   ],
                 ),
