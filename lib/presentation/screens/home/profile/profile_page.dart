@@ -11,6 +11,7 @@ import '../../../widgets/widgets.dart'
         ButtonsInfoProfile,
         CardGradientPicture,
         CardInfoProfile,
+        CircleAvatarProfile,
         CircularOutlineGradientButton,
         ConfigurationInputField,
         CustomDropdownButton,
@@ -1281,7 +1282,7 @@ class _UserCardState extends State<_UserCard> {
                           controller: scrollController,
                           child: Column(
                             children: [
-                              _CardSeeProfileDetails(size: size),
+                              _CardSeeProfileDetails(),
                               SizedBox(height: size.height * 0.02),
                               _SmallDescriptionProfile(size: size),
                               const ButtonsInfoProfile(
@@ -1961,16 +1962,66 @@ class _SmallDescriptionProfile extends StatelessWidget {
   }
 }
 
-class _CardSeeProfileDetails extends StatelessWidget {
-  const _CardSeeProfileDetails({
-    super.key,
-    required this.size,
-  });
+class _CardSeeProfileDetails extends StatefulWidget {
+  const _CardSeeProfileDetails();
 
-  final Size size;
+  @override
+  State<_CardSeeProfileDetails> createState() => _CardSeeProfileDetailsState();
+}
+
+class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
+    with TickerProviderStateMixin {
+  late TabController _tabControllerReport;
+  final List<Tab> tabsReport = <Tab>[
+    const Tab(
+      icon: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.person_search_outlined),
+          SizedBox(width: 8),
+          Text(
+            'Report User',
+            style: TextStyle(
+              color: Color(0xFF9CA4BF),
+              fontSize: 16,
+              fontFamily: Strings.fontFamily,
+              fontWeight: FontWeight.w600,
+            ),
+          )
+        ],
+      ),
+    ),
+    const Tab(
+        icon: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.person_off_outlined),
+        SizedBox(width: 8),
+        Text(
+          'User Block',
+          style: TextStyle(
+            color: Color(0xFF9CA4BF),
+            fontSize: 16,
+            fontFamily: Strings.fontFamily,
+            fontWeight: FontWeight.w600,
+          ),
+        )
+      ],
+    )),
+  ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _tabControllerReport =
+        TabController(vsync: this, length: tabsReport.length, initialIndex: 0);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(28),
@@ -1991,34 +2042,109 @@ class _CardSeeProfileDetails extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                        size: 32,
+                      )),
+                  const Text(
+                    'Melissandre (31)',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontFamily: Strings.fontFamily,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        // showDragHandle: true,
+                        // enableDrag: true,
+                        useSafeArea: true,
+                        isScrollControlled: false,
+                        builder: (BuildContext context) {
+                          return DraggableScrollableSheet(
+                            initialChildSize: 1.0,
+                            // minChildSize: 0.8,
+                            maxChildSize: 1.0,
+                            builder: (BuildContext context,
+                                ScrollController scrollController) {
+                              return SizedBox(
+                                height: size.height * 0.80,
+                                width: size.width * 0.95,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 4.0),
+                                    SizedBox(
+                                      height: size.height * 0.05,
+                                      width: size.width,
+                                      child: ListTile(
+                                        leading: const CircleAvatarProfile(
+                                          image: 'assets/imgs/girl1.png',
+                                        ),
+                                        title: const Text(
+                                          'Melissandre (31)',
+                                          style: TextStyle(
+                                            color: Color(0xFF261638),
+                                            fontSize: 20,
+                                            fontFamily: Strings.fontFamily,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        trailing: IconButton(
+                                          onPressed: () {},
+                                          icon: const Icon(
+                                            Icons.cancel_outlined,
+                                            color: AppTheme.disabledColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8.0),
+                                    TabBar(
+                                      controller: _tabControllerReport,
+                                      tabs: tabsReport,
+                                    ),
+                                    Expanded(
+                                      child: TabBarView(
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        controller: _tabControllerReport,
+                                        children: [
+                                          _ReportUserPage(size: size),
+                                          Center(
+                                            child: Text('Text1'),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            controller: DraggableScrollableController(),
+                          );
+                        },
+                      );
+                    },
                     icon: const Icon(
-                      Icons.arrow_back,
+                      Icons.no_accounts_outlined,
                       color: Colors.white,
                       size: 32,
-                    )),
-                const Text(
-                  'Melissandre (31)',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontFamily: Strings.fontFamily,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.no_accounts_outlined,
-                    color: Colors.white,
-                    size: 32,
-                  ),
-                )
-              ],
+                    ),
+                  )
+                ],
+              ),
             ),
             Container(
               height: 25,
@@ -2047,6 +2173,176 @@ class _CardSeeProfileDetails extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _ReportUserPage extends StatelessWidget {
+  const _ReportUserPage({
+    super.key,
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: [
+        _TitleReportUser(size: size),
+        _CardReportUser(size: size),
+        Container(
+          margin:
+              EdgeInsets.symmetric(horizontal: size.width * 0.20, vertical: 15),
+          child: FilledButton(
+            onPressed: () {},
+            style: FilledButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+            ),
+            child: const Text(
+              'SEND REPORT',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontFamily: Strings.fontFamily,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _TitleReportUser extends StatelessWidget {
+  const _TitleReportUser({
+    super.key,
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size.width * 0.95,
+      height: size.height * 0.10,
+      child: const ListTile(
+        title: Text(
+          'PLEASE, SELECT A REASON',
+          style: TextStyle(
+            color: Color(0xFF686E8C),
+            fontSize: 14,
+            fontFamily: Strings.fontFamily,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        subtitle: Text(
+          'Your report is private',
+          style: TextStyle(
+            color: Color(0xFF9CA4BF),
+            fontSize: 12,
+            fontFamily: Strings.fontFamily,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _CardReportUser extends StatelessWidget {
+  const _CardReportUser({
+    super.key,
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 15),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 5.0,
+      ),
+      decoration: BoxDecoration(
+        color: Color(0xFFEFF0FB),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        children: [
+          _RadioReportReason(
+            value: 1,
+            groupValue: 1,
+            title: 'I\'m not interested in this person',
+            onChanged: (value) {},
+          ),
+          const Divider(),
+          _RadioReportReason(
+            value: 2,
+            groupValue: 1,
+            title: 'Offensive or abusive',
+            onChanged: (value) {},
+          ),
+          const Divider(),
+          _RadioReportReason(
+            value: 3,
+            groupValue: 1,
+            title: 'Underage',
+            onChanged: (value) {},
+          ),
+          const Divider(),
+          _RadioReportReason(
+            value: 4,
+            groupValue: 1,
+            title: 'Fake profile',
+            onChanged: (value) {},
+          ),
+          const Divider(),
+          _RadioReportReason(
+            value: 5,
+            groupValue: 1,
+            title: 'Inappropiate photos or behavior',
+            onChanged: (value) {},
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RadioReportReason extends StatelessWidget {
+  const _RadioReportReason({
+    required this.value,
+    required this.groupValue,
+    required this.title,
+    required this.onChanged,
+  });
+
+  final Object value;
+  final Object groupValue;
+  final String title;
+  final ValueChanged<Object?>? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return RadioListTile(
+      controlAffinity: ListTileControlAffinity.trailing,
+      value: true,
+      groupValue: 1,
+      title: Text(
+        title,
+        style: const TextStyle(
+          color: Color(0xFF686E8C),
+          fontSize: 14,
+          fontFamily: Strings.fontFamily,
+          // fontWeight: FontWeight.w600,
+        ),
+      ),
+      onChanged: onChanged,
     );
   }
 }
