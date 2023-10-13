@@ -2084,11 +2084,15 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    const SizedBox(height: 4.0),
+                                    const SizedBox(height: 20.0),
                                     SizedBox(
                                       height: size.height * 0.05,
                                       width: size.width,
                                       child: ListTile(
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                          horizontal: 15,
+                                        ),
                                         leading: const CircleAvatarProfile(
                                           image: 'assets/imgs/girl1.png',
                                         ),
@@ -2102,7 +2106,8 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
                                           ),
                                         ),
                                         trailing: IconButton(
-                                          onPressed: () {},
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(),
                                           icon: const Icon(
                                             Icons.cancel_outlined,
                                             color: AppTheme.disabledColor,
@@ -2110,7 +2115,7 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(height: 8.0),
+                                    const SizedBox(height: 25.0),
                                     TabBar(
                                       controller: _tabControllerReport,
                                       tabs: tabsReport,
@@ -2122,8 +2127,91 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
                                         controller: _tabControllerReport,
                                         children: [
                                           _ReportUserPage(size: size),
-                                          Center(
-                                            child: Text('Text1'),
+                                          Container(
+                                            margin: EdgeInsets.symmetric(
+                                                horizontal: 20, vertical: 20),
+                                            child: ListView(
+                                              children: [
+                                                Text(
+                                                  'ARE YOU SURE YOU WANT TO BLOCK THIS MELISSANDRE?',
+                                                  style: TextStyle(
+                                                    color: Color(0xFF686E8C),
+                                                    fontSize: 14,
+                                                    fontFamily:
+                                                        Strings.fontFamily,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  'Your Blocked list will be on your profile settings',
+                                                  style: TextStyle(
+                                                    color: Color(0xFF9CA4BF),
+                                                    fontSize: 12,
+                                                    fontFamily:
+                                                        Strings.fontFamily,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                    height: size.height * 0.15),
+                                                ButtonBar(
+                                                  alignment: MainAxisAlignment
+                                                      .spaceAround,
+                                                  children: [
+                                                    SizedBox(
+                                                      width: size.width * 0.40,
+                                                      child: FilledButton(
+                                                        onPressed: () {},
+                                                        style: FilledButton
+                                                            .styleFrom(
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                            horizontal: 30,
+                                                            vertical: 10,
+                                                          ),
+                                                        ),
+                                                        child: Text(
+                                                          'NO',
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 16,
+                                                            fontFamily: Strings
+                                                                .fontFamily,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: size.width * 0.40,
+                                                      child: FilledButton(
+                                                        onPressed: () {},
+                                                        style: FilledButton
+                                                            .styleFrom(
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                            horizontal: 30,
+                                                            vertical: 10,
+                                                          ),
+                                                        ),
+                                                        child: Text(
+                                                          'YES',
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 16,
+                                                            fontFamily: Strings
+                                                                .fontFamily,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                )
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),
