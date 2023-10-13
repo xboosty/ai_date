@@ -31,12 +31,13 @@ class SignInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return SafeArea(
-      child: Scaffold(
-        body: ScaffoldAnimated(
-          size: size,
-          child: const SignInBox(),
+    return Scaffold(
+      body: ScaffoldAnimated(
+        size: size,
+        decoration: const BoxDecoration(
+          gradient: AppTheme.linearGradientTopRightBottomLeft,
         ),
+        child: const SignInBox(),
       ),
     );
   }

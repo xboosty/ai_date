@@ -23,16 +23,21 @@ class BloquedListScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: ListView.builder(
-        itemCount: 3,
-        itemBuilder: (context, index) {
-          return const Column(
-            children: [
-              _UnbloquedProfile(),
-              Divider(),
-            ],
-          );
-        },
+      body: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: SafeArea(
+          child: ListView.builder(
+            itemCount: 3,
+            itemBuilder: (context, index) {
+              return const Column(
+                children: [
+                  _UnbloquedProfile(),
+                  Divider(),
+                ],
+              );
+            },
+          ),
+        ),
       ),
     );
   }

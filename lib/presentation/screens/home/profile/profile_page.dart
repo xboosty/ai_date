@@ -122,7 +122,10 @@ class _AppBarAIDate extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Image.asset('assets/imgs/aidate_home.png'),
+        Image.asset(
+          'assets/imgs/aidate_home.png',
+          height: 20,
+        ),
         IconButton(
           onPressed: () {
             showModalBottomSheet(
@@ -1263,6 +1266,14 @@ class _UserCardState extends State<_UserCard> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   SystemUiOverlayStyle.light.copyWith(
+    //     systemNavigationBarIconBrightness: Brightness.light,
+    //     systemNavigationBarColor: Theme.of(context).colorScheme.primaryVariant,
+    //     statusBarIconBrightness: Brightness.light,
+    //     statusBarColor: Colors.red, // Note RED here
+    //   ),
+    // );
 
     return Center(
       child: SizedBox(
@@ -1281,8 +1292,11 @@ class _UserCardState extends State<_UserCard> {
                   context: context,
                   // showDragHandle: true,
                   // enableDrag: true,
-                  // useSafeArea: true,
+                  useSafeArea: true,
                   isScrollControlled: true,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero,
+                  ),
                   builder: (BuildContext context) {
                     return DraggableScrollableSheet(
                       initialChildSize: 1.0,
@@ -2084,155 +2098,174 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
                         useSafeArea: true,
                         isScrollControlled: false,
                         builder: (BuildContext context) {
-                          return DraggableScrollableSheet(
-                            initialChildSize: 1.0,
-                            // minChildSize: 0.8,
-                            maxChildSize: 1.0,
-                            builder: (BuildContext context,
-                                ScrollController scrollController) {
-                              return SizedBox(
-                                height: size.height * 0.80,
-                                width: size.width * 0.95,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 20.0),
-                                    SizedBox(
-                                      height: size.height * 0.05,
-                                      width: size.width,
-                                      child: ListTile(
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                          horizontal: 15,
-                                        ),
-                                        leading: const CircleAvatarProfile(
-                                          image: 'assets/imgs/girl1.png',
-                                        ),
-                                        title: const Text(
-                                          'Melissandre (31)',
-                                          style: TextStyle(
-                                            color: Color(0xFF261638),
-                                            fontSize: 20,
-                                            fontFamily: Strings.fontFamily,
-                                            fontWeight: FontWeight.w600,
+                          return Container(
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                            child: SafeArea(
+                              child: DraggableScrollableSheet(
+                                initialChildSize: 1.0,
+                                // minChildSize: 0.8,
+                                maxChildSize: 1.0,
+                                builder: (BuildContext context,
+                                    ScrollController scrollController) {
+                                  return SizedBox(
+                                    height: size.height * 0.80,
+                                    width: size.width * 0.95,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(height: 20.0),
+                                        SizedBox(
+                                          height: size.height * 0.05,
+                                          width: size.width,
+                                          child: ListTile(
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                              horizontal: 15,
+                                            ),
+                                            leading: const CircleAvatarProfile(
+                                              image: 'assets/imgs/girl1.png',
+                                            ),
+                                            title: const Text(
+                                              'Melissandre (31)',
+                                              style: TextStyle(
+                                                color: Color(0xFF261638),
+                                                fontSize: 20,
+                                                fontFamily: Strings.fontFamily,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            trailing: IconButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              icon: const Icon(
+                                                Icons.cancel_outlined,
+                                                color: AppTheme.disabledColor,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                        trailing: IconButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(),
-                                          icon: const Icon(
-                                            Icons.cancel_outlined,
-                                            color: AppTheme.disabledColor,
-                                          ),
+                                        const SizedBox(height: 25.0),
+                                        TabBar(
+                                          controller: _tabControllerReport,
+                                          tabs: tabsReport,
                                         ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 25.0),
-                                    TabBar(
-                                      controller: _tabControllerReport,
-                                      tabs: tabsReport,
-                                    ),
-                                    Expanded(
-                                      child: TabBarView(
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        controller: _tabControllerReport,
-                                        children: [
-                                          _ReportUserPage(size: size),
-                                          Container(
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal: 20, vertical: 20),
-                                            child: ListView(
-                                              children: [
-                                                Text(
-                                                  'ARE YOU SURE YOU WANT TO BLOCK THIS MELISSANDRE?',
-                                                  style: TextStyle(
-                                                    color: Color(0xFF686E8C),
-                                                    fontSize: 14,
-                                                    fontFamily:
-                                                        Strings.fontFamily,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  'Your Blocked list will be on your profile settings',
-                                                  style: TextStyle(
-                                                    color: Color(0xFF9CA4BF),
-                                                    fontSize: 12,
-                                                    fontFamily:
-                                                        Strings.fontFamily,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                    height: size.height * 0.15),
-                                                ButtonBar(
-                                                  alignment: MainAxisAlignment
-                                                      .spaceAround,
+                                        Expanded(
+                                          child: TabBarView(
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            controller: _tabControllerReport,
+                                            children: [
+                                              _ReportUserPage(size: size),
+                                              Container(
+                                                margin: EdgeInsets.symmetric(
+                                                    horizontal: 20,
+                                                    vertical: 20),
+                                                child: ListView(
                                                   children: [
-                                                    SizedBox(
-                                                      width: size.width * 0.40,
-                                                      child: FilledButton(
-                                                        onPressed: () {},
-                                                        style: FilledButton
-                                                            .styleFrom(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                            horizontal: 30,
-                                                            vertical: 10,
-                                                          ),
-                                                        ),
-                                                        child: Text(
-                                                          'NO',
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 16,
-                                                            fontFamily: Strings
-                                                                .fontFamily,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                          ),
-                                                        ),
+                                                    Text(
+                                                      'ARE YOU SURE YOU WANT TO BLOCK THIS MELISSANDRE?',
+                                                      style: TextStyle(
+                                                        color:
+                                                            Color(0xFF686E8C),
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            Strings.fontFamily,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      'Your Blocked list will be on your profile settings',
+                                                      style: TextStyle(
+                                                        color:
+                                                            Color(0xFF9CA4BF),
+                                                        fontSize: 12,
+                                                        fontFamily:
+                                                            Strings.fontFamily,
+                                                        fontWeight:
+                                                            FontWeight.w500,
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                      width: size.width * 0.40,
-                                                      child: FilledButton(
-                                                        onPressed: () {},
-                                                        style: FilledButton
-                                                            .styleFrom(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                            horizontal: 30,
-                                                            vertical: 10,
+                                                        height:
+                                                            size.height * 0.15),
+                                                    ButtonBar(
+                                                      alignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        SizedBox(
+                                                          width:
+                                                              size.width * 0.40,
+                                                          child: FilledButton(
+                                                            onPressed: () {},
+                                                            style: FilledButton
+                                                                .styleFrom(
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                horizontal: 30,
+                                                                vertical: 10,
+                                                              ),
+                                                            ),
+                                                            child: Text(
+                                                              'NO',
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 16,
+                                                                fontFamily: Strings
+                                                                    .fontFamily,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                              ),
+                                                            ),
                                                           ),
                                                         ),
-                                                        child: Text(
-                                                          'YES',
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 16,
-                                                            fontFamily: Strings
-                                                                .fontFamily,
-                                                            fontWeight:
-                                                                FontWeight.w600,
+                                                        SizedBox(
+                                                          width:
+                                                              size.width * 0.40,
+                                                          child: FilledButton(
+                                                            onPressed: () {},
+                                                            style: FilledButton
+                                                                .styleFrom(
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                horizontal: 30,
+                                                                vertical: 10,
+                                                              ),
+                                                            ),
+                                                            child: Text(
+                                                              'YES',
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 16,
+                                                                fontFamily: Strings
+                                                                    .fontFamily,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                              ),
+                                                            ),
                                                           ),
-                                                        ),
-                                                      ),
+                                                        )
+                                                      ],
                                                     )
                                                   ],
-                                                )
-                                              ],
-                                            ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              );
-                            },
-                            controller: DraggableScrollableController(),
+                                  );
+                                },
+                                controller: DraggableScrollableController(),
+                              ),
+                            ),
                           );
                         },
                       );

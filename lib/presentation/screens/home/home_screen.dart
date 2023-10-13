@@ -107,44 +107,47 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: IndexedStack(
-          index: _selectedPage,
-          children: [
-            ProfilePage(tabController: _tabController, tabs: tabs),
-            const Center(
-              child: Text('Interview'),
-            ),
-            const Center(
-              child: Text('Premium'),
-            ),
-            const Center(
-              child: Text('Discover'),
-            ),
-            const Center(
-              child: Text('Chat'),
-            ),
-          ],
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedPage,
-          onTap: (index) {
-            setState(() {
-              _selectedPage = index;
-            });
-          },
-          elevation: 18.0,
-          selectedItemColor: AppTheme.secondaryColor,
-          selectedLabelStyle: const TextStyle(
-            color: Color(0xFF261638),
-            fontSize: 11,
-            fontFamily: Strings.fontFamily,
-            fontWeight: FontWeight.w600,
+    return Scaffold(
+      body: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: SafeArea(
+          child: IndexedStack(
+            index: _selectedPage,
+            children: [
+              ProfilePage(tabController: _tabController, tabs: tabs),
+              const Center(
+                child: Text('Interview'),
+              ),
+              const Center(
+                child: Text('Premium'),
+              ),
+              const Center(
+                child: Text('Discover'),
+              ),
+              const Center(
+                child: Text('Chat'),
+              ),
+            ],
           ),
-          unselectedItemColor: AppTheme.disabledColor,
-          items: _itemsButtonBar,
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedPage,
+        onTap: (index) {
+          setState(() {
+            _selectedPage = index;
+          });
+        },
+        elevation: 18.0,
+        selectedItemColor: AppTheme.secondaryColor,
+        selectedLabelStyle: const TextStyle(
+          color: Color(0xFF261638),
+          fontSize: 11,
+          fontFamily: Strings.fontFamily,
+          fontWeight: FontWeight.w600,
+        ),
+        unselectedItemColor: AppTheme.disabledColor,
+        items: _itemsButtonBar,
       ),
     );
   }
