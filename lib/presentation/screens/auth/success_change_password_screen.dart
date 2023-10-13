@@ -45,6 +45,10 @@ class SuccessChangePasswordScreen extends StatelessWidget {
               isTrailingIcon: true,
               onTap: () =>
                   Navigator.of(context).pushNamed(SignInScreen.routeName),
+              icon: const Icon(
+                Icons.arrow_right_alt,
+                color: Colors.white,
+              ),
             )
           ],
         ),

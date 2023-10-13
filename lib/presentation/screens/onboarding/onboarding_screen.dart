@@ -1155,6 +1155,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   title: 'ALLOW LOCATION ACCESS',
                   isTrailingIcon: false,
                   onTap: () async => await _accessLocation(),
+                  icon: const Icon(
+                    Icons.arrow_right_alt,
+                    color: Colors.white,
+                  ),
                 ),
                 SizedBox(height: size.height * 0.02),
                 FilledColorizedOutlineButton(
