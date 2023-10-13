@@ -1239,47 +1239,50 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return SafeArea(
-      child: Scaffold(
-        body: Form(
-          key: _formKey,
-          child: PageView(
-            physics: const NeverScrollableScrollPhysics(),
-            controller: pageviewController,
-            onPageChanged: (index) {
-              setState(() {
-                _currentPage = index;
-              });
-            },
-            children: [
-              _buildPageUsername(size),
-              _buildPagePhoneNumber(size),
-              _buildPageEmail(size),
-              _buildPagePassword(size),
-              _buildPageGender(size),
-              _buildPageSexuality(size),
-              _buildPageLocation(size),
-              _buildPageCode(size),
-            ],
+    return Scaffold(
+      body: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: SafeArea(
+          child: Form(
+            key: _formKey,
+            child: PageView(
+              physics: const NeverScrollableScrollPhysics(),
+              controller: pageviewController,
+              onPageChanged: (index) {
+                setState(() {
+                  _currentPage = index;
+                });
+              },
+              children: [
+                _buildPageUsername(size),
+                _buildPagePhoneNumber(size),
+                _buildPageEmail(size),
+                _buildPagePassword(size),
+                _buildPageGender(size),
+                _buildPageSexuality(size),
+                _buildPageLocation(size),
+                _buildPageCode(size),
+              ],
+            ),
           ),
         ),
-        floatingActionButton: BlocBuilder<AccountCubit, AccountState>(
-          builder: (context, state) => switch (state.status) {
-            UserRegisterStatus.loading => const CircularProgressIndicator(),
-            UserRegisterStatus.initial => ButtonCircularProgress(
-                pageviewController: pageviewController,
-                onNextPage: (page) => _formRegisterSubmit(context, page: page),
-              ),
-            UserRegisterStatus.success => ButtonCircularProgress(
-                pageviewController: pageviewController,
-                onNextPage: (page) => _formRegisterSubmit(context, page: page),
-              ),
-            UserRegisterStatus.failure => ButtonCircularProgress(
-                pageviewController: pageviewController,
-                onNextPage: (page) => _formRegisterSubmit(context, page: page),
-              ),
-          },
-        ),
+      ),
+      floatingActionButton: BlocBuilder<AccountCubit, AccountState>(
+        builder: (context, state) => switch (state.status) {
+          UserRegisterStatus.loading => const CircularProgressIndicator(),
+          UserRegisterStatus.initial => ButtonCircularProgress(
+              pageviewController: pageviewController,
+              onNextPage: (page) => _formRegisterSubmit(context, page: page),
+            ),
+          UserRegisterStatus.success => ButtonCircularProgress(
+              pageviewController: pageviewController,
+              onNextPage: (page) => _formRegisterSubmit(context, page: page),
+            ),
+          UserRegisterStatus.failure => ButtonCircularProgress(
+              pageviewController: pageviewController,
+              onNextPage: (page) => _formRegisterSubmit(context, page: page),
+            ),
+        },
       ),
     );
   }

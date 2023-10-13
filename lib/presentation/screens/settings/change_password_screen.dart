@@ -106,95 +106,102 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           ),
         ),
       ),
-      body: Form(
-        key: _formKey,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
-          child: Column(
-            children: [
-              PasswordInput(
-                controller: currentCtrl,
-                labelText: 'Current password',
-                obscureText: obscureTextCurrentPassword,
-                style: const TextStyle(
-                  color: Color(0xFF261638),
-                  fontSize: 14,
-                  fontFamily: Strings.fontFamily,
-                  fontWeight: FontWeight.w600,
-                ),
-                onPressedSuffixIcon: () {
-                  setState(() {
-                    obscureTextCurrentPassword = !obscureTextCurrentPassword;
-                  });
-                },
-                validator: (value) => _validateCurrentPassword(value ?? ''),
-              ),
-              PasswordInput(
-                controller: newCtrl,
-                labelText: 'New password',
-                obscureText: obscureTextNewPassword,
-                style: const TextStyle(
-                  color: Color(0xFF261638),
-                  fontSize: 14,
-                  fontFamily: Strings.fontFamily,
-                  fontWeight: FontWeight.w600,
-                ),
-                onPressedSuffixIcon: () {
-                  setState(() {
-                    obscureTextNewPassword = !obscureTextNewPassword;
-                  });
-                },
-                validator: (value) => _validateNewPassword(value ?? ''),
-              ),
-              PasswordInput(
-                controller: repeatCtrl,
-                labelText: 'Repeat password',
-                obscureText: obscureTextRepeatPassword,
-                style: const TextStyle(
-                  color: Color(0xFF261638),
-                  fontSize: 14,
-                  fontFamily: Strings.fontFamily,
-                  fontWeight: FontWeight.w600,
-                ),
-                onPressedSuffixIcon: () {
-                  setState(() {
-                    obscureTextRepeatPassword = !obscureTextRepeatPassword;
-                  });
-                },
-                validator: (value) => _validateRepeatPassword(value ?? ''),
-              ),
-              // SizedBox(height: size.height * 0.05),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 20.0),
-                child: Text(
-                  'Your password should be at least 8 characters long and include a combination of uppercase letters, lowercase letters, numbers, and special characters for added security',
-                  style: TextStyle(
-                    color: Color(0xFF9CA4BF),
-                    fontSize: 12,
-                    fontFamily: Strings.fontFamily,
-                    fontWeight: FontWeight.w500,
+      body: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: SafeArea(
+          child: Form(
+            key: _formKey,
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
+              child: Column(
+                children: [
+                  PasswordInput(
+                    controller: currentCtrl,
+                    labelText: 'Current password',
+                    obscureText: obscureTextCurrentPassword,
+                    style: const TextStyle(
+                      color: Color(0xFF261638),
+                      fontSize: 14,
+                      fontFamily: Strings.fontFamily,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    onPressedSuffixIcon: () {
+                      setState(() {
+                        obscureTextCurrentPassword =
+                            !obscureTextCurrentPassword;
+                      });
+                    },
+                    validator: (value) => _validateCurrentPassword(value ?? ''),
                   ),
-                ),
-              ),
-              SizedBox(height: size.height * 0.05),
-              FilledButton(
-                onPressed: () => _submitChangePassword(),
-                style: FilledButton.styleFrom(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                  disabledBackgroundColor: const Color(0xFF7F87A6),
-                ),
-                child: const Text(
-                  'SET NEW PASSWORD',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontFamily: Strings.fontFamily,
-                    fontWeight: FontWeight.w600,
+                  PasswordInput(
+                    controller: newCtrl,
+                    labelText: 'New password',
+                    obscureText: obscureTextNewPassword,
+                    style: const TextStyle(
+                      color: Color(0xFF261638),
+                      fontSize: 14,
+                      fontFamily: Strings.fontFamily,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    onPressedSuffixIcon: () {
+                      setState(() {
+                        obscureTextNewPassword = !obscureTextNewPassword;
+                      });
+                    },
+                    validator: (value) => _validateNewPassword(value ?? ''),
                   ),
-                ),
-              )
-            ],
+                  PasswordInput(
+                    controller: repeatCtrl,
+                    labelText: 'Repeat password',
+                    obscureText: obscureTextRepeatPassword,
+                    style: const TextStyle(
+                      color: Color(0xFF261638),
+                      fontSize: 14,
+                      fontFamily: Strings.fontFamily,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    onPressedSuffixIcon: () {
+                      setState(() {
+                        obscureTextRepeatPassword = !obscureTextRepeatPassword;
+                      });
+                    },
+                    validator: (value) => _validateRepeatPassword(value ?? ''),
+                  ),
+                  // SizedBox(height: size.height * 0.05),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20.0),
+                    child: Text(
+                      'Your password should be at least 8 characters long and include a combination of uppercase letters, lowercase letters, numbers, and special characters for added security',
+                      style: TextStyle(
+                        color: Color(0xFF9CA4BF),
+                        fontSize: 12,
+                        fontFamily: Strings.fontFamily,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: size.height * 0.05),
+                  FilledButton(
+                    onPressed: () => _submitChangePassword(),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 15),
+                      disabledBackgroundColor: const Color(0xFF7F87A6),
+                    ),
+                    child: const Text(
+                      'SET NEW PASSWORD',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontFamily: Strings.fontFamily,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
         ),
       ),
