@@ -1,4 +1,6 @@
 import 'package:get_it/get_it.dart';
+// Configs
+import '../../config.dart' show HandlerNotification;
 // Infrastructure
 import '../../../infrastructure/infrastructure.dart';
 export '../../../infrastructure/infrastructure.dart';
@@ -16,4 +18,8 @@ void serviceLocatorRepositoryInit() {
   getIt.registerSingleton(
     NtsAccountAuthRepository(datasource: NtsAccountAuthDatasource.ds),
   );
+}
+
+void serviceLocatorNotificationInit() {
+  getIt.registerSingleton(HandlerNotification());
 }

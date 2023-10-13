@@ -95,7 +95,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: tabs.length);
+    _tabController =
+        TabController(vsync: this, length: tabs.length, initialIndex: 1);
   }
 
   @override

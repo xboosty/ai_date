@@ -1,11 +1,18 @@
-import 'package:elegant_notification/elegant_notification.dart';
-import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../config/config.dart'
-    show AccountCubit, AccountState, AppTheme, Strings, UserRegisterStatus;
+    show
+        AccountCubit,
+        AccountState,
+        AppTheme,
+        HandlerNotification,
+        NtsErrorResponse,
+        Strings,
+        UserRegisterStatus,
+        getIt;
 import '../../widgets/widgets.dart'
     show
         FilledColorizedOutlineButton,
@@ -147,6 +154,7 @@ class SignInForm extends StatefulWidget {
 class _SignInFormState extends State<SignInForm> {
   final TextEditingController _emailCtrl = TextEditingController();
   final TextEditingController _passwordCtrl = TextEditingController();
+  final _notifications = getIt<HandlerNotification>();
   bool _obscureText = true;
   bool _isRememberPassword = false;
 
@@ -204,30 +212,24 @@ class _SignInFormState extends State<SignInForm> {
 
       try {
         await context.read<AccountCubit>().signInUser(credentials);
-
+        if (!mounted) return;
         Navigator.of(context).pushNamedAndRemoveUntil(
           HomeScreen.routeName,
           (route) => false,
         );
       } catch (e) {
-        print('Esto es un error: ${e.toString()}');
         if (!mounted) return;
-        ElegantNotification.error(
-          notificationPosition: NotificationPosition.bottomCenter,
-          animation: AnimationType.fromBottom,
-          background: Colors.red.shade100,
-          showProgressIndicator: true,
-          title: const Text(
-            "Error try again",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-          description: const Text(
-            "Something happend!",
-            style: TextStyle(
-              color: Colors.black,
-            ),
-          ),
-        ).show(context);
+        if (e is NtsErrorResponse) {
+          _notifications.ntsErrorNotification(
+            context,
+            title: "Error",
+            message: e.message ?? '',
+          );
+        }
+
+        if (e is DioException) {
+          _notifications.errorDioNotification(context);
+        }
       }
     }
   }
