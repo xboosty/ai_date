@@ -851,133 +851,135 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     return Container(
       width: double.infinity,
       height: size.height,
-      child: Column(
-        children: [
-          Container(
-            width: size.width,
-            height: size.height * 0.36,
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
-            // color: Colors.red,
-            child: Container(
-              // color: Colors.white,
-              child: Stack(
-                children: [
-                  Center(
-                    child: Image.asset(
-                      'assets/imgs/vector_gender.png',
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              width: size.width,
+              height: size.height * 0.36,
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              // color: Colors.red,
+              child: Container(
+                // color: Colors.white,
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        'assets/imgs/vector_gender.png',
+                      ),
                     ),
-                  ),
-                  Center(child: Image.asset('assets/imgs/gender_img.png')),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 30.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back_rounded,
-                            color: AppTheme.disabledColor,
-                            size: 32,
-                          ),
-                          onPressed: () => _backPage(),
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.cancel_outlined,
-                            color: AppTheme.disabledColor,
-                            size: 32,
-                          ),
-                          onPressed: () => _exitSetup(),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: size.height / 40),
-            child: const Text(
-              'What\'s your gender',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFF261638),
-                fontSize: 28,
-                fontFamily: Strings.fontFamily,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: size.width / 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: _genders
-                  .map(
-                    (gender) => Column(
-                      children: [
-                        RadioListTile<Genders>(
-                          controlAffinity: ListTileControlAffinity.trailing,
-                          title: Text(
-                            gender.name,
-                            style: const TextStyle(
-                              color: Color(0xFF686E8C),
-                              fontSize: 14,
-                              fontFamily: Strings.fontFamily,
-                              fontWeight: FontWeight.w600,
+                    Center(child: Image.asset('assets/imgs/gender_img.png')),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 30.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.arrow_back_rounded,
+                              color: AppTheme.disabledColor,
+                              size: 32,
                             ),
+                            onPressed: () => _backPage(),
                           ),
-                          value: gender,
-                          groupValue: _genderSelected,
-                          onChanged: (Genders? value) {
-                            setState(() {
-                              _genderSelected = value;
-                            });
-                          },
-                        ),
-                        gender.id != 1 ? const Divider() : Container(),
-                      ],
+                          IconButton(
+                            icon: const Icon(
+                              Icons.cancel_outlined,
+                              color: AppTheme.disabledColor,
+                              size: 32,
+                            ),
+                            onPressed: () => _exitSetup(),
+                          )
+                        ],
+                      ),
                     ),
-                  )
-                  .toList(),
-
-              // [
-              //   RadioListTile<Genders>(
-              //     title: const Text('Lafayette'),
-              //     value: _genders[0],
-              //     groupValue: _genderSelected,
-              //     onChanged: (Genders? value) {
-              //       setState(() {
-              //         _genderSelected = value;
-              //       });
-              //     },
-              //   ),
-              //   RadioListTile<Genders>(
-              //     title: const Text('Thomas Jefferson'),
-              //     value: _genders[1],
-              //     groupValue: _genderSelected,
-              //     onChanged: (Genders? value) {
-              //       setState(() {
-              //         _genderSelected = value;
-              //       });
-              //     },
-              //   ),
-              //   RadioListTile<Genders>(
-              //     title: const Text('Thomas Jefferson'),
-              //     value: _genders[2],
-              //     groupValue: _genderSelected,
-              //     onChanged: (Genders? value) {
-              //       setState(() {
-              //         _genderSelected = value;
-              //       });
-              //     },
-              //   ),
-              // ],
+                  ],
+                ),
+              ),
             ),
-          ),
-          VisibleOnProfile(isVisible: isGenderVisibleProfile)
-        ],
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: size.height / 40),
+              child: const Text(
+                'What\'s your gender',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xFF261638),
+                  fontSize: 28,
+                  fontFamily: Strings.fontFamily,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: size.width / 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: _genders
+                    .map(
+                      (gender) => Column(
+                        children: [
+                          RadioListTile<Genders>(
+                            controlAffinity: ListTileControlAffinity.trailing,
+                            title: Text(
+                              gender.name,
+                              style: const TextStyle(
+                                color: Color(0xFF686E8C),
+                                fontSize: 14,
+                                fontFamily: Strings.fontFamily,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            value: gender,
+                            groupValue: _genderSelected,
+                            onChanged: (Genders? value) {
+                              setState(() {
+                                _genderSelected = value;
+                              });
+                            },
+                          ),
+                          gender.id != 1 ? const Divider() : Container(),
+                        ],
+                      ),
+                    )
+                    .toList(),
+
+                // [
+                //   RadioListTile<Genders>(
+                //     title: const Text('Lafayette'),
+                //     value: _genders[0],
+                //     groupValue: _genderSelected,
+                //     onChanged: (Genders? value) {
+                //       setState(() {
+                //         _genderSelected = value;
+                //       });
+                //     },
+                //   ),
+                //   RadioListTile<Genders>(
+                //     title: const Text('Thomas Jefferson'),
+                //     value: _genders[1],
+                //     groupValue: _genderSelected,
+                //     onChanged: (Genders? value) {
+                //       setState(() {
+                //         _genderSelected = value;
+                //       });
+                //     },
+                //   ),
+                //   RadioListTile<Genders>(
+                //     title: const Text('Thomas Jefferson'),
+                //     value: _genders[2],
+                //     groupValue: _genderSelected,
+                //     onChanged: (Genders? value) {
+                //       setState(() {
+                //         _genderSelected = value;
+                //       });
+                //     },
+                //   ),
+                // ],
+              ),
+            ),
+            VisibleOnProfile(isVisible: isGenderVisibleProfile)
+          ],
+        ),
       ),
     );
   }
@@ -986,98 +988,100 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     return Container(
       width: double.infinity,
       height: size.height,
-      child: Column(
-        children: [
-          Container(
-            width: size.width,
-            height: size.height * 0.36,
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
-            // color: Colors.red,
-            child: Container(
-              // color: Colors.white,
-              child: Stack(
-                children: [
-                  Center(
-                    child: Image.asset(
-                      'assets/imgs/vector_heart.png',
-                    ),
-                  ),
-                  Center(child: Image.asset('assets/imgs/heart_img.png')),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 30.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back_rounded,
-                            color: AppTheme.disabledColor,
-                            size: 32,
-                          ),
-                          onPressed: () => _backPage(),
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.cancel_outlined,
-                            color: AppTheme.disabledColor,
-                            size: 32,
-                          ),
-                          onPressed: () => _exitSetup(),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: size.height / 40),
-            child: const Text(
-              'What\'s your sexuality?',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFF261638),
-                fontSize: 28,
-                fontFamily: Strings.fontFamily,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          Container(
-            height: size.height * 0.38,
-            // color: Colors.red,
-            padding: EdgeInsets.symmetric(horizontal: size.width / 20),
-            child: ListView.builder(
-              itemCount: 5,
-              itemBuilder: (context, index) => Column(
-                children: [
-                  RadioListTile<Sexuality>(
-                    controlAffinity: ListTileControlAffinity.trailing,
-                    title: Text(
-                      _sexualities[index].name,
-                      style: const TextStyle(
-                        color: Color(0xFF686E8C),
-                        fontSize: 14,
-                        fontFamily: Strings.fontFamily,
-                        fontWeight: FontWeight.w600,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              width: size.width,
+              height: size.height * 0.36,
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              // color: Colors.red,
+              child: Container(
+                // color: Colors.white,
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        'assets/imgs/vector_heart.png',
                       ),
                     ),
-                    value: _sexualities[index],
-                    groupValue: _sexualitySelected,
-                    onChanged: (Sexuality? value) {
-                      setState(() {
-                        _sexualitySelected = value;
-                      });
-                    },
-                  ),
-                  Divider(),
-                ],
+                    Center(child: Image.asset('assets/imgs/heart_img.png')),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 30.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.arrow_back_rounded,
+                              color: AppTheme.disabledColor,
+                              size: 32,
+                            ),
+                            onPressed: () => _backPage(),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.cancel_outlined,
+                              color: AppTheme.disabledColor,
+                              size: 32,
+                            ),
+                            onPressed: () => _exitSetup(),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          VisibleOnProfile(isVisible: isSexualityVisibleProfile),
-        ],
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: size.height / 40),
+              child: const Text(
+                'What\'s your sexuality?',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Color(0xFF261638),
+                  fontSize: 28,
+                  fontFamily: Strings.fontFamily,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            Container(
+              height: size.height * 0.38,
+              // color: Colors.red,
+              padding: EdgeInsets.symmetric(horizontal: size.width / 20),
+              child: ListView.builder(
+                itemCount: 5,
+                itemBuilder: (context, index) => Column(
+                  children: [
+                    RadioListTile<Sexuality>(
+                      controlAffinity: ListTileControlAffinity.trailing,
+                      title: Text(
+                        _sexualities[index].name,
+                        style: const TextStyle(
+                          color: Color(0xFF686E8C),
+                          fontSize: 14,
+                          fontFamily: Strings.fontFamily,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      value: _sexualities[index],
+                      groupValue: _sexualitySelected,
+                      onChanged: (Sexuality? value) {
+                        setState(() {
+                          _sexualitySelected = value;
+                        });
+                      },
+                    ),
+                    Divider(),
+                  ],
+                ),
+              ),
+            ),
+            VisibleOnProfile(isVisible: isSexualityVisibleProfile),
+          ],
+        ),
       ),
     );
   }
@@ -1195,22 +1199,22 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   Future<void> _accessLocation() async {
     final Location location = Location();
 
-    bool _serviceEnabled = false;
-    PermissionStatus _permissionGranted;
+    bool serviceEnabled = false;
+    PermissionStatus permissionGranted;
     // LocationData _locationData;
 
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
         return;
       }
     }
 
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
         return;
       }
     }
@@ -1243,6 +1247,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       body: Container(
         color: Theme.of(context).scaffoldBackgroundColor,
         child: SafeArea(
+          bottom: false,
           child: Form(
             key: _formKey,
             child: PageView(

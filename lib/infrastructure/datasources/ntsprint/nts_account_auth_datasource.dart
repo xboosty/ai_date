@@ -105,7 +105,7 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
           validateStatus: (status) => true,
         ),
       );
-
+      print('esto es la respuesta ${rs.data}');
       if (rs.data["statusCode"] == 200) {
         final isLogOutResponse = NtsVerificationResponse.fromJson(rs.data);
 

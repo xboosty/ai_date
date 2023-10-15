@@ -45,6 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
           gradient: AppTheme.radialGradient,
         ),
         child: SafeArea(
+          bottom: false,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,

@@ -24,6 +24,7 @@ class ScaffoldAnimated extends StatelessWidget {
       //   gradient: AppTheme.linearGradientTopRightBottomLeft,
       // ),
       child: SafeArea(
+        bottom: false,
         child: Stack(
           children: [
             const Positioned(

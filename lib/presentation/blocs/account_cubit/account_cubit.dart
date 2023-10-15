@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../config/config.dart' show NtsAccountAuthRepository, getIt;
+import '../../../config/config.dart'
+    show NtsAccountAuthRepository, SharedPref, getIt;
 import '../../../domain/domain.dart' show UserEntity;
 
 part 'account_state.dart';
@@ -70,6 +71,7 @@ class AccountCubit extends Cubit<AccountState> {
     emit(const AccountState(status: UserRegisterStatus.loading));
     try {
       await repo.logOutRepository();
+      SharedPref.pref.loginCredential = [];
       emit(const AccountState(status: UserRegisterStatus.success, user: null));
     } catch (e) {
       print(e.toString());

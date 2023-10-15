@@ -109,6 +109,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       body: Container(
         color: Theme.of(context).scaffoldBackgroundColor,
         child: SafeArea(
+          bottom: false,
           child: Form(
             key: _formKey,
             child: Container(
