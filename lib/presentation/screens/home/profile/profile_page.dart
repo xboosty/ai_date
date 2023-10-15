@@ -1,10 +1,19 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:appinio_swiper/appinio_swiper.dart';
 
-import '../../../../config/config.dart' show AppTheme, Strings;
+import '../../../../config/config.dart'
+    show
+        AccountCubit,
+        AppTheme,
+        getIt,
+        HandlerNotification,
+        NtsErrorResponse,
+        Strings;
 import '../../screens.dart'
     show BloquedListScreen, ChangePasswordScreen, SignInScreen;
 import '../../../widgets/widgets.dart'
@@ -71,7 +80,10 @@ class _AppBarAIDate extends StatelessWidget {
   const _AppBarAIDate();
 
   Future<void> _logOut(BuildContext context) async {
-    Navigator.of(context).pushAndRemoveUntil(
+    final notifications = getIt<HandlerNotification>();
+    try {
+      await context.read<AccountCubit>().logOutUser();
+      Navigator.of(context).pushAndRemoveUntil(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) =>
               const SignInScreen(),
@@ -79,40 +91,21 @@ class _AppBarAIDate extends StatelessWidget {
             return SlideInRight(child: child);
           },
         ),
-        (route) => false);
+        (route) => false,
+      );
+    } catch (e) {
+      if (e is NtsErrorResponse) {
+        notifications.ntsErrorNotification(
+          context,
+          title: "Error",
+          message: e.message ?? '',
+        );
+      }
 
-    // try {
-    //     await context.read<AccountCubit>();
-
-    //     Navigator.of(context).pushAndRemoveUntil(
-    //     PageRouteBuilder(
-    //       pageBuilder: (context, animation, secondaryAnimation) =>
-    //           const SignInScreen(),
-    //       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-    //         return SlideInRight(child: child);
-    //       },
-    //     ),
-    //     (route) => false);
-    //   } catch (e) {
-    //     print('Esto es un error: ${e.toString()}');
-    //     if (!mounted) return;
-    //     ElegantNotification.error(
-    //       notificationPosition: NotificationPosition.bottomCenter,
-    //       animation: AnimationType.fromBottom,
-    //       background: Colors.red.shade100,
-    //       showProgressIndicator: true,
-    //       title: const Text(
-    //         "Error try again",
-    //         style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-    //       ),
-    //       description: const Text(
-    //         "Something happend!",
-    //         style: TextStyle(
-    //           color: Colors.black,
-    //         ),
-    //       ),
-    //     ).show(context);
-    //   }
+      if (e is DioException) {
+        notifications.errorDioNotification(context);
+      }
+    }
   }
 
   @override
@@ -246,7 +239,7 @@ class _AppBarAIDate extends StatelessWidget {
                               ),
                             ),
                           ),
-                          SizedBox(height: size.height * 0.02),
+                          SizedBox(height: size.height * 0.05),
                         ],
                       ),
                     );
@@ -2101,6 +2094,7 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
                           return Container(
                             color: Theme.of(context).scaffoldBackgroundColor,
                             child: SafeArea(
+                              bottom: false,
                               child: DraggableScrollableSheet(
                                 initialChildSize: 1.0,
                                 // minChildSize: 0.8,

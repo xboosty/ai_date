@@ -10,6 +10,7 @@ import '../../../config/config.dart'
         AppTheme,
         HandlerNotification,
         NtsErrorResponse,
+        SharedPref,
         Strings,
         UserRegisterStatus,
         getIt;
@@ -157,7 +158,7 @@ class _SignInFormState extends State<SignInForm> {
   final TextEditingController _passwordCtrl = TextEditingController();
   final _notifications = getIt<HandlerNotification>();
   bool _obscureText = true;
-  bool _isRememberPassword = false;
+  bool _isRemember = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -206,13 +207,31 @@ class _SignInFormState extends State<SignInForm> {
 
   void _startSession(BuildContext context) async {
     if (_formKey.currentState?.validate() ?? false) {
+      List<String> credentialsList = [];
+
       final credentials = {
         "email": _emailCtrl.text,
         "password": _passwordCtrl.text
       };
 
+      if (credentials['email']!.isNotEmpty &&
+          credentials['password']!.isNotEmpty) {
+        credentialsList.add(credentials['email'] ?? '');
+        credentialsList.add(credentials['password'] ?? '');
+      }
+
+      // Recordar credenciales en Shared Preferences
+      SharedPref.pref.isRememberCredential = _isRemember;
+
       try {
         await context.read<AccountCubit>().signInUser(credentials);
+        // Saved preference if sign in success
+        if (_isRemember && credentials.isNotEmpty) {
+          SharedPref.pref.loginCredential = credentialsList;
+        } else if (_isRemember == false) {
+          SharedPref.pref.loginCredential = [];
+        }
+
         if (!mounted) return;
         Navigator.of(context).pushNamedAndRemoveUntil(
           HomeScreen.routeName,
@@ -232,6 +251,18 @@ class _SignInFormState extends State<SignInForm> {
           _notifications.errorDioNotification(context);
         }
       }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // SharedPreferences credentials
+    List<String?> credentials = SharedPref.pref.loginCredential;
+    _isRemember = SharedPref.pref.isRememberCredential;
+    if (credentials.isNotEmpty) {
+      _emailCtrl.text = credentials[0] ?? '';
+      _passwordCtrl.text = credentials[1] ?? '';
     }
   }
 
@@ -392,10 +423,10 @@ class _SignInFormState extends State<SignInForm> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Checkbox(
-                    value: _isRememberPassword,
+                    value: _isRemember,
                     onChanged: (value) {
                       setState(() {
-                        _isRememberPassword = value ?? false;
+                        _isRemember = value ?? false;
                       });
                     },
                   ),

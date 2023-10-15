@@ -22,6 +22,7 @@ class SuccessChangePasswordScreen extends StatelessWidget {
       body: Container(
         color: Theme.of(context).scaffoldBackgroundColor,
         child: SafeArea(
+          bottom: false,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 50.0),
             child: Column(

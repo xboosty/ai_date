@@ -20,6 +20,7 @@ class IntroductionScreen extends StatelessWidget {
         height: size.height,
         color: Theme.of(context).scaffoldBackgroundColor,
         child: SafeArea(
+          bottom: false,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,

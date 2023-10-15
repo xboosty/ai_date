@@ -6,15 +6,23 @@ import 'config/config.dart'
         AccountCubit,
         AppRouter,
         AppTheme,
+        SharedPref,
         getIt,
         serviceLocatorBlocsInit,
         serviceLocatorNotificationInit,
         serviceLocatorRepositoryInit;
 
 void main() async {
+  // Start Widget
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initializing services locators
   serviceLocatorRepositoryInit();
   serviceLocatorBlocsInit();
   serviceLocatorNotificationInit();
+
+  // Initializing SharedPreferences
+  await SharedPref.pref.initPrefer();
 
   runApp(const BlocsProviders());
 }

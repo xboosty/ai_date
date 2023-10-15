@@ -1,5 +1,3 @@
-// Configs
-
 // Theme
 export 'theme/app_theme.dart';
 // Routers
@@ -10,3 +8,5 @@ export 'constants/strings.dart';
 export 'core/services/services_locator.dart';
 // Helpers
 export 'helpers/handler_notifications.dart';
+// Shared Preferences
+export 'shared/shared_pref.dart';

@@ -26,6 +26,7 @@ class BloquedListScreen extends StatelessWidget {
       body: Container(
         color: Theme.of(context).scaffoldBackgroundColor,
         child: SafeArea(
+          bottom: false,
           child: ListView.builder(
             itemCount: 3,
             itemBuilder: (context, index) {
