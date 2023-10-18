@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../../../config/config.dart' show SharedPref;
 import '../../../domain/domain.dart' show AccountDatasource, UserEntity;
 import '../../infrastructure.dart'
     show NtsErrorResponse, NtsUserResponse, NtsVerificationResponse, UserMapper;
@@ -37,6 +38,10 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
       );
 
       if (rs.data["statusCode"] == 200) {
+        // Save Token in
+        String? token = rs.headers.value('x-amzn-Remapped-Authorization');
+
+        SharedPref.pref.token = token ?? 'null';
         final userResponse = NtsUserResponse.fromJson(rs.data);
 
         // Parsed to model response to entity
@@ -73,8 +78,14 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
           // headers: headers,
         ),
       );
+      print('token ${rs.headers.value('x-amzn-Remapped-Authorization')}');
 
+      // print('token nuevo: $token');
       if (rs.data["statusCode"] == 200) {
+        // Save Token in
+        String? token = rs.headers.value('x-amzn-Remapped-Authorization');
+
+        SharedPref.pref.token = token ?? 'null';
         final userResponse = NtsUserResponse.fromJson(rs.data);
 
         // Parsed to model response to entity
@@ -99,7 +110,12 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
       final rs = await dio.post(
         '/api/account/logout',
         options: Options(
-          headers: _headers,
+          headers: {
+            'Authorization': SharedPref.pref.token,
+            'Content-Type': 'application/json',
+            'User-Agent':
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.60',
+          },
           followRedirects: false,
           // will not throw errors
           validateStatus: (status) => true,
@@ -107,14 +123,8 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
       );
       print('esto es la respuesta ${rs.data}');
       if (rs.data["statusCode"] == 200) {
-        final isLogOutResponse = NtsVerificationResponse.fromJson(rs.data);
-
-        if (isLogOutResponse.result ?? false) {
-          return true;
-        } else {
-          return false;
-        }
-        // Devuelve la entidad
+        // final isLogOutResponse = NtsVerificationResponse.fromJson(rs.data);
+        return true;
       } else {
         // Devuelve un error
         throw NtsErrorResponse.fromJson(rs.data);
@@ -161,10 +171,15 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
   Future<bool> changePasswordAccount(Map<String, dynamic> passwords) async {
     try {
       final rs = await dio.post(
-        '/api/account/verify-code',
+        '/api/account/change-password',
         data: passwords,
         options: Options(
-          headers: _headers,
+          headers: {
+            'Authorization': SharedPref.pref.token,
+            'Content-Type': 'application/json',
+            'User-Agent':
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.60',
+          },
           followRedirects: false,
           // will not throw errors
           validateStatus: (status) => true,
@@ -173,8 +188,7 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
       );
 
       if (rs.data["statusCode"] == 200) {
-        final bool isChangePassword = rs.data as bool;
-        return isChangePassword;
+        return true;
       } else {
         // Devuelve un error
         throw NtsErrorResponse.fromJson(rs.data);
@@ -185,14 +199,11 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
   }
 
   @override
-  Future<bool> forgotPasswordAccount(
-      {required String code, required String number}) async {
+  Future<bool> forgotPasswordAccount({required String email}) async {
     try {
       final rs = await dio.post(
         '/api/account/forgot-password',
-        data: {
-          "phone": {"code": code, "number": number}
-        },
+        data: {"email": email},
         options: Options(
           headers: _headers,
           followRedirects: false,
@@ -203,7 +214,38 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
       );
 
       if (rs.data["statusCode"] == 200) {
-        final bool isSendCode = rs.data as bool;
+        final bool isSendCode =
+            rs.data["result"] == true ? rs.data["result"] : false;
+        return isSendCode;
+      } else {
+        // Devuelve un error
+        throw NtsErrorResponse.fromJson(rs.data);
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<bool> recoveryPassword(
+      Map<String, dynamic> recoveryCredentilal) async {
+    // TODO: implement recoveryPassword
+    try {
+      final rs = await dio.post(
+        '/api/account/recovery-password',
+        data: recoveryCredentilal,
+        options: Options(
+          headers: _headers,
+          followRedirects: false,
+          // will not throw errors
+          validateStatus: (status) => true,
+          // headers: headers,
+        ),
+      );
+
+      if (rs.data["statusCode"] == 200) {
+        final bool isSendCode =
+            rs.data["result"] == true ? rs.data["result"] : false;
         return isSendCode;
       } else {
         // Devuelve un error

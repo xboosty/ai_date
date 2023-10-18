@@ -71,7 +71,6 @@ class AccountCubit extends Cubit<AccountState> {
     emit(const AccountState(status: UserRegisterStatus.loading));
     try {
       await repo.logOutRepository();
-      SharedPref.pref.loginCredential = [];
       emit(const AccountState(status: UserRegisterStatus.success, user: null));
     } catch (e) {
       print(e.toString());
@@ -105,13 +104,12 @@ class AccountCubit extends Cubit<AccountState> {
     }
   }
 
-  Future<void> forgotPasswordUser(
-      {required String code, required String number}) async {
+  Future<void> forgotPasswordUser({required String email}) async {
     emit(const AccountState(status: UserRegisterStatus.loading));
     try {
-      await repo.forgotPasswordRepository(code: code, number: number);
+      await repo.forgotPasswordRepository(email: email);
       emit(const AccountState(status: UserRegisterStatus.success));
-      print('SignIn Success');
+      print('Forgot success');
     } catch (e) {
       print(e.toString());
       emit(
@@ -120,7 +118,26 @@ class AccountCubit extends Cubit<AccountState> {
           errorMessage: e.toString(),
         ),
       );
-      print('SignIn Failure');
+      print('Forgot Failure');
+      rethrow;
+    }
+  }
+
+  Future<void> recoveryCredential(Map<String, dynamic> recoveryCred) async {
+    emit(const AccountState(status: UserRegisterStatus.loading));
+    try {
+      await repo.recoveryPassword(recoveryCred);
+      emit(const AccountState(status: UserRegisterStatus.success));
+      print('Recovery success');
+    } catch (e) {
+      print(e.toString());
+      emit(
+        AccountState(
+          status: UserRegisterStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
+      print('Recovery Failure');
       rethrow;
     }
   }

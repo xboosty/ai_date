@@ -9,11 +9,13 @@ import 'package:appinio_swiper/appinio_swiper.dart';
 import '../../../../config/config.dart'
     show
         AccountCubit,
+        AccountState,
         AppTheme,
-        getIt,
         HandlerNotification,
         NtsErrorResponse,
-        Strings;
+        Strings,
+        UserRegisterStatus,
+        getIt;
 import '../../screens.dart'
     show BloquedListScreen, ChangePasswordScreen, SignInScreen;
 import '../../../widgets/widgets.dart'
@@ -166,25 +168,75 @@ class _AppBarAIDate extends StatelessWidget {
                                 showDialog(
                                   context: context,
                                   barrierDismissible: false,
-                                  builder: (context) => AlertDialog(
-                                    icon: const Icon(
-                                      Icons.info_outline_rounded,
-                                      size: 40,
-                                    ),
-                                    title: const Text('Exit AI Date'),
-                                    content: const Text(
-                                        'Are you sure you want to exit the app?'),
-                                    actions: [
-                                      FilledButton(
-                                        onPressed: () =>
-                                            Navigator.of(context).pop(),
-                                        child: const Text('Cancel'),
-                                      ),
-                                      FilledButton(
-                                        onPressed: () => _logOut(context),
-                                        child: const Text('Ok'),
-                                      ),
-                                    ],
+                                  builder: (context) =>
+                                      BlocBuilder<AccountCubit, AccountState>(
+                                    builder: (context, state) =>
+                                        switch (state.status) {
+                                      UserRegisterStatus.initial => AlertDialog(
+                                          icon: const Icon(
+                                            Icons.info_outline_rounded,
+                                            size: 40,
+                                          ),
+                                          title: const Text('Exit AI Date'),
+                                          content: const Text(
+                                              'Are you sure you want to exit the app?'),
+                                          actions: [
+                                            FilledButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              child: const Text('Cancel'),
+                                            ),
+                                            FilledButton(
+                                              onPressed: () => _logOut(context),
+                                              child: const Text('Ok'),
+                                            ),
+                                          ],
+                                        ),
+                                      UserRegisterStatus.loading =>
+                                        const Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      UserRegisterStatus.failure => AlertDialog(
+                                          icon: const Icon(
+                                            Icons.info_outline_rounded,
+                                            size: 40,
+                                          ),
+                                          title: const Text('Exit AI Date'),
+                                          content: const Text(
+                                              'Are you sure you want to exit the app?'),
+                                          actions: [
+                                            FilledButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              child: const Text('Cancel'),
+                                            ),
+                                            FilledButton(
+                                              onPressed: () => _logOut(context),
+                                              child: const Text('Ok'),
+                                            ),
+                                          ],
+                                        ),
+                                      UserRegisterStatus.success => AlertDialog(
+                                          icon: const Icon(
+                                            Icons.info_outline_rounded,
+                                            size: 40,
+                                          ),
+                                          title: const Text('Exit AI Date'),
+                                          content: const Text(
+                                              'Are you sure you want to exit the app?'),
+                                          actions: [
+                                            FilledButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              child: const Text('Cancel'),
+                                            ),
+                                            FilledButton(
+                                              onPressed: () => _logOut(context),
+                                              child: const Text('Ok'),
+                                            ),
+                                          ],
+                                        ),
+                                    },
                                   ),
                                 );
                               },
