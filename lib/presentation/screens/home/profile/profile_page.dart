@@ -393,11 +393,11 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
   @override
   void initState() {
     super.initState();
-    Map<String, dynamic> userMap = jsonDecode(SharedPref.pref.account);
-    user = UserEntity.fromJson(userMap);
-    nameCtrl.text = user?.name ?? '';
-    lastNameCtrl.text = '';
-    emailCtrl.text = user?.email ?? '';
+    // Map<String, dynamic> userMap = jsonDecode(SharedPref.pref.account);
+    // user = UserEntity.fromJson(userMap);
+    // nameCtrl.text = user?.name ?? '';
+    // lastNameCtrl.text = '';
+    // emailCtrl.text = user?.email ?? '';
   }
 
   @override
