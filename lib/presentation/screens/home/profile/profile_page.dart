@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,9 +15,11 @@ import '../../../../config/config.dart'
         AppTheme,
         HandlerNotification,
         NtsErrorResponse,
+        SharedPref,
         Strings,
         UserRegisterStatus,
         getIt;
+import '../../../../domain/domain.dart' show UserEntity;
 import '../../screens.dart'
     show BloquedListScreen, ChangePasswordScreen, SignInScreen;
 import '../../../widgets/widgets.dart'
@@ -381,6 +385,20 @@ class _ProfileEditPage extends StatefulWidget {
 
 class _ProfileEditPageState extends State<_ProfileEditPage> {
   final _dateCtrl = TextEditingController();
+  final nameCtrl = TextEditingController();
+  final lastNameCtrl = TextEditingController();
+  final emailCtrl = TextEditingController();
+  UserEntity? user;
+
+  @override
+  void initState() {
+    super.initState();
+    Map<String, dynamic> userMap = jsonDecode(SharedPref.pref.account);
+    user = UserEntity.fromJson(userMap);
+    nameCtrl.text = user?.name ?? '';
+    lastNameCtrl.text = '';
+    emailCtrl.text = user?.email ?? '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -388,7 +406,13 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
 
     return ListView(
       children: [
-        _CardPersonalInfo(size: size, dateCtrl: _dateCtrl),
+        _CardPersonalInfo(
+          size: size,
+          dateCtrl: _dateCtrl,
+          nameCtrl: nameCtrl,
+          lastNameCtrl: lastNameCtrl,
+          emailCtrl: emailCtrl,
+        ),
         _CardGenderInfo(size: size),
         const ListTile(
           leading: Icon(Icons.add_photo_alternate, size: 20),
@@ -542,10 +566,18 @@ class _CardPersonalInfo extends StatelessWidget {
   const _CardPersonalInfo({
     required this.size,
     required TextEditingController dateCtrl,
+    this.user,
+    this.nameCtrl,
+    this.lastNameCtrl,
+    this.emailCtrl,
   }) : _dateCtrl = dateCtrl;
 
   final Size size;
   final TextEditingController _dateCtrl;
+  final TextEditingController? nameCtrl;
+  final TextEditingController? lastNameCtrl;
+  final TextEditingController? emailCtrl;
+  final UserEntity? user;
 
   @override
   Widget build(BuildContext context) {
@@ -568,17 +600,20 @@ class _CardPersonalInfo extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const ConfigurationInputField(
+            ConfigurationInputField(
+              controller: nameCtrl,
               fontSize: 10,
               labelText: 'Name',
-              colorLabel: Color(0xFF6C2EBC),
+              colorLabel: const Color(0xFF6C2EBC),
             ),
-            const ConfigurationInputField(
+            ConfigurationInputField(
+              controller: lastNameCtrl,
               fontSize: 10,
               labelText: 'Last Name',
               colorLabel: Color(0xFF6C2EBC),
             ),
-            const ConfigurationInputField(
+            ConfigurationInputField(
+              controller: emailCtrl,
               fontSize: 10,
               labelText: 'Email',
               colorLabel: Color(0xFF6C2EBC),

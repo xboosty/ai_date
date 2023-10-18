@@ -6,7 +6,7 @@ class UserMapper {
 
   static UserEntity userResponseToEntity(NtsUserResponse ur) {
     return UserEntity(
-      fullName: ur.user.fullName,
+      name: ur.user.fullName,
       email: ur.user.email,
       birthDate: ur.user.birthDate ?? DateTime(1000),
       phone: ur.user.phone ?? 'null',

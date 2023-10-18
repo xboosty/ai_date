@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:animate_do/animate_do.dart';
@@ -14,6 +15,7 @@ import '../../../config/config.dart'
         Strings,
         UserRegisterStatus,
         getIt;
+import '../../../domain/entities/user_entity.dart';
 import '../../widgets/widgets.dart'
     show
         FilledColorizedOutlineButton,
@@ -230,6 +232,14 @@ class _SignInFormState extends State<SignInForm> {
           SharedPref.pref.loginCredential = credentialsList;
         } else if (_isRemember == false) {
           SharedPref.pref.loginCredential = [];
+        }
+
+        UserEntity? userLoged = context.read<AccountCubit>().state.user;
+
+        if (userLoged != null) {
+          String jsonAccount = jsonEncode(userLoged.toJson());
+          print('Este es el json $jsonAccount');
+          SharedPref.pref.account = jsonAccount;
         }
 
         if (!mounted) return;
