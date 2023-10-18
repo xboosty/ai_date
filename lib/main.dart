@@ -36,7 +36,7 @@ class BlocsProviders extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => getIt<AccountCubit>(),
-        )
+        ),
       ],
       child: const AIDateApp(),
     );

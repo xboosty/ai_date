@@ -88,13 +88,16 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   String? _validateUsername(String value) {
     // Define your validation logic here.
     if (value.isEmpty) {
-      return 'Username is required';
+      return 'Name is required';
     }
     if (value.length < 4) {
-      return 'Username must be at least 4 characters long';
+      return 'Name must be at least 4 characters long';
     }
-    if (!RegExp(r'^[a-zA-Z0-9_-]+$').hasMatch(value)) {
-      return 'Enter a valid username Ex: jennifer95';
+    // if (!RegExp(r'^[a-zA-Z0-9_-]+$').hasMatch(value)) {
+    //   return 'Enter a valid name Ex: jennifer95';
+    // }
+    if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
+      return 'Enter a valid name without spaces Ex: Jennifer';
     }
     return null; // Return null if the input is valid.
   }

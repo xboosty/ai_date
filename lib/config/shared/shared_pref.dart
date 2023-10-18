@@ -18,9 +18,9 @@ class SharedPref {
   List<String> get loginCredential =>
       preferences?.getStringList('credentials') ?? [];
   String get token => preferences?.getString('token') ?? 'null';
+  String get account => preferences?.getString('account') ?? '{}';
 
   // bool get allowNotifications => preferences?.getBool('notification') ?? false;
-  // String get port => preferences?.getString('port') ?? '0';
   // String get database => preferences?.getString('database') ?? '';
   // String get userDB => preferences?.getString('userDB') ?? '';
   // String get passwordDB => preferences?.getString('passwordDB') ?? '';
@@ -37,10 +37,11 @@ class SharedPref {
       preferences?.setStringList('credentials', credentials);
 
   set token(String newToken) => preferences?.setString('token', newToken);
+  set account(String newAccount) =>
+      preferences?.setString('account', newAccount);
   // set allowNotifications(bool flag) =>
   //     preferences?.setBool('notification', flag);
 
-  // set port(String newPort) => preferences?.setString('port', newPort);
   // set database(String newDatabase) =>
   //     preferences?.setString('database', newDatabase);
   // set userDB(String newUserDB) => preferences?.setString('userDB', newUserDB);
