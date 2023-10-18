@@ -17,7 +17,7 @@ class SharedPref {
       preferences?.getBool('isRememberCredential') ?? false;
   List<String> get loginCredential =>
       preferences?.getStringList('credentials') ?? [];
-  // bool get terms => preferences?.getBool('terms') ?? false;
+  String get token => preferences?.getString('token') ?? 'null';
 
   // bool get allowNotifications => preferences?.getBool('notification') ?? false;
   // String get port => preferences?.getString('port') ?? '0';
@@ -36,10 +36,9 @@ class SharedPref {
   set loginCredential(List<String> credentials) =>
       preferences?.setStringList('credentials', credentials);
 
+  set token(String newToken) => preferences?.setString('token', newToken);
   // set allowNotifications(bool flag) =>
   //     preferences?.setBool('notification', flag);
-
-  // set terms(bool flag) => preferences?.setBool('terms', flag);
 
   // set port(String newPort) => preferences?.setString('port', newPort);
   // set database(String newDatabase) =>

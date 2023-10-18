@@ -459,34 +459,32 @@ class _SignInFormState extends State<SignInForm> {
               ),
               SizedBox(height: size.height * 0.02),
               BlocBuilder<AccountCubit, AccountState>(
-                  builder: (context, state) => switch (state.status) {
-                        UserRegisterStatus.initial =>
-                          FilledColorizedOutlineButton(
-                            width: 150,
-                            height: 50,
-                            title: 'SIGN IN',
-                            isTrailingIcon: false,
-                            onTap: () => _startSession(context),
-                          ),
-                        UserRegisterStatus.loading =>
-                          const CircularProgressIndicator(),
-                        UserRegisterStatus.failure =>
-                          FilledColorizedOutlineButton(
-                            width: 150,
-                            height: 50,
-                            title: 'SIGN IN',
-                            isTrailingIcon: false,
-                            onTap: () => _startSession(context),
-                          ),
-                        UserRegisterStatus.success =>
-                          FilledColorizedOutlineButton(
-                            width: 150,
-                            height: 50,
-                            title: 'SIGN IN',
-                            isTrailingIcon: false,
-                            onTap: () => _startSession(context),
-                          ),
-                      }),
+                builder: (context, state) => switch (state.status) {
+                  UserRegisterStatus.initial => FilledColorizedOutlineButton(
+                      width: 150,
+                      height: 50,
+                      title: 'SIGN IN',
+                      isTrailingIcon: false,
+                      onTap: () => _startSession(context),
+                    ),
+                  UserRegisterStatus.loading =>
+                    const CircularProgressIndicator(),
+                  UserRegisterStatus.failure => FilledColorizedOutlineButton(
+                      width: 150,
+                      height: 50,
+                      title: 'SIGN IN',
+                      isTrailingIcon: false,
+                      onTap: () => _startSession(context),
+                    ),
+                  UserRegisterStatus.success => FilledColorizedOutlineButton(
+                      width: 150,
+                      height: 50,
+                      title: 'SIGN IN',
+                      isTrailingIcon: false,
+                      onTap: () => _startSession(context),
+                    ),
+                },
+              ),
             ],
           ),
         ),

@@ -36,10 +36,17 @@ class NtsAccountAuthRepository extends AccountRepository<UserEntity> {
   }
 
   @override
-  Future<bool> forgotPasswordRepository(
-      {required String code, required String number}) async {
+  Future<bool> forgotPasswordRepository({required String email}) async {
     final bool isForgetChangedPassword =
-        await datasource.forgotPasswordAccount(code: code, number: number);
+        await datasource.forgotPasswordAccount(email: email);
     return isForgetChangedPassword;
+  }
+
+  @override
+  Future<bool> recoveryPassword(
+      Map<String, dynamic> recoveryCredentilal) async {
+    final bool isRecoveryPassword =
+        await datasource.recoveryPassword(recoveryCredentilal);
+    return isRecoveryPassword;
   }
 }

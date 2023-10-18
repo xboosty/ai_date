@@ -29,8 +29,8 @@ class DatePickerFormField extends StatelessWidget {
             showDatePicker(
               context: context,
               initialDate: DateTime.now(),
-              firstDate: DateTime(2023, 1, 1),
-              lastDate: DateTime(2024, 12, 31),
+              firstDate: DateTime(1900),
+              lastDate: DateTime(2100),
             ).then((date) {
               if (date != null) {
                 onDateSelected(date);
