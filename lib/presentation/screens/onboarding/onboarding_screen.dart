@@ -254,7 +254,12 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       try {
         await context.read<AccountCubit>().verificationCode(verification);
         if (!mounted) return;
-        Navigator.of(context).pushNamed(HomeScreen.routeName);
+        Navigator.of(context).pushNamed(SignInScreen.routeName);
+        _notifications.ntsSuccessNotification(
+          context,
+          title: "Account registration",
+          message: 'Account created successfully',
+        );
       } catch (e) {
         if (!mounted) return;
         Navigator.of(context).pushNamed(SignInScreen.routeName);
