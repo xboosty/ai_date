@@ -9,6 +9,7 @@ abstract class AccountDatasource<T> {
 
   Future<bool> changePasswordAccount(Map<String, dynamic> passwords);
 
-  Future<bool> forgotPasswordAccount(
-      {required String code, required String number});
+  Future<bool> forgotPasswordAccount({required String email});
+
+  Future<bool> recoveryPassword(Map<String, dynamic> recoveryCredentilal);
 }

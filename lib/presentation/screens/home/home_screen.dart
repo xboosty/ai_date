@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../config/config.dart' show AppTheme, Strings;
-import '../screens.dart' show ProfilePage;
+import '../../../config/config.dart' show AppTheme, SharedPref, Strings;
+import '../../widgets/widgets.dart' show OutlineText;
+import '../screens.dart' show InterViewPage, IntroInterviewPage, ProfilePage;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -92,11 +93,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   ];
   late TabController _tabController;
 
+  bool showFirstInterviewPage = false;
+
   @override
   void initState() {
     super.initState();
     _tabController =
         TabController(vsync: this, length: tabs.length, initialIndex: 1);
+    showFirstInterviewPage = SharedPref.pref.showFirstInterviewPage;
   }
 
   @override
@@ -107,44 +111,48 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: IndexedStack(
-          index: _selectedPage,
-          children: [
-            ProfilePage(tabController: _tabController, tabs: tabs),
-            const Center(
-              child: Text('Interview'),
-            ),
-            const Center(
-              child: Text('Premium'),
-            ),
-            const Center(
-              child: Text('Discover'),
-            ),
-            const Center(
-              child: Text('Chat'),
-            ),
-          ],
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedPage,
-          onTap: (index) {
-            setState(() {
-              _selectedPage = index;
-            });
-          },
-          elevation: 18.0,
-          selectedItemColor: AppTheme.secondaryColor,
-          selectedLabelStyle: const TextStyle(
-            color: Color(0xFF261638),
-            fontSize: 11,
-            fontFamily: Strings.fontFamily,
-            fontWeight: FontWeight.w600,
+    final size = MediaQuery.of(context).size;
+
+    return Scaffold(
+      body: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: SafeArea(
+          bottom: false,
+          child: IndexedStack(
+            index: _selectedPage,
+            children: [
+              ProfilePage(tabController: _tabController, tabs: tabs),
+              showFirstInterviewPage ? IntroInterviewPage() : InterViewPage(),
+              const Center(
+                child: Text('Premium'),
+              ),
+              const Center(
+                child: Text('Discover'),
+              ),
+              const Center(
+                child: Text('Chat'),
+              ),
+            ],
           ),
-          unselectedItemColor: AppTheme.disabledColor,
-          items: _itemsButtonBar,
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedPage,
+        onTap: (index) {
+          setState(() {
+            _selectedPage = index;
+          });
+        },
+        elevation: 18.0,
+        selectedItemColor: AppTheme.secondaryColor,
+        selectedLabelStyle: const TextStyle(
+          color: Color(0xFF261638),
+          fontSize: 11,
+          fontFamily: Strings.fontFamily,
+          fontWeight: FontWeight.w600,
+        ),
+        unselectedItemColor: AppTheme.disabledColor,
+        items: _itemsButtonBar,
       ),
     );
   }

@@ -1,11 +1,27 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:appinio_swiper/appinio_swiper.dart';
 
-import '../../../../config/config.dart' show AppTheme, Strings;
-import '../../screens.dart' show ChangePasswordScreen, SignInScreen;
+import '../../../../config/config.dart'
+    show
+        AccountCubit,
+        AccountState,
+        AppTheme,
+        HandlerNotification,
+        NtsErrorResponse,
+        SharedPref,
+        Strings,
+        UserRegisterStatus,
+        getIt;
+import '../../../../domain/domain.dart' show UserEntity;
+import '../../screens.dart'
+    show BloquedListScreen, ChangePasswordScreen, SignInScreen;
 import '../../../widgets/widgets.dart'
     show
         ButtonsInfoProfile,
@@ -70,48 +86,26 @@ class _AppBarAIDate extends StatelessWidget {
   const _AppBarAIDate();
 
   Future<void> _logOut(BuildContext context) async {
-    Navigator.of(context).pushAndRemoveUntil(
-        PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              const SignInScreen(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return SlideInRight(child: child);
-          },
-        ),
-        (route) => false);
+    final notifications = getIt<HandlerNotification>();
+    try {
+      await context.read<AccountCubit>().logOutUser();
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        SignInScreen.routeName,
+        (route) => false,
+      );
+    } catch (e) {
+      if (e is NtsErrorResponse) {
+        notifications.ntsErrorNotification(
+          context,
+          title: "Error",
+          message: e.message ?? '',
+        );
+      }
 
-    // try {
-    //     await context.read<AccountCubit>();
-
-    //     Navigator.of(context).pushAndRemoveUntil(
-    //     PageRouteBuilder(
-    //       pageBuilder: (context, animation, secondaryAnimation) =>
-    //           const SignInScreen(),
-    //       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-    //         return SlideInRight(child: child);
-    //       },
-    //     ),
-    //     (route) => false);
-    //   } catch (e) {
-    //     print('Esto es un error: ${e.toString()}');
-    //     if (!mounted) return;
-    //     ElegantNotification.error(
-    //       notificationPosition: NotificationPosition.bottomCenter,
-    //       animation: AnimationType.fromBottom,
-    //       background: Colors.red.shade100,
-    //       showProgressIndicator: true,
-    //       title: const Text(
-    //         "Error try again",
-    //         style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-    //       ),
-    //       description: const Text(
-    //         "Something happend!",
-    //         style: TextStyle(
-    //           color: Colors.black,
-    //         ),
-    //       ),
-    //     ).show(context);
-    //   }
+      if (e is DioException) {
+        notifications.errorDioNotification(context);
+      }
+    }
   }
 
   @override
@@ -121,7 +115,10 @@ class _AppBarAIDate extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Image.asset('assets/imgs/aidate_home.png'),
+        Image.asset(
+          'assets/imgs/aidate_home.png',
+          height: 20,
+        ),
         IconButton(
           onPressed: () {
             showModalBottomSheet(
@@ -169,25 +166,75 @@ class _AppBarAIDate extends StatelessWidget {
                                 showDialog(
                                   context: context,
                                   barrierDismissible: false,
-                                  builder: (context) => AlertDialog(
-                                    icon: const Icon(
-                                      Icons.info_outline_rounded,
-                                      size: 40,
-                                    ),
-                                    title: const Text('Exit AI Date'),
-                                    content: const Text(
-                                        'Are you sure you want to exit the app?'),
-                                    actions: [
-                                      FilledButton(
-                                        onPressed: () =>
-                                            Navigator.of(context).pop(),
-                                        child: const Text('Cancel'),
-                                      ),
-                                      FilledButton(
-                                        onPressed: () => _logOut(context),
-                                        child: const Text('Ok'),
-                                      ),
-                                    ],
+                                  builder: (context) =>
+                                      BlocBuilder<AccountCubit, AccountState>(
+                                    builder: (context, state) =>
+                                        switch (state.status) {
+                                      UserRegisterStatus.initial => AlertDialog(
+                                          icon: const Icon(
+                                            Icons.info_outline_rounded,
+                                            size: 40,
+                                          ),
+                                          title: const Text('Exit AI Date'),
+                                          content: const Text(
+                                              'Are you sure you want to exit the app?'),
+                                          actions: [
+                                            FilledButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              child: const Text('Cancel'),
+                                            ),
+                                            FilledButton(
+                                              onPressed: () => _logOut(context),
+                                              child: const Text('Ok'),
+                                            ),
+                                          ],
+                                        ),
+                                      UserRegisterStatus.loading =>
+                                        const Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      UserRegisterStatus.failure => AlertDialog(
+                                          icon: const Icon(
+                                            Icons.info_outline_rounded,
+                                            size: 40,
+                                          ),
+                                          title: const Text('Exit AI Date'),
+                                          content: const Text(
+                                              'Are you sure you want to exit the app?'),
+                                          actions: [
+                                            FilledButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              child: const Text('Cancel'),
+                                            ),
+                                            FilledButton(
+                                              onPressed: () => _logOut(context),
+                                              child: const Text('Ok'),
+                                            ),
+                                          ],
+                                        ),
+                                      UserRegisterStatus.success => AlertDialog(
+                                          icon: const Icon(
+                                            Icons.info_outline_rounded,
+                                            size: 40,
+                                          ),
+                                          title: const Text('Exit AI Date'),
+                                          content: const Text(
+                                              'Are you sure you want to exit the app?'),
+                                          actions: [
+                                            FilledButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              child: const Text('Cancel'),
+                                            ),
+                                            FilledButton(
+                                              onPressed: () => _logOut(context),
+                                              child: const Text('Ok'),
+                                            ),
+                                          ],
+                                        ),
+                                    },
                                   ),
                                 );
                               },
@@ -242,7 +289,7 @@ class _AppBarAIDate extends StatelessWidget {
                               ),
                             ),
                           ),
-                          SizedBox(height: size.height * 0.02),
+                          SizedBox(height: size.height * 0.05),
                         ],
                       ),
                     );
@@ -332,6 +379,20 @@ class _ProfileEditPage extends StatefulWidget {
 
 class _ProfileEditPageState extends State<_ProfileEditPage> {
   final _dateCtrl = TextEditingController();
+  final nameCtrl = TextEditingController();
+  final lastNameCtrl = TextEditingController();
+  final emailCtrl = TextEditingController();
+  UserEntity? user;
+
+  @override
+  void initState() {
+    super.initState();
+    // Map<String, dynamic> userMap = jsonDecode(SharedPref.pref.account);
+    // user = UserEntity.fromJson(userMap);
+    // nameCtrl.text = user?.name ?? '';
+    // lastNameCtrl.text = '';
+    // emailCtrl.text = user?.email ?? '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -339,7 +400,13 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
 
     return ListView(
       children: [
-        _CardPersonalInfo(size: size, dateCtrl: _dateCtrl),
+        _CardPersonalInfo(
+          size: size,
+          dateCtrl: _dateCtrl,
+          nameCtrl: nameCtrl,
+          lastNameCtrl: lastNameCtrl,
+          emailCtrl: emailCtrl,
+        ),
         _CardGenderInfo(size: size),
         const ListTile(
           leading: Icon(Icons.add_photo_alternate, size: 20),
@@ -407,6 +474,10 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                 height: 50,
                 title: 'SAVE CHANGES',
                 isTrailingIcon: false,
+                icon: const Icon(
+                  Icons.arrow_right_alt,
+                  color: Colors.white,
+                ),
               ),
               SizedBox(height: size.height * 0.02),
             ],
@@ -489,10 +560,18 @@ class _CardPersonalInfo extends StatelessWidget {
   const _CardPersonalInfo({
     required this.size,
     required TextEditingController dateCtrl,
+    this.user,
+    this.nameCtrl,
+    this.lastNameCtrl,
+    this.emailCtrl,
   }) : _dateCtrl = dateCtrl;
 
   final Size size;
   final TextEditingController _dateCtrl;
+  final TextEditingController? nameCtrl;
+  final TextEditingController? lastNameCtrl;
+  final TextEditingController? emailCtrl;
+  final UserEntity? user;
 
   @override
   Widget build(BuildContext context) {
@@ -515,17 +594,20 @@ class _CardPersonalInfo extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const ConfigurationInputField(
+            ConfigurationInputField(
+              controller: nameCtrl,
               fontSize: 10,
               labelText: 'Name',
-              colorLabel: Color(0xFF6C2EBC),
+              colorLabel: const Color(0xFF6C2EBC),
             ),
-            const ConfigurationInputField(
+            ConfigurationInputField(
+              controller: lastNameCtrl,
               fontSize: 10,
               labelText: 'Last Name',
               colorLabel: Color(0xFF6C2EBC),
             ),
-            const ConfigurationInputField(
+            ConfigurationInputField(
+              controller: emailCtrl,
               fontSize: 10,
               labelText: 'Email',
               colorLabel: Color(0xFF6C2EBC),
@@ -1220,7 +1302,14 @@ class _AccountSettings extends StatelessWidget {
                   Icons.arrow_forward_ios_rounded,
                   size: 15.0,
                 ),
-                onTap: () {},
+                onTap: () => Navigator.of(context).push(PageRouteBuilder(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      const BloquedListScreen(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    return SlideInRight(child: child);
+                  },
+                )),
               )
             ],
           ),
@@ -1251,6 +1340,14 @@ class _UserCardState extends State<_UserCard> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   SystemUiOverlayStyle.light.copyWith(
+    //     systemNavigationBarIconBrightness: Brightness.light,
+    //     systemNavigationBarColor: Theme.of(context).colorScheme.primaryVariant,
+    //     statusBarIconBrightness: Brightness.light,
+    //     statusBarColor: Colors.red, // Note RED here
+    //   ),
+    // );
 
     return Center(
       child: SizedBox(
@@ -1269,8 +1366,11 @@ class _UserCardState extends State<_UserCard> {
                   context: context,
                   // showDragHandle: true,
                   // enableDrag: true,
-                  // useSafeArea: true,
+                  useSafeArea: true,
                   isScrollControlled: true,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero,
+                  ),
                   builder: (BuildContext context) {
                     return DraggableScrollableSheet(
                       initialChildSize: 1.0,
@@ -2072,155 +2172,175 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
                         useSafeArea: true,
                         isScrollControlled: false,
                         builder: (BuildContext context) {
-                          return DraggableScrollableSheet(
-                            initialChildSize: 1.0,
-                            // minChildSize: 0.8,
-                            maxChildSize: 1.0,
-                            builder: (BuildContext context,
-                                ScrollController scrollController) {
-                              return SizedBox(
-                                height: size.height * 0.80,
-                                width: size.width * 0.95,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 20.0),
-                                    SizedBox(
-                                      height: size.height * 0.05,
-                                      width: size.width,
-                                      child: ListTile(
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                          horizontal: 15,
-                                        ),
-                                        leading: const CircleAvatarProfile(
-                                          image: 'assets/imgs/girl1.png',
-                                        ),
-                                        title: const Text(
-                                          'Melissandre (31)',
-                                          style: TextStyle(
-                                            color: Color(0xFF261638),
-                                            fontSize: 20,
-                                            fontFamily: Strings.fontFamily,
-                                            fontWeight: FontWeight.w600,
+                          return Container(
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                            child: SafeArea(
+                              bottom: false,
+                              child: DraggableScrollableSheet(
+                                initialChildSize: 1.0,
+                                // minChildSize: 0.8,
+                                maxChildSize: 1.0,
+                                builder: (BuildContext context,
+                                    ScrollController scrollController) {
+                                  return SizedBox(
+                                    height: size.height * 0.80,
+                                    width: size.width * 0.95,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(height: 20.0),
+                                        SizedBox(
+                                          height: size.height * 0.05,
+                                          width: size.width,
+                                          child: ListTile(
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                              horizontal: 15,
+                                            ),
+                                            leading: const CircleAvatarProfile(
+                                              image: 'assets/imgs/girl1.png',
+                                            ),
+                                            title: const Text(
+                                              'Melissandre (31)',
+                                              style: TextStyle(
+                                                color: Color(0xFF261638),
+                                                fontSize: 20,
+                                                fontFamily: Strings.fontFamily,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            trailing: IconButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              icon: const Icon(
+                                                Icons.cancel_outlined,
+                                                color: AppTheme.disabledColor,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                        trailing: IconButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(),
-                                          icon: const Icon(
-                                            Icons.cancel_outlined,
-                                            color: AppTheme.disabledColor,
-                                          ),
+                                        const SizedBox(height: 25.0),
+                                        TabBar(
+                                          controller: _tabControllerReport,
+                                          tabs: tabsReport,
                                         ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 25.0),
-                                    TabBar(
-                                      controller: _tabControllerReport,
-                                      tabs: tabsReport,
-                                    ),
-                                    Expanded(
-                                      child: TabBarView(
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        controller: _tabControllerReport,
-                                        children: [
-                                          _ReportUserPage(size: size),
-                                          Container(
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal: 20, vertical: 20),
-                                            child: ListView(
-                                              children: [
-                                                Text(
-                                                  'ARE YOU SURE YOU WANT TO BLOCK THIS MELISSANDRE?',
-                                                  style: TextStyle(
-                                                    color: Color(0xFF686E8C),
-                                                    fontSize: 14,
-                                                    fontFamily:
-                                                        Strings.fontFamily,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  'Your Blocked list will be on your profile settings',
-                                                  style: TextStyle(
-                                                    color: Color(0xFF9CA4BF),
-                                                    fontSize: 12,
-                                                    fontFamily:
-                                                        Strings.fontFamily,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                    height: size.height * 0.15),
-                                                ButtonBar(
-                                                  alignment: MainAxisAlignment
-                                                      .spaceAround,
+                                        Expanded(
+                                          child: TabBarView(
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            controller: _tabControllerReport,
+                                            children: [
+                                              _ReportUserPage(size: size),
+                                              Container(
+                                                margin: EdgeInsets.symmetric(
+                                                    horizontal: 20,
+                                                    vertical: 20),
+                                                child: ListView(
                                                   children: [
-                                                    SizedBox(
-                                                      width: size.width * 0.40,
-                                                      child: FilledButton(
-                                                        onPressed: () {},
-                                                        style: FilledButton
-                                                            .styleFrom(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                            horizontal: 30,
-                                                            vertical: 10,
-                                                          ),
-                                                        ),
-                                                        child: Text(
-                                                          'NO',
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 16,
-                                                            fontFamily: Strings
-                                                                .fontFamily,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                          ),
-                                                        ),
+                                                    Text(
+                                                      'ARE YOU SURE YOU WANT TO BLOCK THIS MELISSANDRE?',
+                                                      style: TextStyle(
+                                                        color:
+                                                            Color(0xFF686E8C),
+                                                        fontSize: 14,
+                                                        fontFamily:
+                                                            Strings.fontFamily,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      'Your Blocked list will be on your profile settings',
+                                                      style: TextStyle(
+                                                        color:
+                                                            Color(0xFF9CA4BF),
+                                                        fontSize: 12,
+                                                        fontFamily:
+                                                            Strings.fontFamily,
+                                                        fontWeight:
+                                                            FontWeight.w500,
                                                       ),
                                                     ),
                                                     SizedBox(
-                                                      width: size.width * 0.40,
-                                                      child: FilledButton(
-                                                        onPressed: () {},
-                                                        style: FilledButton
-                                                            .styleFrom(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                            horizontal: 30,
-                                                            vertical: 10,
+                                                        height:
+                                                            size.height * 0.15),
+                                                    ButtonBar(
+                                                      alignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        SizedBox(
+                                                          width:
+                                                              size.width * 0.40,
+                                                          child: FilledButton(
+                                                            onPressed: () {},
+                                                            style: FilledButton
+                                                                .styleFrom(
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                horizontal: 30,
+                                                                vertical: 10,
+                                                              ),
+                                                            ),
+                                                            child: Text(
+                                                              'NO',
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 16,
+                                                                fontFamily: Strings
+                                                                    .fontFamily,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                              ),
+                                                            ),
                                                           ),
                                                         ),
-                                                        child: Text(
-                                                          'YES',
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 16,
-                                                            fontFamily: Strings
-                                                                .fontFamily,
-                                                            fontWeight:
-                                                                FontWeight.w600,
+                                                        SizedBox(
+                                                          width:
+                                                              size.width * 0.40,
+                                                          child: FilledButton(
+                                                            onPressed: () {},
+                                                            style: FilledButton
+                                                                .styleFrom(
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                horizontal: 30,
+                                                                vertical: 10,
+                                                              ),
+                                                            ),
+                                                            child: Text(
+                                                              'YES',
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 16,
+                                                                fontFamily: Strings
+                                                                    .fontFamily,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                              ),
+                                                            ),
                                                           ),
-                                                        ),
-                                                      ),
+                                                        )
+                                                      ],
                                                     )
                                                   ],
-                                                )
-                                              ],
-                                            ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              );
-                            },
-                            controller: DraggableScrollableController(),
+                                  );
+                                },
+                                controller: DraggableScrollableController(),
+                              ),
+                            ),
                           );
                         },
                       );

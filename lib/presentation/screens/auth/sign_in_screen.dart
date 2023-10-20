@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:animate_do/animate_do.dart';
@@ -10,9 +11,11 @@ import '../../../config/config.dart'
         AppTheme,
         HandlerNotification,
         NtsErrorResponse,
+        SharedPref,
         Strings,
         UserRegisterStatus,
         getIt;
+import '../../../domain/entities/user_entity.dart';
 import '../../widgets/widgets.dart'
     show
         FilledColorizedOutlineButton,
@@ -31,12 +34,13 @@ class SignInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return SafeArea(
-      child: Scaffold(
-        body: ScaffoldAnimated(
-          size: size,
-          child: const SignInBox(),
+    return Scaffold(
+      body: ScaffoldAnimated(
+        size: size,
+        decoration: const BoxDecoration(
+          gradient: AppTheme.linearGradientTopRightBottomLeft,
         ),
+        child: const SignInBox(),
       ),
     );
   }
@@ -156,7 +160,7 @@ class _SignInFormState extends State<SignInForm> {
   final TextEditingController _passwordCtrl = TextEditingController();
   final _notifications = getIt<HandlerNotification>();
   bool _obscureText = true;
-  bool _isRememberPassword = false;
+  bool _isRemember = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -205,13 +209,39 @@ class _SignInFormState extends State<SignInForm> {
 
   void _startSession(BuildContext context) async {
     if (_formKey.currentState?.validate() ?? false) {
+      List<String> credentialsList = [];
+
       final credentials = {
         "email": _emailCtrl.text,
         "password": _passwordCtrl.text
       };
 
+      if (credentials['email']!.isNotEmpty &&
+          credentials['password']!.isNotEmpty) {
+        credentialsList.add(credentials['email'] ?? '');
+        credentialsList.add(credentials['password'] ?? '');
+      }
+
+      // Recordar credenciales en Shared Preferences
+      SharedPref.pref.isRememberCredential = _isRemember;
+
       try {
         await context.read<AccountCubit>().signInUser(credentials);
+        // Saved preference if sign in success
+        if (_isRemember && credentials.isNotEmpty) {
+          SharedPref.pref.loginCredential = credentialsList;
+        } else if (_isRemember == false) {
+          SharedPref.pref.loginCredential = [];
+        }
+
+        UserEntity? userLoged = context.read<AccountCubit>().state.user;
+
+        if (userLoged != null) {
+          String jsonAccount = jsonEncode(userLoged.toJson());
+          print('Este es el json $jsonAccount');
+          SharedPref.pref.account = jsonAccount;
+        }
+
         if (!mounted) return;
         Navigator.of(context).pushNamedAndRemoveUntil(
           HomeScreen.routeName,
@@ -231,6 +261,18 @@ class _SignInFormState extends State<SignInForm> {
           _notifications.errorDioNotification(context);
         }
       }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // SharedPreferences credentials
+    List<String?> credentials = SharedPref.pref.loginCredential;
+    _isRemember = SharedPref.pref.isRememberCredential;
+    if (credentials.isNotEmpty) {
+      _emailCtrl.text = credentials[0] ?? '';
+      _passwordCtrl.text = credentials[1] ?? '';
     }
   }
 
@@ -391,10 +433,10 @@ class _SignInFormState extends State<SignInForm> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Checkbox(
-                    value: _isRememberPassword,
+                    value: _isRemember,
                     onChanged: (value) {
                       setState(() {
-                        _isRememberPassword = value ?? false;
+                        _isRemember = value ?? false;
                       });
                     },
                   ),
@@ -427,34 +469,32 @@ class _SignInFormState extends State<SignInForm> {
               ),
               SizedBox(height: size.height * 0.02),
               BlocBuilder<AccountCubit, AccountState>(
-                  builder: (context, state) => switch (state.status) {
-                        UserRegisterStatus.initial =>
-                          FilledColorizedOutlineButton(
-                            width: 150,
-                            height: 50,
-                            title: 'SIGN IN',
-                            isTrailingIcon: false,
-                            onTap: () => _startSession(context),
-                          ),
-                        UserRegisterStatus.loading =>
-                          const CircularProgressIndicator(),
-                        UserRegisterStatus.failure =>
-                          FilledColorizedOutlineButton(
-                            width: 150,
-                            height: 50,
-                            title: 'SIGN IN',
-                            isTrailingIcon: false,
-                            onTap: () => _startSession(context),
-                          ),
-                        UserRegisterStatus.success =>
-                          FilledColorizedOutlineButton(
-                            width: 150,
-                            height: 50,
-                            title: 'SIGN IN',
-                            isTrailingIcon: false,
-                            onTap: () => _startSession(context),
-                          ),
-                      }),
+                builder: (context, state) => switch (state.status) {
+                  UserRegisterStatus.initial => FilledColorizedOutlineButton(
+                      width: 150,
+                      height: 50,
+                      title: 'SIGN IN',
+                      isTrailingIcon: false,
+                      onTap: () => _startSession(context),
+                    ),
+                  UserRegisterStatus.loading =>
+                    const CircularProgressIndicator(),
+                  UserRegisterStatus.failure => FilledColorizedOutlineButton(
+                      width: 150,
+                      height: 50,
+                      title: 'SIGN IN',
+                      isTrailingIcon: false,
+                      onTap: () => _startSession(context),
+                    ),
+                  UserRegisterStatus.success => FilledColorizedOutlineButton(
+                      width: 150,
+                      height: 50,
+                      title: 'SIGN IN',
+                      isTrailingIcon: false,
+                      onTap: () => _startSession(context),
+                    ),
+                },
+              ),
             ],
           ),
         ),

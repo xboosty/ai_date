@@ -10,6 +10,7 @@ class ConfigurationInputField extends StatelessWidget {
     this.fontSize,
     this.colorLabel,
     this.suffixIcon,
+    this.controller,
   });
 
   final String labelText;
@@ -17,11 +18,13 @@ class ConfigurationInputField extends StatelessWidget {
   final double? fontSize;
   final Color? colorLabel;
   final Widget? suffixIcon;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       keyboardType: keyboardType,
+      controller: controller,
       style: const TextStyle(
         color: Color(0xFF261638),
         fontSize: 14,

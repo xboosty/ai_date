@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
 import '../../../config/config.dart' show Strings;
@@ -19,34 +20,53 @@ class SuccessChangePasswordScreen extends StatelessWidget {
         ),
         backgroundColor: const Color(0xFFCCC1EA),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 50.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: Image.asset('assets/imgs/success_change_password.png'),
+      body: Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: SafeArea(
+          bottom: false,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 50.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Image.asset('assets/imgs/success_change_password.png'),
+                ),
+                const Text(
+                  'Password successfully changed for your account!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF6C2EBC),
+                    fontSize: 28,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const Spacer(),
+                FilledColorizedButton(
+                  width: 165,
+                  height: 50,
+                  title: 'LET\'S START',
+                  isTrailingIcon: true,
+                  onTap: () => Navigator.of(context).pushAndRemoveUntil(
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          const SignInScreen(),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        return SlideInLeft(child: child);
+                      },
+                    ),
+                    (route) => false,
+                  ),
+                  icon: const Icon(
+                    Icons.arrow_right_alt,
+                    color: Colors.white,
+                  ),
+                )
+              ],
             ),
-            const Text(
-              'Password successfully changed for your account!',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFF6C2EBC),
-                fontSize: 28,
-                fontFamily: Strings.fontFamily,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const Spacer(),
-            FilledColorizedButton(
-              width: 165,
-              height: 50,
-              title: 'LET\'S START',
-              isTrailingIcon: true,
-              onTap: () =>
-                  Navigator.of(context).pushNamed(SignInScreen.routeName),
-            )
-          ],
+          ),
         ),
       ),
     );

@@ -14,11 +14,13 @@ class IntroductionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          width: double.infinity,
-          height: size.height,
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        height: size.height,
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: SafeArea(
+          bottom: false,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -99,6 +101,10 @@ class IntroductionScreen extends StatelessWidget {
                           ),
                         );
                       },
+                      icon: const Icon(
+                        Icons.arrow_right_alt,
+                        color: Colors.white,
+                      ),
                     )
                   ],
                 ),

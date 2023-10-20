@@ -36,13 +36,16 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return SafeArea(
-      bottom: false,
-      child: Scaffold(
-        body: Container(
-          width: size.width,
-          height: size.height,
-          decoration: BoxDecoration(gradient: AppTheme.radialGradient),
+    return Scaffold(
+      body: Container(
+        width: size.width,
+        height: size.height,
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          gradient: AppTheme.radialGradient,
+        ),
+        child: SafeArea(
+          bottom: false,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,

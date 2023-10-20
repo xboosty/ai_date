@@ -9,12 +9,22 @@ class NtsErrorResponse {
     this.message,
   });
 
-  factory NtsErrorResponse.fromJson(Map<String, dynamic> json) =>
-      NtsErrorResponse(
-        statusCode: json["statusCode"],
-        customStatusCode: json["customStatusCode"],
-        message: json["message"],
-      );
+  factory NtsErrorResponse.fromJson(Map<String, dynamic> json) {
+    String? messageResp;
+    if (json["message"] != null) {
+      messageResp = json["message"];
+    }
+
+    if (json["errors"] != null) {
+      messageResp = json["errors"][0];
+    }
+
+    return NtsErrorResponse(
+      statusCode: json["statusCode"],
+      customStatusCode: json["customStatusCode"],
+      message: messageResp,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "statusCode": statusCode,
