@@ -8,12 +8,14 @@ class AppRouter {
   static Map<String, Widget Function(BuildContext)> appRouter() => {
         SplashScreen.routeName: (_) => const SplashScreen(),
         IntroductionScreen.routeName: (_) => const IntroductionScreen(),
-        OnBoardingScreen.routeName: (_) => const OnBoardingScreen(),
+        RegisterScreen.routeName: (_) => const RegisterScreen(),
         SignInScreen.routeName: (_) => const SignInScreen(),
         ForgotPasswordScreen.routeName: (_) => const ForgotPasswordScreen(),
         ChangePasswordScreen.routeName: (_) => const ChangePasswordScreen(),
         SuccessChangePasswordScreen.routeName: (_) =>
             const SuccessChangePasswordScreen(),
+        BloquedListScreen.routeName: (_) => const BloquedListScreen(),
         HomeScreen.routeName: (_) => const HomeScreen(),
+        InterviewChatScreen.routeName: (_) => const InterviewChatScreen(),
       };
 }

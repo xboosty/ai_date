@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../config/config.dart'
@@ -112,17 +111,8 @@ class SignInBox extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          Navigator.of(context).push(PageRouteBuilder(
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) =>
-                                    const IntroductionScreen(),
-                            transitionsBuilder: (context, animation,
-                                secondaryAnimation, child) {
-                              return SlideInRight(child: child);
-                            },
-                          ));
-                          // Navigator.of(context)
-                          //     .pushNamed(IntroductionScreen.routeName);
+                          Navigator.of(context)
+                              .pushNamed(IntroductionScreen.routeName);
                         },
                         child: const Text(
                           'SIGN UP',
@@ -451,7 +441,6 @@ class _SignInFormState extends State<SignInForm> {
                   ),
                   Expanded(
                       child: TextButton(
-                    child: const Text('Forgot Password?'),
                     style: TextButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -464,6 +453,7 @@ class _SignInFormState extends State<SignInForm> {
                       ),
                     ),
                     onPressed: () => _forgotPassword(),
+                    child: const Text('Forgot Password?'),
                   ))
                 ],
               ),

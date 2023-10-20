@@ -48,11 +48,11 @@ class ProfilePicturePhoto extends StatelessWidget {
                 Container(
                   width: 24,
                   height: 24,
-                  margin: EdgeInsets.all(5.0),
+                  margin: const EdgeInsets.all(5.0),
                   child: IconButton(
                     onPressed: () {},
-                    icon: Center(
-                      child: const Icon(
+                    icon: const Center(
+                      child: Icon(
                         Icons.add,
                         color: Colors.white,
                       ),

@@ -32,7 +32,7 @@ class AppTheme {
 
   static final Shader linearGradientShader = const LinearGradient(
     colors: <Color>[firstColorBlur, secondColorBlur],
-  ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
+  ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
 
   static final radialGradient = RadialGradient(
     center: Alignment.center,
@@ -68,15 +68,5 @@ class AppTheme {
             ),
           ),
         ),
-        // pageTransitionsTheme:  PageTransitionsTheme(
-        //   builders: {
-        //     TargetPlatform.android: CupertinoPageTransitionsBuilder().buildTransitions(route, context, animation, secondaryAnimation, child){
-        //       return SlideInLeft(
-        //         child: child,
-        //       );
-        //     },
-        //     TargetPlatform.iOS: const CupertinoPageTransitionsBuilder(),
-        //   },
-        // ),
       );
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:animate_do/animate_do.dart';
 
 import '../../../config/config.dart' show AppTheme, Strings;
 import '../screens.dart' show SignInScreen;
@@ -22,13 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void _navigationHome() async {
     await Future.delayed(const Duration(seconds: 5), () {
-      Navigator.of(context).pushReplacement(PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            const SignInScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return SlideInRight(child: child);
-        },
-      ));
+      Navigator.of(context).pushReplacementNamed(SignInScreen.routeName);
     });
   }
 
@@ -81,7 +74,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
               ),
               const Spacer(),
-              Container(
+              SizedBox(
                 // color: Colors.red,
                 width: double.infinity,
                 height: size.height * 0.55,

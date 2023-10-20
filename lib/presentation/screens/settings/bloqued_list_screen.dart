@@ -147,7 +147,6 @@ class _UnbloquedProfile extends StatelessWidget {
 
 class _TitleUnblockUser extends StatelessWidget {
   const _TitleUnblockUser({
-    super.key,
     required this.size,
   });
 
@@ -205,7 +204,6 @@ class _TitleUnblockUser extends StatelessWidget {
 
 class _OpacityCardUnblock extends StatelessWidget {
   const _OpacityCardUnblock({
-    super.key,
     required this.size,
   });
 
@@ -250,7 +248,7 @@ class _OpacityCardUnblock extends StatelessWidget {
             height: 50,
             title: 'Unblock',
             isTrailingIcon: true,
-            icon: const Icon(
+            icon: Icon(
               Icons.published_with_changes_outlined,
               color: Colors.white,
             ),

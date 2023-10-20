@@ -358,7 +358,7 @@ class _WizardScreenState extends State<_WizardScreen> {
                       color: const Color(0xFFE9EAF6),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.key,
                       color: Colors.purple,
                       size: 32,
@@ -571,8 +571,6 @@ class StepPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 5),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 // Configs
 import 'config/config.dart'
     show
@@ -14,8 +15,8 @@ import 'config/config.dart'
 
 void main() async {
   // Start Widget
-  WidgetsFlutterBinding.ensureInitialized();
-
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   // Initializing services locators
   serviceLocatorRepositoryInit();
   serviceLocatorBlocsInit();
@@ -23,6 +24,8 @@ void main() async {
 
   // Initializing SharedPreferences
   await SharedPref.pref.initPrefer();
+
+  FlutterNativeSplash.remove();
 
   runApp(const BlocsProviders());
 }
