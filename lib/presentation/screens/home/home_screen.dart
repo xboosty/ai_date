@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../config/config.dart' show AppTheme, Strings;
-import '../screens.dart' show ProfilePage;
+import '../../../config/config.dart' show AppTheme, SharedPref, Strings;
+import '../../widgets/widgets.dart' show OutlineText;
+import '../screens.dart' show InterViewPage, IntroInterviewPage, ProfilePage;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -92,11 +93,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   ];
   late TabController _tabController;
 
+  bool showFirstInterviewPage = false;
+
   @override
   void initState() {
     super.initState();
     _tabController =
         TabController(vsync: this, length: tabs.length, initialIndex: 1);
+    showFirstInterviewPage = SharedPref.pref.showFirstInterviewPage;
   }
 
   @override
@@ -107,6 +111,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: Container(
         color: Theme.of(context).scaffoldBackgroundColor,
@@ -116,9 +122,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             index: _selectedPage,
             children: [
               ProfilePage(tabController: _tabController, tabs: tabs),
-              const Center(
-                child: Text('Interview'),
-              ),
+              showFirstInterviewPage ? IntroInterviewPage() : InterViewPage(),
               const Center(
                 child: Text('Premium'),
               ),

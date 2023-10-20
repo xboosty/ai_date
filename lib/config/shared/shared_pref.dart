@@ -12,7 +12,9 @@ class SharedPref {
   }
 
   // Getters
-  bool get showApp => preferences?.getBool('showApp') ?? false;
+  bool get showApp => preferences?.getBool('showApp') ?? true;
+  bool get showFirstInterviewPage =>
+      preferences?.getBool('showFirstInterviewPage') ?? true;
   bool get isRememberCredential =>
       preferences?.getBool('isRememberCredential') ?? false;
   List<String> get loginCredential =>
@@ -31,6 +33,8 @@ class SharedPref {
 
   // Setters
   set showApp(bool flag) => preferences?.setBool('showApp', flag);
+  set showFirstInterviewPage(bool flag) =>
+      preferences?.setBool('showFirstInterviewPage', flag);
   set isRememberCredential(bool flag) =>
       preferences?.setBool('isRememberCredential', flag);
   set loginCredential(List<String> credentials) =>

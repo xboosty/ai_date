@@ -89,14 +89,8 @@ class _AppBarAIDate extends StatelessWidget {
     final notifications = getIt<HandlerNotification>();
     try {
       await context.read<AccountCubit>().logOutUser();
-      Navigator.of(context).pushAndRemoveUntil(
-        PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              const SignInScreen(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return SlideInRight(child: child);
-          },
-        ),
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        SignInScreen.routeName,
         (route) => false,
       );
     } catch (e) {

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../presentation/screens/screens.dart';
 
 class AppRouter {
-  static const String initialRoute = SplashScreen.routeName;
+  static const String initialRoute = HomeScreen.routeName;
 
   static Map<String, Widget Function(BuildContext)> appRouter() => {
         SplashScreen.routeName: (_) => const SplashScreen(),
@@ -15,5 +15,6 @@ class AppRouter {
         SuccessChangePasswordScreen.routeName: (_) =>
             const SuccessChangePasswordScreen(),
         HomeScreen.routeName: (_) => const HomeScreen(),
+        InterviewChatScreen.routeName: (_) => const InterviewChatScreen(),
       };
 }
