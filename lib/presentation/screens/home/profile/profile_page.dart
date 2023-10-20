@@ -1,9 +1,6 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:animate_do/animate_do.dart';
+import 'package:dio/dio.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:appinio_swiper/appinio_swiper.dart';
@@ -15,7 +12,6 @@ import '../../../../config/config.dart'
         AppTheme,
         HandlerNotification,
         NtsErrorResponse,
-        SharedPref,
         Strings,
         UserRegisterStatus,
         getIt;
@@ -82,13 +78,19 @@ class ProfilePage extends StatelessWidget {
   }
 }
 
-class _AppBarAIDate extends StatelessWidget {
+class _AppBarAIDate extends StatefulWidget {
   const _AppBarAIDate();
 
+  @override
+  State<_AppBarAIDate> createState() => _AppBarAIDateState();
+}
+
+class _AppBarAIDateState extends State<_AppBarAIDate> {
   Future<void> _logOut(BuildContext context) async {
     final notifications = getIt<HandlerNotification>();
     try {
       await context.read<AccountCubit>().logOutUser();
+      if (!mounted) return;
       Navigator.of(context).pushNamedAndRemoveUntil(
         SignInScreen.routeName,
         (route) => false,
@@ -604,13 +606,13 @@ class _CardPersonalInfo extends StatelessWidget {
               controller: lastNameCtrl,
               fontSize: 10,
               labelText: 'Last Name',
-              colorLabel: Color(0xFF6C2EBC),
+              colorLabel: const Color(0xFF6C2EBC),
             ),
             ConfigurationInputField(
               controller: emailCtrl,
               fontSize: 10,
               labelText: 'Email',
-              colorLabel: Color(0xFF6C2EBC),
+              colorLabel: const Color(0xFF6C2EBC),
               keyboardType: TextInputType.emailAddress,
             ),
             SizedBox(height: size.height * 0.01),
@@ -628,7 +630,6 @@ class _CardPersonalInfo extends StatelessWidget {
 
 class _HelpSupportSetting extends StatelessWidget {
   const _HelpSupportSetting({
-    super.key,
     required this.size,
   });
 
@@ -1366,7 +1367,7 @@ class _UserCardState extends State<_UserCard> {
                           controller: scrollController,
                           child: Column(
                             children: [
-                              _CardSeeProfileDetails(),
+                              const _CardSeeProfileDetails(),
                               SizedBox(height: size.height * 0.02),
                               _SmallDescriptionProfile(size: size),
                               const ButtonsInfoProfile(
@@ -1646,11 +1647,11 @@ class _UserCardState extends State<_UserCard> {
                           SizedBox(width: size.width * 0.30),
                           CircularGradientButton(
                             heroTag: 'Like',
-                            child: const Icon(Icons.favorite, size: 32),
                             callback: () {
                               controller.swipeRight();
                             },
                             gradient: AppTheme.linearGradientReverse,
+                            child: const Icon(Icons.favorite, size: 32),
                           ),
                         ],
                       ),
@@ -1668,7 +1669,6 @@ class _UserCardState extends State<_UserCard> {
 
 class _OverviewProfileCard extends StatelessWidget {
   const _OverviewProfileCard({
-    super.key,
     required this.size,
     required this.title,
     required this.description,
@@ -1714,7 +1714,6 @@ class _OverviewProfileCard extends StatelessWidget {
 
 class _HobbiesProfile extends StatelessWidget {
   const _HobbiesProfile({
-    super.key,
     required this.size,
     required List<String> hobbies,
   }) : _hobbies = hobbies;
@@ -1823,7 +1822,6 @@ class _HobbiesProfile extends StatelessWidget {
 
 class _OthersPicturesProfile extends StatelessWidget {
   const _OthersPicturesProfile({
-    super.key,
     required this.size,
   });
 
@@ -1968,7 +1966,6 @@ class _PersonalQuestionInfo extends StatelessWidget {
 
 class _SmallDescriptionProfile extends StatelessWidget {
   const _SmallDescriptionProfile({
-    super.key,
     required this.size,
   });
 
@@ -2096,7 +2093,6 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _tabControllerReport =
         TabController(vsync: this, length: tabsReport.length, initialIndex: 0);
@@ -2217,12 +2213,13 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
                                             children: [
                                               _ReportUserPage(size: size),
                                               Container(
-                                                margin: EdgeInsets.symmetric(
-                                                    horizontal: 20,
-                                                    vertical: 20),
+                                                margin:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 20,
+                                                        vertical: 20),
                                                 child: ListView(
                                                   children: [
-                                                    Text(
+                                                    const Text(
                                                       'ARE YOU SURE YOU WANT TO BLOCK THIS MELISSANDRE?',
                                                       style: TextStyle(
                                                         color:
@@ -2234,7 +2231,7 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
                                                             FontWeight.w600,
                                                       ),
                                                     ),
-                                                    Text(
+                                                    const Text(
                                                       'Your Blocked list will be on your profile settings',
                                                       style: TextStyle(
                                                         color:
@@ -2261,13 +2258,14 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
                                                             onPressed: () {},
                                                             style: FilledButton
                                                                 .styleFrom(
-                                                              padding: EdgeInsets
-                                                                  .symmetric(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
                                                                 horizontal: 30,
                                                                 vertical: 10,
                                                               ),
                                                             ),
-                                                            child: Text(
+                                                            child: const Text(
                                                               'NO',
                                                               style: TextStyle(
                                                                 color: Colors
@@ -2289,13 +2287,14 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
                                                             onPressed: () {},
                                                             style: FilledButton
                                                                 .styleFrom(
-                                                              padding: EdgeInsets
-                                                                  .symmetric(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
                                                                 horizontal: 30,
                                                                 vertical: 10,
                                                               ),
                                                             ),
-                                                            child: Text(
+                                                            child: const Text(
                                                               'YES',
                                                               style: TextStyle(
                                                                 color: Colors
@@ -2371,7 +2370,6 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
 
 class _ReportUserPage extends StatelessWidget {
   const _ReportUserPage({
-    super.key,
     required this.size,
   });
 
@@ -2409,7 +2407,6 @@ class _ReportUserPage extends StatelessWidget {
 
 class _TitleReportUser extends StatelessWidget {
   const _TitleReportUser({
-    super.key,
     required this.size,
   });
 
@@ -2446,7 +2443,6 @@ class _TitleReportUser extends StatelessWidget {
 
 class _CardReportUser extends StatelessWidget {
   const _CardReportUser({
-    super.key,
     required this.size,
   });
 
@@ -2455,13 +2451,13 @@ class _CardReportUser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 15),
+      margin: const EdgeInsets.symmetric(horizontal: 15),
       padding: const EdgeInsets.symmetric(
         horizontal: 20,
         vertical: 5.0,
       ),
       decoration: BoxDecoration(
-        color: Color(0xFFEFF0FB),
+        color: const Color(0xFFEFF0FB),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(

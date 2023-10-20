@@ -23,11 +23,11 @@ class IconButtonSvg extends StatelessWidget {
       heroTag: heroTag,
       elevation: 0.0,
       backgroundColor: backgroundColor,
+      onPressed: onPressed,
       child: SvgPicture.asset(
         urlSvg,
         semanticsLabel: semanticsLabel,
       ),
-      onPressed: onPressed,
     );
   }
 }

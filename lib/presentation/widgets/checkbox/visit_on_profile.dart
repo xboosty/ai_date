@@ -26,7 +26,7 @@ class _VisibleOnProfileState extends State<VisibleOnProfile> {
   @override
   Widget build(BuildContext context) {
     return CheckboxListTile(
-      contentPadding: EdgeInsets.symmetric(horizontal: 30),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 30),
       controlAffinity: ListTileControlAffinity.leading,
       title: const Text(
         'Visible on profile',

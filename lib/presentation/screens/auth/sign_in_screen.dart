@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../config/config.dart'
@@ -442,7 +441,6 @@ class _SignInFormState extends State<SignInForm> {
                   ),
                   Expanded(
                       child: TextButton(
-                    child: const Text('Forgot Password?'),
                     style: TextButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -455,6 +453,7 @@ class _SignInFormState extends State<SignInForm> {
                       ),
                     ),
                     onPressed: () => _forgotPassword(),
+                    child: const Text('Forgot Password?'),
                   ))
                 ],
               ),

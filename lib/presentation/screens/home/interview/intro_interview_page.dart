@@ -72,13 +72,13 @@ class _IntroInterviewPageState extends State<IntroInterviewPage> {
                 ],
               ),
             ),
-            Container(
+            SizedBox(
               height: size.height * 0.35,
               child: ListView(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15.0, vertical: 15.0),
+                  const Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
                     child: Text(
                       'Before we begin, it\'s important to understand that finding a true match goes beyond superficial traits; it\'s a journey that requires honesty, self-awareness, and sometimes, vulnerability. Our process is thorough and may seem extensive, but this is to ensure the most accurate results. We\'ll dive deep into various aspects of your personality, preferences, and life goals. Remember, the key to finding a genuine connection is being open and honest. All your responses are encrypted and securely stored, with access granted only at your discretion.',
                       style: TextStyle(
@@ -91,15 +91,20 @@ class _IntroInterviewPageState extends State<IntroInterviewPage> {
                   ),
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: size.width / 5),
-                    child: const FilledColorizedButton(
+                    child: FilledColorizedButton(
                       width: 165,
                       height: 50,
                       title: 'LET\'S START',
                       isTrailingIcon: true,
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.arrow_forward_rounded,
                         color: Colors.white,
                       ),
+                      onTap: () {
+                        setState(() {
+                          SharedPref.pref.showFirstInterviewPage = false;
+                        });
+                      },
                     ),
                   )
                 ],
@@ -109,7 +114,7 @@ class _IntroInterviewPageState extends State<IntroInterviewPage> {
         ),
       );
     } else {
-      return InterViewPage();
+      return const InterViewPage();
     }
   }
 }

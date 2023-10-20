@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../config/config.dart' show AppTheme, SharedPref, Strings;
-import '../../widgets/widgets.dart' show OutlineText;
 import '../screens.dart' show InterViewPage, IntroInterviewPage, ProfilePage;
 
 class HomeScreen extends StatefulWidget {
@@ -111,8 +110,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Scaffold(
       body: Container(
         color: Theme.of(context).scaffoldBackgroundColor,
@@ -122,7 +119,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             index: _selectedPage,
             children: [
               ProfilePage(tabController: _tabController, tabs: tabs),
-              showFirstInterviewPage ? IntroInterviewPage() : InterViewPage(),
+              showFirstInterviewPage
+                  ? const IntroInterviewPage()
+                  : const InterViewPage(),
               const Center(
                 child: Text('Premium'),
               ),

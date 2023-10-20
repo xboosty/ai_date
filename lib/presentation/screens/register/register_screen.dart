@@ -1,8 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:location/location.dart';
 
@@ -24,7 +24,7 @@ import '../../widgets/widgets.dart'
         FilledColorizedButton,
         FilledColorizedOutlineButton,
         VisibleOnProfile;
-import '../screens.dart' show HomeScreen, SignInScreen;
+import '../screens.dart' show SignInScreen;
 
 class Genders {
   final int id;
@@ -65,7 +65,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String phoneNumberUser = '';
   String codeNumber = '';
 
-  int _currentPage = 0;
   late Genders? _genderSelected;
   late Sexuality? _sexualitySelected;
 
@@ -329,7 +328,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildPageUsername(Size size) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: size.height,
       child: SingleChildScrollView(
@@ -340,42 +339,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
               height: size.height * 0.36,
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               // color: Colors.red,
-              child: Container(
-                // color: Colors.white,
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Image.asset(
-                        'assets/imgs/vector_robot_chat.png',
-                      ),
+              child: Stack(
+                children: [
+                  Center(
+                    child: Image.asset(
+                      'assets/imgs/vector_robot_chat.png',
                     ),
-                    Center(child: Image.asset('assets/imgs/robot_chat.png')),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 30.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.arrow_back_rounded,
-                              color: AppTheme.disabledColor,
-                              size: 32,
-                            ),
-                            onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  Center(child: Image.asset('assets/imgs/robot_chat.png')),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 30.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back_rounded,
+                            color: AppTheme.disabledColor,
+                            size: 32,
                           ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.cancel_outlined,
-                              color: AppTheme.disabledColor,
-                              size: 32,
-                            ),
-                            onPressed: () => _exitSetup(),
-                          )
-                        ],
-                      ),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.cancel_outlined,
+                            color: AppTheme.disabledColor,
+                            size: 32,
+                          ),
+                          onPressed: () => _exitSetup(),
+                        )
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -443,7 +439,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildPagePhoneNumber(Size size) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: size.height,
       child: SingleChildScrollView(
@@ -549,7 +545,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildPageCode(Size size) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: size.height,
       child: SingleChildScrollView(
@@ -559,41 +555,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
               width: size.width,
               height: size.height * 0.36,
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              child: Container(
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Image.asset(
-                        'assets/imgs/vector_code.png',
-                      ),
+              child: Stack(
+                children: [
+                  Center(
+                    child: Image.asset(
+                      'assets/imgs/vector_code.png',
                     ),
-                    Center(child: Image.asset('assets/imgs/code_img.png')),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 30.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.arrow_back_rounded,
-                              color: AppTheme.disabledColor,
-                              size: 32,
-                            ),
-                            onPressed: () => _backPage(),
+                  ),
+                  Center(child: Image.asset('assets/imgs/code_img.png')),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 30.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back_rounded,
+                            color: AppTheme.disabledColor,
+                            size: 32,
                           ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.cancel_outlined,
-                              color: AppTheme.disabledColor,
-                              size: 32,
-                            ),
-                            onPressed: () => _exitSetup(),
-                          )
-                        ],
-                      ),
+                          onPressed: () => _backPage(),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.cancel_outlined,
+                            color: AppTheme.disabledColor,
+                            size: 32,
+                          ),
+                          onPressed: () => _exitSetup(),
+                        )
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -648,7 +642,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildPageEmail(Size size) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: size.height,
       child: SingleChildScrollView(
@@ -658,43 +652,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
               width: size.width,
               height: size.height * 0.36,
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              // color: Colors.red,
-              child: Container(
-                // color: Colors.white,
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Image.asset(
-                        'assets/imgs/vector_email.png',
-                      ),
+              child: Stack(
+                children: [
+                  Center(
+                    child: Image.asset(
+                      'assets/imgs/vector_email.png',
                     ),
-                    Center(child: Image.asset('assets/imgs/email_img.png')),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 30.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.arrow_back_rounded,
-                              color: AppTheme.disabledColor,
-                              size: 32,
-                            ),
-                            onPressed: () => _backPage(),
+                  ),
+                  Center(child: Image.asset('assets/imgs/email_img.png')),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 30.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back_rounded,
+                            color: AppTheme.disabledColor,
+                            size: 32,
                           ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.cancel_outlined,
-                              color: AppTheme.disabledColor,
-                              size: 32,
-                            ),
-                            onPressed: () => _exitSetup(),
-                          )
-                        ],
-                      ),
+                          onPressed: () => _backPage(),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.cancel_outlined,
+                            color: AppTheme.disabledColor,
+                            size: 32,
+                          ),
+                          onPressed: () => _exitSetup(),
+                        )
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -741,7 +731,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildPagePassword(Size size) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: size.height,
       child: SingleChildScrollView(
@@ -752,42 +742,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
               height: size.height * 0.36,
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               // color: Colors.red,
-              child: Container(
-                // color: Colors.white,
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Image.asset(
-                        'assets/imgs/vector_password.png',
-                      ),
+              child: Stack(
+                children: [
+                  Center(
+                    child: Image.asset(
+                      'assets/imgs/vector_password.png',
                     ),
-                    Center(child: Image.asset('assets/imgs/password_img.png')),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 30.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.arrow_back_rounded,
-                              color: AppTheme.disabledColor,
-                              size: 32,
-                            ),
-                            onPressed: () => _backPage(),
+                  ),
+                  Center(child: Image.asset('assets/imgs/password_img.png')),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 30.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back_rounded,
+                            color: AppTheme.disabledColor,
+                            size: 32,
                           ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.cancel_outlined,
-                              color: AppTheme.disabledColor,
-                              size: 32,
-                            ),
-                            onPressed: () => _exitSetup(),
-                          )
-                        ],
-                      ),
+                          onPressed: () => _backPage(),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.cancel_outlined,
+                            color: AppTheme.disabledColor,
+                            size: 32,
+                          ),
+                          onPressed: () => _exitSetup(),
+                        )
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -856,7 +843,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildPageGender(Size size) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: size.height,
       child: SingleChildScrollView(
@@ -867,42 +854,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
               height: size.height * 0.36,
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               // color: Colors.red,
-              child: Container(
-                // color: Colors.white,
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Image.asset(
-                        'assets/imgs/vector_gender.png',
-                      ),
+              child: Stack(
+                children: [
+                  Center(
+                    child: Image.asset(
+                      'assets/imgs/vector_gender.png',
                     ),
-                    Center(child: Image.asset('assets/imgs/gender_img.png')),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 30.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.arrow_back_rounded,
-                              color: AppTheme.disabledColor,
-                              size: 32,
-                            ),
-                            onPressed: () => _backPage(),
+                  ),
+                  Center(child: Image.asset('assets/imgs/gender_img.png')),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 30.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back_rounded,
+                            color: AppTheme.disabledColor,
+                            size: 32,
                           ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.cancel_outlined,
-                              color: AppTheme.disabledColor,
-                              size: 32,
-                            ),
-                            onPressed: () => _exitSetup(),
-                          )
-                        ],
-                      ),
+                          onPressed: () => _backPage(),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.cancel_outlined,
+                            color: AppTheme.disabledColor,
+                            size: 32,
+                          ),
+                          onPressed: () => _exitSetup(),
+                        )
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -993,7 +977,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildPageSexuality(Size size) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: size.height,
       child: SingleChildScrollView(
@@ -1004,42 +988,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
               height: size.height * 0.36,
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               // color: Colors.red,
-              child: Container(
-                // color: Colors.white,
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Image.asset(
-                        'assets/imgs/vector_heart.png',
-                      ),
+              child: Stack(
+                children: [
+                  Center(
+                    child: Image.asset(
+                      'assets/imgs/vector_heart.png',
                     ),
-                    Center(child: Image.asset('assets/imgs/heart_img.png')),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 30.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.arrow_back_rounded,
-                              color: AppTheme.disabledColor,
-                              size: 32,
-                            ),
-                            onPressed: () => _backPage(),
+                  ),
+                  Center(child: Image.asset('assets/imgs/heart_img.png')),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 30.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back_rounded,
+                            color: AppTheme.disabledColor,
+                            size: 32,
                           ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.cancel_outlined,
-                              color: AppTheme.disabledColor,
-                              size: 32,
-                            ),
-                            onPressed: () => _exitSetup(),
-                          )
-                        ],
-                      ),
+                          onPressed: () => _backPage(),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.cancel_outlined,
+                            color: AppTheme.disabledColor,
+                            size: 32,
+                          ),
+                          onPressed: () => _exitSetup(),
+                        )
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -1082,7 +1063,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         });
                       },
                     ),
-                    Divider(),
+                    const Divider(),
                   ],
                 ),
               ),
@@ -1095,7 +1076,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildPageLocation(Size size) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: size.height,
       child: Column(
@@ -1105,42 +1086,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
             height: size.height * 0.36,
             padding: const EdgeInsets.symmetric(horizontal: 30.0),
             // color: Colors.red,
-            child: Container(
-              // color: Colors.white,
-              child: Stack(
-                children: [
-                  Center(
-                    child: Image.asset(
-                      'assets/imgs/vector_location.png',
-                    ),
+            child: Stack(
+              children: [
+                Center(
+                  child: Image.asset(
+                    'assets/imgs/vector_location.png',
                   ),
-                  Center(child: Image.asset('assets/imgs/location_img.png')),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 30.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back_rounded,
-                            color: AppTheme.disabledColor,
-                            size: 32,
-                          ),
-                          onPressed: () => _backPage(),
+                ),
+                Center(child: Image.asset('assets/imgs/location_img.png')),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 30.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        icon: const Icon(
+                          Icons.arrow_back_rounded,
+                          color: AppTheme.disabledColor,
+                          size: 32,
                         ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.cancel_outlined,
-                            color: AppTheme.disabledColor,
-                            size: 32,
-                          ),
-                          onPressed: () => _exitSetup(),
-                        )
-                      ],
-                    ),
+                        onPressed: () => _backPage(),
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.cancel_outlined,
+                          color: AppTheme.disabledColor,
+                          size: 32,
+                        ),
+                        onPressed: () => _exitSetup(),
+                      )
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           Padding(
@@ -1229,9 +1207,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _pageListener() {
-    setState(() {
-      _currentPage = pageviewController.page!.round();
-    });
+    setState(() {});
   }
 
   @override
@@ -1262,9 +1238,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               physics: const NeverScrollableScrollPhysics(),
               controller: pageviewController,
               onPageChanged: (index) {
-                setState(() {
-                  _currentPage = index;
-                });
+                setState(() {});
               },
               children: [
                 _buildPageUsername(size),

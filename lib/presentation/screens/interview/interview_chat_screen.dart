@@ -38,7 +38,7 @@ class InterviewChatScreen extends StatelessWidget {
                     value: 0.25,
                   ),
                 ),
-                Text(
+                const Text(
                   '25%',
                   style: TextStyle(
                     color: Color(0xFF6C2EBC),
@@ -52,18 +52,18 @@ class InterviewChatScreen extends StatelessWidget {
           )
         ],
       ),
-      body: Container(
+      body: SizedBox(
         width: size.width,
         height: size.height,
         child: Column(
           children: [
-            Container(
+            SizedBox(
               width: size.width,
               height: size.height * 0.80,
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Padding(
+                    const Padding(
                       padding:
                           EdgeInsets.symmetric(vertical: 10, horizontal: 10.0),
                       child: Text(
@@ -83,9 +83,9 @@ class InterviewChatScreen extends StatelessWidget {
                         side: BorderSide.none,
                       ),
                       side: BorderSide.none,
-                      backgroundColor: Color(0xFFCCC1EA),
-                      label: Padding(
-                        padding: const EdgeInsets.all(5.0),
+                      backgroundColor: const Color(0xFFCCC1EA),
+                      label: const Padding(
+                        padding: EdgeInsets.all(5.0),
                         child: Text(
                           'Today',
                           style: TextStyle(
@@ -106,8 +106,8 @@ class InterviewChatScreen extends StatelessWidget {
             ),
             Expanded(
               child: Container(
-                margin: EdgeInsets.all(8.0),
-                padding: EdgeInsets.symmetric(horizontal: 12),
+                margin: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(35),
                   border: Border.all(color: Colors.grey),
@@ -115,7 +115,7 @@ class InterviewChatScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       'Write or Tap and hold to send an audio',
                       style: TextStyle(
                         color: Color(0xFFBDC0D6),
@@ -125,7 +125,7 @@ class InterviewChatScreen extends StatelessWidget {
                         height: 0.12,
                       ),
                     ),
-                    IconButton(onPressed: () {}, icon: Icon(Icons.mic))
+                    IconButton(onPressed: () {}, icon: const Icon(Icons.mic))
                   ],
                 ),
               ),
@@ -139,7 +139,6 @@ class InterviewChatScreen extends StatelessWidget {
 
 class _ChatUser extends StatelessWidget {
   const _ChatUser({
-    super.key,
     required this.size,
   });
 
@@ -158,14 +157,14 @@ class _ChatUser extends StatelessWidget {
                 width: size.width * 0.89,
                 decoration: BoxDecoration(
                   color: Colors.purple.shade300,
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
                     bottomLeft: Radius.circular(20),
                     bottomRight: Radius.circular(5),
                   ),
                 ),
-                child: Column(
+                child: const Column(
                   children: [
                     ListTile(
                       title: Text(
@@ -184,8 +183,8 @@ class _ChatUser extends StatelessWidget {
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -208,7 +207,6 @@ class _ChatUser extends StatelessWidget {
 
 class _ChatAI extends StatelessWidget {
   const _ChatAI({
-    super.key,
     required this.size,
   });
 
@@ -225,7 +223,7 @@ class _ChatAI extends StatelessWidget {
             children: [
               Container(
                 width: size.width * 0.89,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: AppTheme.linearGradientTopRightBottomLeft,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
@@ -234,7 +232,7 @@ class _ChatAI extends StatelessWidget {
                     bottomRight: Radius.circular(20),
                   ),
                 ),
-                child: Column(
+                child: const Column(
                   children: [
                     ListTile(
                       leading: CircleAvatar(
@@ -258,8 +256,8 @@ class _ChatAI extends StatelessWidget {
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
           child: Row(
             children: [
               Text(

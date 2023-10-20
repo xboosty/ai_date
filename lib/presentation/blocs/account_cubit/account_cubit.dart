@@ -1,8 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../config/config.dart'
-    show NtsAccountAuthRepository, SharedPref, getIt;
+import '../../../config/config.dart' show NtsAccountAuthRepository, getIt;
 import '../../../domain/domain.dart' show UserEntity;
 
 part 'account_state.dart';

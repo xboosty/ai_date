@@ -2,7 +2,6 @@ import 'package:ai_date/presentation/screens/screens.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../config/config.dart' show AppTheme, Strings;
-import '../../../widgets/widgets.dart' show FilledColorizedButton;
 
 class InterViewPage extends StatelessWidget {
   const InterViewPage({super.key});
@@ -72,7 +71,7 @@ class InterViewPage extends StatelessWidget {
               children: [
                 _CardInterview(
                   size: size,
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.diversity_2,
                     color: Colors.white,
                     size: 32,
@@ -85,7 +84,7 @@ class InterViewPage extends StatelessWidget {
                 SizedBox(height: size.height * 0.02),
                 _CardInterview(
                   size: size,
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.real_estate_agent,
                     color: Colors.deepPurple,
                     size: 32,
@@ -98,7 +97,7 @@ class InterViewPage extends StatelessWidget {
                 SizedBox(height: size.height * 0.02),
                 _CardInterview(
                   size: size,
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.supervised_user_circle,
                     color: Colors.white,
                     size: 32,
@@ -120,7 +119,6 @@ class InterViewPage extends StatelessWidget {
 
 class _CardInterview extends StatelessWidget {
   const _CardInterview({
-    super.key,
     required this.size,
     required this.titleHeader,
     required this.title,
@@ -187,7 +185,7 @@ class _CardInterview extends StatelessWidget {
                   height: 50,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Color(0x336C2EBC),
+                    color: const Color(0x336C2EBC),
                   ),
                   child: Center(
                     child: icon,
@@ -227,8 +225,8 @@ class _CardInterview extends StatelessWidget {
                             topRight: Radius.circular(10),
                           ),
                         ),
-                        child: Center(
-                          child: const Text(
+                        child: const Center(
+                          child: Text(
                             'START HERE',
                             style: TextStyle(
                               color: Colors.white,
@@ -249,7 +247,8 @@ class _CardInterview extends StatelessWidget {
                           children: [
                             Container(
                               width: size.width * 0.70,
-                              padding: EdgeInsets.only(left: 25.0, right: 15.0),
+                              padding: const EdgeInsets.only(
+                                  left: 25.0, right: 15.0),
                               child: Center(
                                 child: LinearProgressIndicator(
                                   backgroundColor: Colors.white
@@ -276,7 +275,7 @@ class _CardInterview extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(50),
                                 ),
                               ),
-                              child: Center(
+                              child: const Center(
                                 child: Text(
                                   '25%',
                                   style: TextStyle(
@@ -326,7 +325,7 @@ class _CardInterview extends StatelessWidget {
               ),
               title: Text(
                 titleHeader,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color(0xFF7F87A6),
                   fontSize: 12,
                   fontFamily: Strings.fontFamily,
@@ -335,7 +334,7 @@ class _CardInterview extends StatelessWidget {
               ),
               subtitle: Text(
                 title,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Color(0xFF6C2EBC),
                   fontSize: 24,
                   fontFamily: Strings.fontFamily,
@@ -357,8 +356,8 @@ class _CardInterview extends StatelessWidget {
                     topRight: Radius.circular(10),
                   ),
                 ),
-                child: Center(
-                  child: const Text(
+                child: const Center(
+                  child: Text(
                     'START HERE',
                     style: TextStyle(
                       color: Colors.white,
