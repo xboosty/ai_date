@@ -347,8 +347,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   Center(child: Image.asset('assets/imgs/robot_chat.png')),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 30.0),
+                  SafeArea(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -459,8 +458,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Center(
                     child: Image.asset('assets/imgs/phone_number_img.png'),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 30.0),
+                  SafeArea(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -660,8 +658,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   Center(child: Image.asset('assets/imgs/email_img.png')),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 30.0),
+                  SafeArea(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -750,8 +747,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   Center(child: Image.asset('assets/imgs/password_img.png')),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 30.0),
+                  SafeArea(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -862,8 +858,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   Center(child: Image.asset('assets/imgs/gender_img.png')),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 30.0),
+                  SafeArea(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -996,8 +991,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   Center(child: Image.asset('assets/imgs/heart_img.png')),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 30.0),
+                  SafeArea(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -1094,8 +1088,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 Center(child: Image.asset('assets/imgs/location_img.png')),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 30.0),
+                SafeArea(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -1230,27 +1223,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       body: Container(
         color: Theme.of(context).scaffoldBackgroundColor,
-        child: SafeArea(
-          bottom: false,
-          child: Form(
-            key: _formKey,
-            child: PageView(
-              physics: const NeverScrollableScrollPhysics(),
-              controller: pageviewController,
-              onPageChanged: (index) {
-                setState(() {});
-              },
-              children: [
-                _buildPageUsername(size),
-                _buildPagePhoneNumber(size),
-                _buildPageEmail(size),
-                _buildPagePassword(size),
-                _buildPageGender(size),
-                _buildPageSexuality(size),
-                _buildPageLocation(size),
-                _buildPageCode(size),
-              ],
-            ),
+        child: Form(
+          key: _formKey,
+          child: PageView(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: pageviewController,
+            onPageChanged: (index) {
+              setState(() {});
+            },
+            children: [
+              _buildPageUsername(size),
+              _buildPagePhoneNumber(size),
+              _buildPageEmail(size),
+              _buildPagePassword(size),
+              _buildPageGender(size),
+              _buildPageSexuality(size),
+              _buildPageLocation(size),
+              _buildPageCode(size),
+            ],
           ),
         ),
       ),
