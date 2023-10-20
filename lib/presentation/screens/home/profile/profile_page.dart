@@ -1161,18 +1161,8 @@ class _PrivacyAndSecuritySetting extends StatelessWidget {
                   Icons.arrow_forward_ios_rounded,
                   size: 15.0,
                 ),
-                onTap: () => Navigator.of(context).push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, animation, secondaryAnimation) =>
-                        const ChangePasswordScreen(),
-                    transitionsBuilder:
-                        (context, animation, secondaryAnimation, child) {
-                      return SlideInRight(
-                        child: child,
-                      );
-                    },
-                  ),
-                ),
+                onTap: () => Navigator.of(context)
+                    .pushNamed(ChangePasswordScreen.routeName),
               ),
               const Divider(),
               ListTile(
@@ -1302,14 +1292,8 @@ class _AccountSettings extends StatelessWidget {
                   Icons.arrow_forward_ios_rounded,
                   size: 15.0,
                 ),
-                onTap: () => Navigator.of(context).push(PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      const BloquedListScreen(),
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) {
-                    return SlideInRight(child: child);
-                  },
-                )),
+                onTap: () => Navigator.of(context)
+                    .pushNamed(BloquedListScreen.routeName),
               )
             ],
           ),

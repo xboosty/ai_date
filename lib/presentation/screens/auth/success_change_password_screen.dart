@@ -48,15 +48,8 @@ class SuccessChangePasswordScreen extends StatelessWidget {
                   height: 50,
                   title: 'LET\'S START',
                   isTrailingIcon: true,
-                  onTap: () => Navigator.of(context).pushAndRemoveUntil(
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) =>
-                          const SignInScreen(),
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) {
-                        return SlideInLeft(child: child);
-                      },
-                    ),
+                  onTap: () => Navigator.of(context).pushNamedAndRemoveUntil(
+                    SignInScreen.routeName,
                     (route) => false,
                   ),
                   icon: const Icon(

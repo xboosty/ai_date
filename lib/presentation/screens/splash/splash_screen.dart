@@ -22,13 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void _navigationHome() async {
     await Future.delayed(const Duration(seconds: 5), () {
-      Navigator.of(context).pushReplacement(PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            const SignInScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return SlideInRight(child: child);
-        },
-      ));
+      Navigator.of(context).pushReplacementNamed(SignInScreen.routeName);
     });
   }
 

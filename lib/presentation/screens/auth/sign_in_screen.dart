@@ -112,17 +112,8 @@ class SignInBox extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          Navigator.of(context).push(PageRouteBuilder(
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) =>
-                                    const IntroductionScreen(),
-                            transitionsBuilder: (context, animation,
-                                secondaryAnimation, child) {
-                              return SlideInRight(child: child);
-                            },
-                          ));
-                          // Navigator.of(context)
-                          //     .pushNamed(IntroductionScreen.routeName);
+                          Navigator.of(context)
+                              .pushNamed(IntroductionScreen.routeName);
                         },
                         child: const Text(
                           'SIGN UP',

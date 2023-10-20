@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../config/config.dart' show AppTheme, Strings;
 import '../../widgets/widgets.dart' show FilledColorizedButton, OutlineText;
-import '../screens.dart' show OnBoardingScreen;
+import '../screens.dart' show RegisterScreen;
 
 class IntroductionScreen extends StatelessWidget {
   const IntroductionScreen({super.key});
@@ -89,17 +89,8 @@ class IntroductionScreen extends StatelessWidget {
                       title: 'LET\'S START',
                       isTrailingIcon: true,
                       onTap: () {
-                        Navigator.of(context).push(
-                          PageRouteBuilder(
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) =>
-                                    const OnBoardingScreen(),
-                            transitionsBuilder: (context, animation,
-                                secondaryAnimation, child) {
-                              return SlideInRight(child: child);
-                            },
-                          ),
-                        );
+                        Navigator.of(context)
+                            .pushNamed(RegisterScreen.routeName);
                       },
                       icon: const Icon(
                         Icons.arrow_right_alt,

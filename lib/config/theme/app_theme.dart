@@ -68,15 +68,5 @@ class AppTheme {
             ),
           ),
         ),
-        // pageTransitionsTheme:  PageTransitionsTheme(
-        //   builders: {
-        //     TargetPlatform.android: CupertinoPageTransitionsBuilder().buildTransitions(route, context, animation, secondaryAnimation, child){
-        //       return SlideInLeft(
-        //         child: child,
-        //       );
-        //     },
-        //     TargetPlatform.iOS: const CupertinoPageTransitionsBuilder(),
-        //   },
-        // ),
       );
 }

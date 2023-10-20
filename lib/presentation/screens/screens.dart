@@ -1,7 +1,8 @@
 // Screens
 export 'splash/splash_screen.dart';
 export 'onboarding/onboarding_screen.dart';
-export 'onboarding/introduction_screen.dart';
+export 'register/register_screen.dart';
+export 'register/introduction_screen.dart';
 export 'auth/sign_in_screen.dart';
 export 'auth/forgot_password_screen.dart';
 export 'auth/success_change_password_screen.dart';
