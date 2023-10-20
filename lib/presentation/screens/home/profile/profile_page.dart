@@ -52,7 +52,7 @@ class ProfilePage extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: size.height,
-      padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+      padding: const EdgeInsets.only(left: 20, right: 20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
