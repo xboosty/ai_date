@@ -278,21 +278,22 @@ class _WizardScreenState extends State<_WizardScreen> {
       try {
         await context.read<AccountCubit>().recoveryCredential(recoveryCred);
         if (!mounted) return;
-        _notifications.successRobotNotification(
+        await _notifications.successRobotNotification(
           context,
           message: 'Password successfully changed for your account!',
         );
+        if (!mounted) return;
         Navigator.of(context).pushNamedAndRemoveUntil(
           SignInScreen.routeName,
           (route) => false,
         );
       } catch (e) {
-        if (!mounted) return;
         if (e is NtsErrorResponse) {
-          _notifications.errorRobotNotification(
+          await _notifications.errorRobotNotification(
             context,
             message: e.message ?? '',
           );
+          if (!mounted) return;
           Navigator.of(context).pushNamedAndRemoveUntil(
             SignInScreen.routeName,
             (route) => false,

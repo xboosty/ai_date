@@ -160,9 +160,9 @@ class HandlerNotification {
     );
   }
 
-  void successRobotNotification(BuildContext context,
-      {required String message}) {
-    showDialog(
+  Future<void> successRobotNotification(BuildContext context,
+      {required String message}) async {
+    await showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) {
@@ -173,8 +173,9 @@ class HandlerNotification {
     );
   }
 
-  void errorRobotNotification(BuildContext context, {required String message}) {
-    showDialog(
+  Future<void> errorRobotNotification(BuildContext context,
+      {required String message}) async {
+    await showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) {
