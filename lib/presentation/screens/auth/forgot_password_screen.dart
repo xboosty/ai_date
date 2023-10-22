@@ -195,7 +195,7 @@ class _WizardScreenState extends State<_WizardScreen> {
     return null; // Return null if the input is valid.
   }
 
-  void _submitEmail() async {
+  void _submitEmail({required Size size}) async {
     if (_formKey.currentState!.validate()) {
       // If the form is valid, save the form and perform an action.
       _formKey.currentState!.save();
@@ -210,19 +210,25 @@ class _WizardScreenState extends State<_WizardScreen> {
         if (e is NtsErrorResponse) {
           _notifications.ntsErrorNotification(
             context,
-            title: "Error",
             message: e.message ?? '',
+            height: size.height * 0.12,
+            width: size.width * 0.90,
           );
         }
 
         if (e is DioException) {
-          _notifications.errorDioNotification(context);
+          _notifications.ntsErrorNotification(
+            context,
+            message: 'Sorry. Something went wrong. Please try again later',
+            height: size.height * 0.12,
+            width: size.width * 0.90,
+          );
         }
       }
     }
   }
 
-  Future<void> _submitVerificationCode() async {
+  Future<void> _submitVerificationCode({required Size size}) async {
     if (_formKey.currentState!.validate()) {
       // final verification = {
       //   "phone": {"code": "", "number": ""},
@@ -239,19 +245,25 @@ class _WizardScreenState extends State<_WizardScreen> {
         if (e is NtsErrorResponse) {
           _notifications.ntsErrorNotification(
             context,
-            title: "Error",
             message: e.message ?? '',
+            height: size.height * 0.12,
+            width: size.width * 0.90,
           );
         }
 
         if (e is DioException) {
-          _notifications.errorDioNotification(context);
+          _notifications.ntsErrorNotification(
+            context,
+            message: 'Sorry. Something went wrong. Please try again later',
+            height: size.height * 0.12,
+            width: size.width * 0.90,
+          );
         }
       }
     }
   }
 
-  void _submitForgotPasswords() async {
+  void _submitForgotPasswords({required Size size}) async {
     if (_formKey.currentState!.validate()) {
       // If the form is valid, save the form and perform an action.
       _formKey.currentState!.save();
@@ -266,21 +278,34 @@ class _WizardScreenState extends State<_WizardScreen> {
       try {
         await context.read<AccountCubit>().recoveryCredential(recoveryCred);
         if (!mounted) return;
+        _notifications.successRobotNotification(
+          context,
+          message: 'Password successfully changed for your account!',
+        );
         Navigator.of(context).pushNamedAndRemoveUntil(
-            SuccessChangePasswordScreen.routeName, (route) => false);
+          SignInScreen.routeName,
+          (route) => false,
+        );
       } catch (e) {
         if (!mounted) return;
-        Navigator.of(context).pushNamed(SignInScreen.routeName);
         if (e is NtsErrorResponse) {
-          _notifications.ntsErrorNotification(
+          _notifications.errorRobotNotification(
             context,
-            title: "Error",
             message: e.message ?? '',
+          );
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            SignInScreen.routeName,
+            (route) => false,
           );
         }
 
         if (e is DioException) {
-          _notifications.errorDioNotification(context);
+          _notifications.ntsErrorNotification(
+            context,
+            message: 'Sorry. Something went wrong. Please try again later',
+            height: size.height * 0.12,
+            width: size.width * 0.90,
+          );
         }
       }
     }
@@ -377,7 +402,7 @@ class _WizardScreenState extends State<_WizardScreen> {
                             height: 50,
                             title: 'NEXT',
                             isTrailingIcon: false,
-                            onTap: () => _submitEmail(),
+                            onTap: () => _submitEmail(size: size),
                           ),
                         UserRegisterStatus.loading =>
                           const CircularProgressIndicator(),
@@ -387,7 +412,7 @@ class _WizardScreenState extends State<_WizardScreen> {
                             height: 50,
                             title: 'NEXT',
                             isTrailingIcon: false,
-                            onTap: () => _submitEmail(),
+                            onTap: () => _submitEmail(size: size),
                           ),
                         UserRegisterStatus.success =>
                           FilledColorizedOutlineButton(
@@ -395,7 +420,7 @@ class _WizardScreenState extends State<_WizardScreen> {
                             height: 50,
                             title: 'NEXT',
                             isTrailingIcon: false,
-                            onTap: () => _submitEmail(),
+                            onTap: () => _submitEmail(size: size),
                           ),
                       };
                     },
@@ -432,7 +457,7 @@ class _WizardScreenState extends State<_WizardScreen> {
                             height: 50,
                             title: 'VERIFY',
                             isTrailingIcon: false,
-                            onTap: () => _submitVerificationCode(),
+                            onTap: () => _submitVerificationCode(size: size),
                           ),
                         UserRegisterStatus.loading =>
                           const CircularProgressIndicator(),
@@ -442,7 +467,7 @@ class _WizardScreenState extends State<_WizardScreen> {
                             height: 50,
                             title: 'VERIFY',
                             isTrailingIcon: false,
-                            onTap: () => _submitVerificationCode(),
+                            onTap: () => _submitVerificationCode(size: size),
                           ),
                         UserRegisterStatus.success =>
                           FilledColorizedOutlineButton(
@@ -450,7 +475,7 @@ class _WizardScreenState extends State<_WizardScreen> {
                             height: 50,
                             title: 'VERIFY',
                             isTrailingIcon: false,
-                            onTap: () => _submitVerificationCode(),
+                            onTap: () => _submitVerificationCode(size: size),
                           ),
                       };
                     },
@@ -515,7 +540,7 @@ class _WizardScreenState extends State<_WizardScreen> {
                                 height: 50,
                                 title: 'RESET PASSWORD',
                                 isTrailingIcon: false,
-                                onTap: () => _submitForgotPasswords(),
+                                onTap: () => _submitForgotPasswords(size: size),
                               ),
                             UserRegisterStatus.loading =>
                               const CircularProgressIndicator(),
@@ -525,7 +550,7 @@ class _WizardScreenState extends State<_WizardScreen> {
                                 height: 50,
                                 title: 'RESET PASSWORD',
                                 isTrailingIcon: false,
-                                onTap: () => _submitForgotPasswords(),
+                                onTap: () => _submitForgotPasswords(size: size),
                               ),
                             UserRegisterStatus.success =>
                               FilledColorizedOutlineButton(
@@ -533,7 +558,7 @@ class _WizardScreenState extends State<_WizardScreen> {
                                 height: 50,
                                 title: 'RESET PASSWORD',
                                 isTrailingIcon: false,
-                                onTap: () => _submitForgotPasswords(),
+                                onTap: () => _submitForgotPasswords(size: size),
                               ),
                           };
                         },
