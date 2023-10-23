@@ -31,6 +31,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final TextEditingController currentCtrl = TextEditingController();
   final TextEditingController newCtrl = TextEditingController();
   final TextEditingController repeatCtrl = TextEditingController();
+  final FocusNode _focusCurrentPassword = FocusNode();
+  final FocusNode _focusNewPassword = FocusNode();
+  final FocusNode _focusRepeatPassword = FocusNode();
   final _notifications = getIt<HandlerNotification>();
 
   String? _validateCurrentPassword(String value) {
@@ -158,150 +161,160 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         color: Theme.of(context).scaffoldBackgroundColor,
         child: SafeArea(
           bottom: false,
-          child: Form(
-            key: _formKey,
-            child: Container(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    PasswordInput(
-                      controller: currentCtrl,
-                      labelText: 'Current password',
-                      obscureText: obscureTextCurrentPassword,
-                      style: const TextStyle(
-                        color: Color(0xFF261638),
-                        fontSize: 14,
-                        fontFamily: Strings.fontFamily,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      onPressedSuffixIcon: () {
-                        setState(() {
-                          obscureTextCurrentPassword =
-                              !obscureTextCurrentPassword;
-                        });
-                      },
-                      validator: (value) =>
-                          _validateCurrentPassword(value ?? ''),
-                    ),
-                    PasswordInput(
-                      controller: newCtrl,
-                      labelText: 'New password',
-                      obscureText: obscureTextNewPassword,
-                      style: const TextStyle(
-                        color: Color(0xFF261638),
-                        fontSize: 14,
-                        fontFamily: Strings.fontFamily,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      onPressedSuffixIcon: () {
-                        setState(() {
-                          obscureTextNewPassword = !obscureTextNewPassword;
-                        });
-                      },
-                      validator: (value) => _validateNewPassword(value ?? ''),
-                    ),
-                    PasswordInput(
-                      controller: repeatCtrl,
-                      labelText: 'Repeat password',
-                      obscureText: obscureTextRepeatPassword,
-                      style: const TextStyle(
-                        color: Color(0xFF261638),
-                        fontSize: 14,
-                        fontFamily: Strings.fontFamily,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      onPressedSuffixIcon: () {
-                        setState(() {
-                          obscureTextRepeatPassword =
-                              !obscureTextRepeatPassword;
-                        });
-                      },
-                      validator: (value) =>
-                          _validateRepeatPassword(value ?? ''),
-                    ),
-                    // SizedBox(height: size.height * 0.05),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20.0),
-                      child: Text(
-                        'Your password should be at least 8 characters long and include a combination of uppercase letters, lowercase letters, numbers, and special characters for added security',
-                        style: TextStyle(
-                          color: Color(0xFF9CA4BF),
-                          fontSize: 12,
+          child: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Form(
+              key: _formKey,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      PasswordInput(
+                        controller: currentCtrl,
+                        focusNode: _focusCurrentPassword,
+                        labelText: 'Current password',
+                        obscureText: obscureTextCurrentPassword,
+                        style: const TextStyle(
+                          color: Color(0xFF261638),
+                          fontSize: 14,
                           fontFamily: Strings.fontFamily,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        onPressedSuffixIcon: () {
+                          setState(() {
+                            obscureTextCurrentPassword =
+                                !obscureTextCurrentPassword;
+                          });
+                        },
+                        validator: (value) =>
+                            _validateCurrentPassword(value ?? ''),
+                        onEditingComplete: () =>
+                            _focusCurrentPassword.unfocus(),
+                      ),
+                      PasswordInput(
+                        controller: newCtrl,
+                        focusNode: _focusNewPassword,
+                        labelText: 'New password',
+                        obscureText: obscureTextNewPassword,
+                        style: const TextStyle(
+                          color: Color(0xFF261638),
+                          fontSize: 14,
+                          fontFamily: Strings.fontFamily,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        onPressedSuffixIcon: () {
+                          setState(() {
+                            obscureTextNewPassword = !obscureTextNewPassword;
+                          });
+                        },
+                        validator: (value) => _validateNewPassword(value ?? ''),
+                        onEditingComplete: () => _focusNewPassword.unfocus(),
+                      ),
+                      PasswordInput(
+                        controller: repeatCtrl,
+                        focusNode: _focusRepeatPassword,
+                        labelText: 'Repeat password',
+                        obscureText: obscureTextRepeatPassword,
+                        style: const TextStyle(
+                          color: Color(0xFF261638),
+                          fontSize: 14,
+                          fontFamily: Strings.fontFamily,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        onPressedSuffixIcon: () {
+                          setState(() {
+                            obscureTextRepeatPassword =
+                                !obscureTextRepeatPassword;
+                          });
+                        },
+                        validator: (value) =>
+                            _validateRepeatPassword(value ?? ''),
+                        onEditingComplete: () => _focusRepeatPassword.unfocus(),
+                      ),
+                      // SizedBox(height: size.height * 0.05),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 20.0),
+                        child: Text(
+                          'Your password should be at least 8 characters long and include a combination of uppercase letters, lowercase letters, numbers, and special characters for added security',
+                          style: TextStyle(
+                            color: Color(0xFF9CA4BF),
+                            fontSize: 12,
+                            fontFamily: Strings.fontFamily,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: size.height * 0.05),
+                      SizedBox(height: size.height * 0.05),
 
-                    BlocBuilder<AccountCubit, AccountState>(
-                      builder: (context, state) {
-                        return switch (state.status) {
-                          UserRegisterStatus.initial => FilledButton(
-                              onPressed: () =>
-                                  _submitChangePassword(size: size),
-                              style: FilledButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 15),
-                                disabledBackgroundColor:
-                                    const Color(0xFF7F87A6),
-                              ),
-                              child: const Text(
-                                'SET NEW PASSWORD',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontFamily: Strings.fontFamily,
-                                  fontWeight: FontWeight.w600,
+                      BlocBuilder<AccountCubit, AccountState>(
+                        builder: (context, state) {
+                          return switch (state.status) {
+                            UserRegisterStatus.initial => FilledButton(
+                                onPressed: () =>
+                                    _submitChangePassword(size: size),
+                                style: FilledButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15, vertical: 15),
+                                  disabledBackgroundColor:
+                                      const Color(0xFF7F87A6),
+                                ),
+                                child: const Text(
+                                  'SET NEW PASSWORD',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontFamily: Strings.fontFamily,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
-                            ),
-                          UserRegisterStatus.loading =>
-                            const CircularProgressIndicator(),
-                          UserRegisterStatus.failure => FilledButton(
-                              onPressed: () =>
-                                  _submitChangePassword(size: size),
-                              style: FilledButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 15),
-                                disabledBackgroundColor:
-                                    const Color(0xFF7F87A6),
-                              ),
-                              child: const Text(
-                                'SET NEW PASSWORD',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontFamily: Strings.fontFamily,
-                                  fontWeight: FontWeight.w600,
+                            UserRegisterStatus.loading =>
+                              const CircularProgressIndicator(),
+                            UserRegisterStatus.failure => FilledButton(
+                                onPressed: () =>
+                                    _submitChangePassword(size: size),
+                                style: FilledButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15, vertical: 15),
+                                  disabledBackgroundColor:
+                                      const Color(0xFF7F87A6),
+                                ),
+                                child: const Text(
+                                  'SET NEW PASSWORD',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontFamily: Strings.fontFamily,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
-                            ),
-                          UserRegisterStatus.success => FilledButton(
-                              onPressed: () =>
-                                  _submitChangePassword(size: size),
-                              style: FilledButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 15),
-                                disabledBackgroundColor:
-                                    const Color(0xFF7F87A6),
-                              ),
-                              child: const Text(
-                                'SET NEW PASSWORD',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontFamily: Strings.fontFamily,
-                                  fontWeight: FontWeight.w600,
+                            UserRegisterStatus.success => FilledButton(
+                                onPressed: () =>
+                                    _submitChangePassword(size: size),
+                                style: FilledButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15, vertical: 15),
+                                  disabledBackgroundColor:
+                                      const Color(0xFF7F87A6),
+                                ),
+                                child: const Text(
+                                  'SET NEW PASSWORD',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontFamily: Strings.fontFamily,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
-                            ),
-                        };
-                      },
-                    ),
-                  ],
+                          };
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

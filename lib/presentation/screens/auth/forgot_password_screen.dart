@@ -140,6 +140,10 @@ class _WizardScreenState extends State<_WizardScreen> {
   final TextEditingController _verificationCtrl = TextEditingController();
   final TextEditingController _passwordNewCtrl = TextEditingController();
   final TextEditingController _passwordConfirmCtrl = TextEditingController();
+  final FocusNode _focusNodeEmail = FocusNode();
+  final FocusNode _focusNodeCode = FocusNode();
+  final FocusNode _focusNodeNewPassword = FocusNode();
+  final FocusNode _focusNodeRepitPassword = FocusNode();
   final _notifications = getIt<HandlerNotification>();
 
   final PageController _pageController = PageController();
@@ -318,262 +322,292 @@ class _WizardScreenState extends State<_WizardScreen> {
   }
 
   @override
+  void dispose() {
+    _emailUserCtrl.dispose();
+    _verificationCtrl.dispose();
+    _passwordNewCtrl.dispose();
+    _passwordConfirmCtrl.dispose();
+    _pageController.dispose();
+    _focusNodeEmail.dispose();
+    _focusNodeCode.dispose();
+    _focusNodeNewPassword.dispose();
+    _focusNodeRepitPassword.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
     return Form(
       key: _formKey,
-      child: Column(
-        children: [
-          // Stepper horizontal
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              3, // Reemplaza este número con la cantidad de pasos que desees
-              (index) {
-                return Row(
-                  children: [
-                    Container(
-                      width: 30.0,
-                      height: 30.0,
-                      margin: const EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: _currentPage == index
-                            ? Colors.purple
-                            : AppTheme.disabledColor,
-                      ),
-                      child: Center(
-                        child: Text(
-                          (index + 1).toString(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    if (index <
-                        2) // Agregar línea entre los elementos excepto el último
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Column(
+          children: [
+            // Stepper horizontal
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                3, // Reemplaza este número con la cantidad de pasos que desees
+                (index) {
+                  return Row(
+                    children: [
                       Container(
-                        width: size.width * 0.08,
-                        height: 1.0,
-                        color: Colors.grey,
-                      ),
-                  ],
-                );
-              },
-            ),
-          ),
-          Expanded(
-            child: PageView(
-              controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              onPageChanged: (index) {
-                setState(() {
-                  _currentPage = index;
-                });
-              },
-              children: [
-                // Aquí puedes colocar el contenido de cada paso
-                StepPage(
-                  icon: Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE9EAF6),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(
-                      Icons.key,
-                      color: Colors.purple,
-                      size: 32,
-                    ),
-                  ),
-                  content: EmailInput(
-                    controller: _emailUserCtrl,
-                    validator: (value) => _validateEmail(value ?? ''),
-                  ),
-                  button: BlocBuilder<AccountCubit, AccountState>(
-                    builder: (context, state) {
-                      return switch (state.status) {
-                        UserRegisterStatus.initial =>
-                          FilledColorizedOutlineButton(
-                            width: 150,
-                            height: 50,
-                            title: 'NEXT',
-                            isTrailingIcon: false,
-                            onTap: () => _submitEmail(size: size),
-                          ),
-                        UserRegisterStatus.loading =>
-                          const CircularProgressIndicator(),
-                        UserRegisterStatus.failure =>
-                          FilledColorizedOutlineButton(
-                            width: 150,
-                            height: 50,
-                            title: 'NEXT',
-                            isTrailingIcon: false,
-                            onTap: () => _submitEmail(size: size),
-                          ),
-                        UserRegisterStatus.success =>
-                          FilledColorizedOutlineButton(
-                            width: 150,
-                            height: 50,
-                            title: 'NEXT',
-                            isTrailingIcon: false,
-                            onTap: () => _submitEmail(size: size),
-                          ),
-                      };
-                    },
-                  ),
-                  isHelperText: true,
-                  helperText:
-                      'Enter the email address associated with your account to reset your password.',
-                ),
-                StepPage(
-                  icon: Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE9EAF6),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(
-                      Icons.mark_as_unread,
-                      color: Colors.purple,
-                      size: 32,
-                    ),
-                  ),
-                  content: CodeVerificationInput(
-                    controller: _verificationCtrl,
-                    validator: (value) =>
-                        _validateVerificationCode(value ?? ''),
-                  ),
-                  button: BlocBuilder<AccountCubit, AccountState>(
-                    builder: (context, state) {
-                      return switch (state.status) {
-                        UserRegisterStatus.initial =>
-                          FilledColorizedOutlineButton(
-                            width: 150,
-                            height: 50,
-                            title: 'VERIFY',
-                            isTrailingIcon: false,
-                            onTap: () => _submitVerificationCode(size: size),
-                          ),
-                        UserRegisterStatus.loading =>
-                          const CircularProgressIndicator(),
-                        UserRegisterStatus.failure =>
-                          FilledColorizedOutlineButton(
-                            width: 150,
-                            height: 50,
-                            title: 'VERIFY',
-                            isTrailingIcon: false,
-                            onTap: () => _submitVerificationCode(size: size),
-                          ),
-                        UserRegisterStatus.success =>
-                          FilledColorizedOutlineButton(
-                            width: 150,
-                            height: 50,
-                            title: 'VERIFY',
-                            isTrailingIcon: false,
-                            onTap: () => _submitVerificationCode(size: size),
-                          ),
-                      };
-                    },
-                  ),
-                  isHelperText: true,
-                  helperText:
-                      'We\'ve dispatched a verification code to your email address. Please enter it here to authenticate and secure your account.',
-                ),
-                SingleChildScrollView(
-                  child: SizedBox(
-                    // height: size.height * 10,
-                    child: StepPage(
-                      icon: Container(
-                        width: 60,
-                        height: 60,
+                        width: 30.0,
+                        height: 30.0,
+                        margin: const EdgeInsets.all(10.0),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFE9EAF6),
-                          borderRadius: BorderRadius.circular(10),
+                          shape: BoxShape.circle,
+                          color: _currentPage == index
+                              ? Colors.purple
+                              : AppTheme.disabledColor,
                         ),
-                        child: const Icon(
-                          Icons.shield_outlined,
-                          color: Colors.purple,
-                          size: 32,
+                        child: Center(
+                          child: Text(
+                            (index + 1).toString(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
-                      content: Column(
-                        children: [
-                          PasswordInput(
-                            obscureText: isObscureTextNewPassword,
-                            labelText: 'New Password',
-                            controller: _passwordNewCtrl,
-                            validator: (value) =>
-                                _validatePasswords(value ?? ''),
-                            onPressedSuffixIcon: () {
-                              setState(() {
-                                isObscureTextNewPassword =
-                                    !isObscureTextNewPassword;
-                              });
-                            },
-                          ),
-                          PasswordInput(
-                            obscureText: isObscureTextRepeatPassword,
-                            labelText: 'Confirm Password',
-                            controller: _passwordConfirmCtrl,
-                            validator: (value) =>
-                                _validatePasswords(value ?? ''),
-                            onPressedSuffixIcon: () {
-                              setState(() {
-                                isObscureTextRepeatPassword =
-                                    !isObscureTextRepeatPassword;
-                              });
-                            },
-                          ),
-                        ],
+                      if (index <
+                          2) // Agregar línea entre los elementos excepto el último
+                        Container(
+                          width: size.width * 0.08,
+                          height: 1.0,
+                          color: Colors.grey,
+                        ),
+                    ],
+                  );
+                },
+              ),
+            ),
+            Expanded(
+              child: PageView(
+                controller: _pageController,
+                physics: const NeverScrollableScrollPhysics(),
+                onPageChanged: (index) {
+                  setState(() {
+                    _currentPage = index;
+                  });
+                },
+                children: [
+                  // Aquí puedes colocar el contenido de cada paso
+                  StepPage(
+                    icon: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE9EAF6),
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      button: BlocBuilder<AccountCubit, AccountState>(
-                        builder: (context, state) {
-                          return switch (state.status) {
-                            UserRegisterStatus.initial =>
-                              FilledColorizedOutlineButton(
-                                width: 187,
-                                height: 50,
-                                title: 'RESET PASSWORD',
-                                isTrailingIcon: false,
-                                onTap: () => _submitForgotPasswords(size: size),
-                              ),
-                            UserRegisterStatus.loading =>
-                              const CircularProgressIndicator(),
-                            UserRegisterStatus.failure =>
-                              FilledColorizedOutlineButton(
-                                width: 187,
-                                height: 50,
-                                title: 'RESET PASSWORD',
-                                isTrailingIcon: false,
-                                onTap: () => _submitForgotPasswords(size: size),
-                              ),
-                            UserRegisterStatus.success =>
-                              FilledColorizedOutlineButton(
-                                width: 187,
-                                height: 50,
-                                title: 'RESET PASSWORD',
-                                isTrailingIcon: false,
-                                onTap: () => _submitForgotPasswords(size: size),
-                              ),
-                          };
-                        },
+                      child: const Icon(
+                        Icons.key,
+                        color: Colors.purple,
+                        size: 32,
                       ),
-                      isHelperText: true,
-                      helperText:
-                          'Your password must be different from previous used password.',
+                    ),
+                    content: EmailInput(
+                      controller: _emailUserCtrl,
+                      focusNode: _focusNodeEmail,
+                      validator: (value) => _validateEmail(value ?? ''),
+                      onEditingComplete: () => _focusNodeEmail.unfocus(),
+                    ),
+                    button: BlocBuilder<AccountCubit, AccountState>(
+                      builder: (context, state) {
+                        return switch (state.status) {
+                          UserRegisterStatus.initial =>
+                            FilledColorizedOutlineButton(
+                              width: 150,
+                              height: 50,
+                              title: 'NEXT',
+                              isTrailingIcon: false,
+                              onTap: () => _submitEmail(size: size),
+                            ),
+                          UserRegisterStatus.loading =>
+                            const CircularProgressIndicator(),
+                          UserRegisterStatus.failure =>
+                            FilledColorizedOutlineButton(
+                              width: 150,
+                              height: 50,
+                              title: 'NEXT',
+                              isTrailingIcon: false,
+                              onTap: () => _submitEmail(size: size),
+                            ),
+                          UserRegisterStatus.success =>
+                            FilledColorizedOutlineButton(
+                              width: 150,
+                              height: 50,
+                              title: 'NEXT',
+                              isTrailingIcon: false,
+                              onTap: () => _submitEmail(size: size),
+                            ),
+                        };
+                      },
+                    ),
+                    isHelperText: true,
+                    helperText:
+                        'Enter the email address associated with your account to reset your password.',
+                  ),
+                  StepPage(
+                    icon: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE9EAF6),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(
+                        Icons.mark_as_unread,
+                        color: Colors.purple,
+                        size: 32,
+                      ),
+                    ),
+                    content: CodeVerificationInput(
+                      controller: _verificationCtrl,
+                      focusNode: _focusNodeCode,
+                      validator: (value) =>
+                          _validateVerificationCode(value ?? ''),
+                      onEditingComplete: () => _focusNodeCode.unfocus(),
+                    ),
+                    button: BlocBuilder<AccountCubit, AccountState>(
+                      builder: (context, state) {
+                        return switch (state.status) {
+                          UserRegisterStatus.initial =>
+                            FilledColorizedOutlineButton(
+                              width: 150,
+                              height: 50,
+                              title: 'VERIFY',
+                              isTrailingIcon: false,
+                              onTap: () => _submitVerificationCode(size: size),
+                            ),
+                          UserRegisterStatus.loading =>
+                            const CircularProgressIndicator(),
+                          UserRegisterStatus.failure =>
+                            FilledColorizedOutlineButton(
+                              width: 150,
+                              height: 50,
+                              title: 'VERIFY',
+                              isTrailingIcon: false,
+                              onTap: () => _submitVerificationCode(size: size),
+                            ),
+                          UserRegisterStatus.success =>
+                            FilledColorizedOutlineButton(
+                              width: 150,
+                              height: 50,
+                              title: 'VERIFY',
+                              isTrailingIcon: false,
+                              onTap: () => _submitVerificationCode(size: size),
+                            ),
+                        };
+                      },
+                    ),
+                    isHelperText: true,
+                    helperText:
+                        'We\'ve dispatched a verification code to your email address. Please enter it here to authenticate and secure your account.',
+                  ),
+                  SingleChildScrollView(
+                    child: SizedBox(
+                      // height: size.height * 10,
+                      child: StepPage(
+                        icon: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE9EAF6),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(
+                            Icons.shield_outlined,
+                            color: Colors.purple,
+                            size: 32,
+                          ),
+                        ),
+                        content: Column(
+                          children: [
+                            PasswordInput(
+                              focusNode: _focusNodeNewPassword,
+                              obscureText: isObscureTextNewPassword,
+                              labelText: 'New Password',
+                              controller: _passwordNewCtrl,
+                              validator: (value) =>
+                                  _validatePasswords(value ?? ''),
+                              onPressedSuffixIcon: () {
+                                setState(() {
+                                  isObscureTextNewPassword =
+                                      !isObscureTextNewPassword;
+                                });
+                              },
+                              onEditingComplete: () =>
+                                  _focusNodeNewPassword.unfocus(),
+                            ),
+                            PasswordInput(
+                              focusNode: _focusNodeRepitPassword,
+                              obscureText: isObscureTextRepeatPassword,
+                              labelText: 'Confirm Password',
+                              controller: _passwordConfirmCtrl,
+                              validator: (value) =>
+                                  _validatePasswords(value ?? ''),
+                              onPressedSuffixIcon: () {
+                                setState(() {
+                                  isObscureTextRepeatPassword =
+                                      !isObscureTextRepeatPassword;
+                                });
+                              },
+                              onEditingComplete: () =>
+                                  _focusNodeRepitPassword.unfocus(),
+                            ),
+                          ],
+                        ),
+                        button: BlocBuilder<AccountCubit, AccountState>(
+                          builder: (context, state) {
+                            return switch (state.status) {
+                              UserRegisterStatus.initial =>
+                                FilledColorizedOutlineButton(
+                                  width: 187,
+                                  height: 50,
+                                  title: 'RESET PASSWORD',
+                                  isTrailingIcon: false,
+                                  onTap: () =>
+                                      _submitForgotPasswords(size: size),
+                                ),
+                              UserRegisterStatus.loading =>
+                                const CircularProgressIndicator(),
+                              UserRegisterStatus.failure =>
+                                FilledColorizedOutlineButton(
+                                  width: 187,
+                                  height: 50,
+                                  title: 'RESET PASSWORD',
+                                  isTrailingIcon: false,
+                                  onTap: () =>
+                                      _submitForgotPasswords(size: size),
+                                ),
+                              UserRegisterStatus.success =>
+                                FilledColorizedOutlineButton(
+                                  width: 187,
+                                  height: 50,
+                                  title: 'RESET PASSWORD',
+                                  isTrailingIcon: false,
+                                  onTap: () =>
+                                      _submitForgotPasswords(size: size),
+                                ),
+                            };
+                          },
+                        ),
+                        isHelperText: true,
+                        helperText:
+                            'Your password must be different from previous used password.',
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
