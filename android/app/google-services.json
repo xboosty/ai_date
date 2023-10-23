@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "615701910692",
+    "project_id": "aidate-test",
+    "storage_bucket": "aidate-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:615701910692:android:bffd0637908a1eb0c50231",
+        "android_client_info": {
+          "package_name": "com.enterprise.ntsprint.ai_date"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "615701910692-h6nn9jnt6coni8tjv3cf03aogreau2j9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyqFbgiLnrdiLhv1Iz5cfQ8GZL5qwidfM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "615701910692-h6nn9jnt6coni8tjv3cf03aogreau2j9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "615701910692-8hhlp0r1d71mrg7485sfa48m6etfqs7l.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.enterprise.ntsprint.aiDate"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
