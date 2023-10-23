@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../config/config.dart'
     show
@@ -254,6 +257,33 @@ class _SignInFormState extends State<SignInForm> {
     }
   }
 
+  Future<UserCredential> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  Future<UserCredential> signInWithApple() async {
+    final appleProvider = AppleAuthProvider();
+    return await FirebaseAuth.instance.signInWithProvider(appleProvider);
+  }
+
+  Future<UserCredential> signInWithFacebook() async {
+    final LoginResult loginResult = await FacebookAuth.instance.login();
+
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(loginResult.accessToken?.token ?? '');
+
+    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -315,21 +345,27 @@ class _SignInFormState extends State<SignInForm> {
                     semanticsLabel: 'Facebook Logo',
                     heroTag: 'facebookIcon',
                     backgroundColor: const Color(0xFFE9EAF6),
-                    onPressed: () {},
+                    onPressed: () {
+                      signInWithFacebook();
+                    },
                   ),
                   IconButtonSvg(
                     urlSvg: 'assets/svgs/apple_icon.svg',
                     semanticsLabel: 'Apple Logo',
                     heroTag: 'appleIcon',
                     backgroundColor: const Color(0xFFE9EAF6),
-                    onPressed: () {},
+                    onPressed: () {
+                      signInWithApple();
+                    },
                   ),
                   IconButtonSvg(
                     urlSvg: 'assets/svgs/google_icon.svg',
                     semanticsLabel: 'Google Logo',
                     heroTag: 'googleIcon',
                     backgroundColor: const Color(0xFFE9EAF6),
-                    onPressed: () {},
+                    onPressed: () {
+                      signInWithGoogle();
+                    },
                   ),
                 ],
               ),
