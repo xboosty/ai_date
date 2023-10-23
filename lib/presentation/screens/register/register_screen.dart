@@ -72,18 +72,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late Sexuality? _sexualitySelected;
 
   final List<Genders> _genders = [
+    Genders(id: 1, name: 'Woman'),
+    Genders(id: 0, name: 'Man'),
     Genders(id: 3, name: 'Non Binary'),
-    Genders(id: 2, name: 'Woman'),
-    Genders(id: 1, name: 'Man'),
   ];
 
   final List<Sexuality> _sexualities = [
-    Sexuality(id: 1, name: 'Prefer not to say'),
-    Sexuality(id: 2, name: 'Straight'),
-    Sexuality(id: 3, name: 'Gay'),
-    Sexuality(id: 4, name: 'Lesbian'),
-    Sexuality(id: 5, name: 'Bisexual'),
-    Sexuality(id: 6, name: 'Transgender'),
+    Sexuality(id: 4, name: 'Prefer not to say'),
+    Sexuality(id: 0, name: 'Hetero'),
+    Sexuality(id: 1, name: 'Bisexual'),
+    Sexuality(id: 2, name: 'Homosexual'),
+    Sexuality(id: 3, name: 'Transexual'),
   ];
 
   // Validations
@@ -958,7 +957,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               });
                             },
                           ),
-                          gender.id != 1 ? const Divider() : Container(),
+                          gender.id != _genders.length - 3
+                              ? const Divider()
+                              : Container(),
                         ],
                       ),
                     )
@@ -1091,7 +1092,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         });
                       },
                     ),
-                    const Divider(),
+                    index != _sexualities.length - 1
+                        ? const Divider()
+                        : Container(),
                   ],
                 ),
               ),
@@ -1331,6 +1334,7 @@ class _ButtonCircularProgressState extends State<ButtonCircularProgress> {
   double currentPage = 0;
 
   void _onPressButtonPage() {
+    FocusScope.of(context).unfocus();
     widget.onNextPage!(widget.pageviewController.page ?? -1);
 
     setState(() {
