@@ -27,22 +27,22 @@ class ScaffoldAnimated extends StatelessWidget {
         bottom: false,
         child: Stack(
           children: [
-            const Positioned(
-              top: -28,
-              child: OutlineAnimatedText(
-                title: 'Smarter Connections',
-                color: Colors.white,
-                fontSize: 80,
-              ),
-            ),
-            const Positioned(
-              bottom: -28,
-              child: OutlineAnimatedText(
-                title: 'Better Dates',
-                color: Colors.white,
-                fontSize: 80,
-              ),
-            ),
+            // const Positioned(
+            //   top: -28,
+            //   child: OutlineAnimatedText(
+            //     title: 'Smarter Connections',
+            //     color: Colors.white,
+            //     fontSize: 80,
+            //   ),
+            // ),
+            // const Positioned(
+            //   bottom: -28,
+            //   child: OutlineAnimatedText(
+            //     title: 'Better Dates',
+            //     color: Colors.white,
+            //     fontSize: 80,
+            //   ),
+            // ),
             child
           ],
         ),

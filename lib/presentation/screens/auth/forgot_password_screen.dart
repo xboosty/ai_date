@@ -19,7 +19,7 @@ import '../../widgets/widgets.dart'
         FilledColorizedOutlineButton,
         PasswordInput,
         ScaffoldAnimated;
-import '../screens.dart' show SignInScreen, SuccessChangePasswordScreen;
+import '../screens.dart' show SignInScreen;
 
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({super.key});
@@ -38,89 +38,97 @@ class ForgotPasswordScreen extends StatelessWidget {
         ),
         child: Center(
           child: SingleChildScrollView(
-            child: Container(
-              width: size.width * 0.93,
-              height: size.height * 0.83,
-              decoration: BoxDecoration(
+            child: Card(
+              elevation: 8.0,
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
               ),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Container(
-                      width: size.width,
-                      height: size.height * 0.25,
-                      decoration: const BoxDecoration(
-                        gradient: AppTheme.linearGradientTopRightBottomLeft,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30),
-                          topRight: Radius.circular(30),
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 5.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                // IconButton(
-                                //   icon: const Icon(
-                                //     Icons.arrow_back_rounded,
-                                //     color: Colors.white,
-                                //     size: 32,
-                                //   ),
-                                //   onPressed: () =>
-                                //       Navigator.of(context).pop(),
-                                // ),
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.cancel_outlined,
-                                    color: Colors.white,
-                                    size: 32,
-                                  ),
-                                  onPressed: () => Navigator.of(context).pop(),
-                                )
-                              ],
-                            ),
-                          ),
-                          const Icon(Icons.arrow_downward, color: Colors.white),
-                          SizedBox(height: size.height * 0.02),
-                          const Text(
-                            'Forgot your password?',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 28,
-                              fontFamily: Strings.fontFamily,
-                              fontWeight: FontWeight.w700,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
+              child: Container(
+                width: size.width * 0.93,
+                height: size.height * 0.83,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Container(
                         width: size.width,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: size.width * 0.05,
-                            vertical: size.height / 25),
+                        height: size.height * 0.25,
                         decoration: const BoxDecoration(
-                          color: Colors.white,
+                          gradient: AppTheme.linearGradientTopRightBottomLeft,
                           borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(30),
-                            bottomRight: Radius.circular(30),
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30),
                           ),
                         ),
-                        child: _WizardScreen(),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  // IconButton(
+                                  //   icon: const Icon(
+                                  //     Icons.arrow_back_rounded,
+                                  //     color: Colors.white,
+                                  //     size: 32,
+                                  //   ),
+                                  //   onPressed: () =>
+                                  //       Navigator.of(context).pop(),
+                                  // ),
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.cancel_outlined,
+                                      color: Colors.white,
+                                      size: 32,
+                                    ),
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                  )
+                                ],
+                              ),
+                            ),
+                            const Icon(Icons.arrow_downward,
+                                color: Colors.white),
+                            SizedBox(height: size.height * 0.02),
+                            const Text(
+                              'Forgot your password?',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 28,
+                                fontFamily: Strings.fontFamily,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ]),
+                      Expanded(
+                        child: Container(
+                          width: size.width,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: size.width * 0.05,
+                              vertical: size.height / 25),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(30),
+                              bottomRight: Radius.circular(30),
+                            ),
+                          ),
+                          child: _WizardScreen(),
+                        ),
+                      ),
+                    ]),
+              ),
             ),
           ),
         ),
