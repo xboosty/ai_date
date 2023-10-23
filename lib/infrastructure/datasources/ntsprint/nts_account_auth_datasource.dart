@@ -46,7 +46,7 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
 
         // Parsed to model response to entity
         final UserEntity userResult =
-            UserMapper.userResponseToEntity(userResponse);
+            UserMapper.userResponseToEntity(userResponse.user);
 
         return userResult;
         // Devuelve la entidad
@@ -90,7 +90,7 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
 
         // Parsed to model response to entity
         final UserEntity userResult =
-            UserMapper.userResponseToEntity(userResponse);
+            UserMapper.userResponseToEntity(userResponse.user);
 
         return userResult;
         // Devuelve la entidad

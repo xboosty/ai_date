@@ -1,23 +1,23 @@
 import '../../domain/domain.dart' show UserEntity;
-import '../models/ntsprint/nts_user_response.dart';
+import '../models/ntsprint/user_response.dart';
 
 class UserMapper {
   // Mappers for NTSprint API
-
-  static UserEntity userResponseToEntity(NtsUserResponse ur) {
+  static UserEntity userResponseToEntity(UserResponse user) {
     return UserEntity(
-      name: ur.user.fullName,
-      email: ur.user.email,
-      birthDate: ur.user.birthDate ?? DateTime(1000),
-      phone: ur.user.phone ?? 'null',
-      gender: ur.user.gender,
-      sexualOrientation: ur.user.sexualOrientation,
-      identity: ur.user.identity ?? '',
-      genderId: ur.user.genderId ?? -1,
-      statusId: ur.user.statusId ?? -1,
-      status: ur.user.status ?? '',
-      avatar: ur.user.avatar,
-      avatarMimeType: ur.user.avatarMimeType,
+      id: user.id,
+      name: user.fullName,
+      email: user.email,
+      birthDate: user.birthDate ?? DateTime(1000),
+      phone: user.phone ?? 'null',
+      gender: user.gender,
+      sexualOrientation: user.sexualOrientation,
+      identity: user.identity ?? '',
+      genderId: user.genderId ?? -1,
+      statusId: user.statusId ?? -1,
+      status: user.status ?? '',
+      avatar: user.avatar,
+      avatarMimeType: user.avatarMimeType,
     );
   }
 }
