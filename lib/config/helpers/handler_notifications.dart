@@ -80,12 +80,12 @@ class HandlerNotification {
   //   );
   // }
 
-  void ntsErrorNotification(
+  Future<void> ntsErrorNotification(
     BuildContext context, {
     required String message,
     required double height,
     required double width,
-  }) {
+  }) async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -120,13 +120,13 @@ class HandlerNotification {
     );
   }
 
-  void ntsSuccessNotification(
+  Future<void> ntsSuccessNotification(
     BuildContext context, {
     required String message,
     required double height,
     required double width,
-  }) {
-    showDialog(
+  }) async {
+    await showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => NotificationCard(

@@ -1,12 +1,40 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../config/config.dart' show AppTheme, Strings;
-import '../../widgets/widgets.dart' show FilledColorizedButton, GradientText;
+import '../../../config/config.dart'
+    show
+        AppTheme,
+        BlockCubit,
+        BlockState,
+        BlockedUsersData,
+        BlockedUsersError,
+        BlockedUsersInitial,
+        BlockedUsersLoading,
+        HandlerNotification,
+        NtsErrorResponse,
+        Strings,
+        getIt;
+import '../../../domain/domain.dart' show UserEntity;
+import '../../widgets/widgets.dart'
+    show CustomAlertDialog, FilledColorizedButton, GradientText;
 
-class BloquedListScreen extends StatelessWidget {
+class BloquedListScreen extends StatefulWidget {
   const BloquedListScreen({super.key});
 
   static const String routeName = '/bloqued_list_screen';
+
+  @override
+  State<BloquedListScreen> createState() => _BloquedListScreenState();
+}
+
+class _BloquedListScreenState extends State<BloquedListScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<BlockCubit>().getUsersBloqued();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,29 +51,105 @@ class BloquedListScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Container(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        child: SafeArea(
-          bottom: false,
-          child: ListView.builder(
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return const Column(
-                children: [
-                  _UnbloquedProfile(),
-                  Divider(),
-                ],
-              );
-            },
-          ),
-        ),
+      body: BlocBuilder<BlockCubit, BlockState>(
+        builder: (context, state) {
+          return Container(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child: SafeArea(
+                bottom: false,
+                child: switch (state) {
+                  // TODO: Handle this case.
+                  BlockedUsersInitial() => Container(),
+                  // TODO: Handle this case.
+                  BlockedUsersLoading() => Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  // ListView.builder(
+                  //     itemCount: 5,
+                  //     itemBuilder: (context, index) {
+                  //       return Skeleton.unite(
+                  //         child: const Column(
+                  //           children: [
+                  //             _UnbloquedProfile(),
+                  //             Divider(),
+                  //           ],
+                  //         ),
+                  //       );
+                  //     },
+                  //   ),
+                  // TODO: Handle this case.
+                  BlockedUsersData() => state.users.isNotEmpty
+                      ? ListView.builder(
+                          itemCount: state.users.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                _UnbloquedProfile(
+                                  user: state.users[index],
+                                ),
+                                const Divider(),
+                              ],
+                            );
+                          },
+                        )
+                      : const Center(
+                          child: Text('There are no blocked users'),
+                        ),
+                  // TODO: Handle this case.
+                  BlockedUsersError() => Container(),
+                }),
+          );
+        },
       ),
     );
   }
 }
 
-class _UnbloquedProfile extends StatelessWidget {
-  const _UnbloquedProfile();
+class _UnbloquedProfile extends StatefulWidget {
+  const _UnbloquedProfile({required this.user});
+
+  final UserEntity user;
+
+  @override
+  State<_UnbloquedProfile> createState() => _UnbloquedProfileState();
+}
+
+class _UnbloquedProfileState extends State<_UnbloquedProfile> {
+  final notifications = getIt<HandlerNotification>();
+
+  void _handleUnblock(BuildContext context, {required Size size}) async {
+    try {
+      Navigator.of(context).pop();
+      await context.read<BlockCubit>().unBlockedUser(id: widget.user.id ?? -1);
+      if (!mounted) return;
+      await notifications.ntsSuccessNotification(
+        context,
+        message: 'User successfully unlocked',
+        height: size.height * 0.12,
+        width: size.width * 0.90,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      Navigator.of(context).pop();
+      if (e is NtsErrorResponse) {
+        notifications.ntsErrorNotification(
+          context,
+          message: e.message ?? '',
+          height: size.height * 0.12,
+          width: size.width * 0.90,
+        );
+      }
+
+      if (e is DioException) {
+        notifications.ntsErrorNotification(
+          context,
+          message: 'Sorry. Something went wrong. Please try again later',
+          height: size.height * 0.12,
+          width: size.width * 0.90,
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,9 +195,13 @@ class _UnbloquedProfile extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            _TitleUnblockUser(size: size),
+                            _TitleUnblockUser(
+                                size: size, name: widget.user.name),
                             const Spacer(),
-                            _OpacityCardUnblock(size: size),
+                            _OpacityCardUnblock(
+                              size: size,
+                              user: widget.user,
+                            ),
                           ],
                         ),
                       ),
@@ -109,9 +217,9 @@ class _UnbloquedProfile extends StatelessWidget {
       leading: const CircleAvatar(
         backgroundImage: AssetImage('assets/imgs/girl3.png'),
       ),
-      title: const Text(
-        'Jessica',
-        style: TextStyle(
+      title: Text(
+        widget.user.name,
+        style: const TextStyle(
           color: Color(0xFF686E8C),
           fontSize: 14,
           fontFamily: Strings.fontFamily,
@@ -122,7 +230,18 @@ class _UnbloquedProfile extends StatelessWidget {
         style: FilledButton.styleFrom(
           alignment: Alignment.centerLeft,
         ),
-        onPressed: () {},
+        onPressed: () {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => CustomAlertDialog(
+              title: 'Unlock user',
+              content: 'Are you sure to unblock this user?',
+              onPressedCancel: () => Navigator.of(context).pop(),
+              onPressedOk: () => _handleUnblock(context, size: size),
+            ),
+          );
+        },
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
@@ -148,9 +267,11 @@ class _UnbloquedProfile extends StatelessWidget {
 class _TitleUnblockUser extends StatelessWidget {
   const _TitleUnblockUser({
     required this.size,
+    required this.name,
   });
 
   final Size size;
+  final String name;
 
   @override
   Widget build(BuildContext context) {
@@ -158,14 +279,13 @@ class _TitleUnblockUser extends StatelessWidget {
       width: size.width,
       height: size.height * 0.10,
       child: ListTile(
-        title: const Text(
-          'Samantha (31)',
-          style: TextStyle(
+        title: Text(
+          name,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 22,
-            fontFamily: 'Montserrat',
+            fontFamily: Strings.fontFamily,
             fontWeight: FontWeight.w600,
-            height: 0.06,
           ),
         ),
         subtitle: const Text(
@@ -173,9 +293,8 @@ class _TitleUnblockUser extends StatelessWidget {
           style: TextStyle(
             color: Colors.white,
             fontSize: 12,
-            fontFamily: 'Montserrat',
+            fontFamily: Strings.fontFamily,
             fontWeight: FontWeight.w600,
-            height: 0.12,
           ),
         ),
         trailing: FilledButton(
@@ -202,17 +321,61 @@ class _TitleUnblockUser extends StatelessWidget {
   }
 }
 
-class _OpacityCardUnblock extends StatelessWidget {
-  const _OpacityCardUnblock({
+class _OpacityCardUnblock extends StatefulWidget {
+  _OpacityCardUnblock({
     required this.size,
+    required this.user,
   });
 
   final Size size;
+  final UserEntity user;
+
+  @override
+  State<_OpacityCardUnblock> createState() => _OpacityCardUnblockState();
+}
+
+class _OpacityCardUnblockState extends State<_OpacityCardUnblock> {
+  final _notifications = getIt<HandlerNotification>();
+
+  void _handleUnblockCard(BuildContext context) async {
+    try {
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+      await context.read<BlockCubit>().unBlockedUser(id: widget.user.id ?? -1);
+      if (!mounted) return;
+      await _notifications.ntsSuccessNotification(
+        context,
+        message: 'User successfully unlocked',
+        height: widget.size.height * 0.12,
+        width: widget.size.width * 0.90,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      if (e is NtsErrorResponse) {
+        await _notifications.ntsErrorNotification(
+          context,
+          message: e.message ?? '',
+          height: widget.size.height * 0.12,
+          width: widget.size.width * 0.90,
+        );
+      }
+
+      if (e is DioException) {
+        if (!mounted) return;
+        await _notifications.ntsErrorNotification(
+          context,
+          message: 'Sorry. Something went wrong. Please try again later',
+          height: widget.size.height * 0.12,
+          width: widget.size.width * 0.90,
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: size.height * 0.35,
+      height: widget.size.height * 0.35,
       padding: const EdgeInsets.only(top: 30, bottom: 50, right: 15, left: 15),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
@@ -221,7 +384,7 @@ class _OpacityCardUnblock extends StatelessWidget {
         ),
         color: Colors.white.withOpacity(0.10000000149011612),
       ),
-      child: const Column(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Text(
@@ -252,6 +415,18 @@ class _OpacityCardUnblock extends StatelessWidget {
               Icons.published_with_changes_outlined,
               color: Colors.white,
             ),
+            onTap: () {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => CustomAlertDialog(
+                  title: 'Unlock user',
+                  content: 'Are you sure to unblock this user?',
+                  onPressedCancel: () => Navigator.of(context).pop(),
+                  onPressedOk: () => _handleUnblockCard(context),
+                ),
+              );
+            },
           ),
         ],
       ),

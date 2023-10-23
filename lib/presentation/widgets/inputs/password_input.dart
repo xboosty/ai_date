@@ -11,6 +11,8 @@ class PasswordInput extends StatelessWidget {
     this.validator,
     required this.labelText,
     this.style,
+    this.focusNode,
+    this.onEditingComplete,
   });
 
   final TextEditingController? controller;
@@ -19,11 +21,14 @@ class PasswordInput extends StatelessWidget {
   final FormFieldValidator<String?>? validator;
   final String labelText;
   final TextStyle? style;
+  final FocusNode? focusNode;
+  final VoidCallback? onEditingComplete;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      focusNode: focusNode,
       obscureText: obscureText,
       style: style,
       decoration: InputDecoration(
@@ -49,6 +54,7 @@ class PasswordInput extends StatelessWidget {
         ),
       ),
       validator: validator,
+      onEditingComplete: onEditingComplete,
     );
   }
 }

@@ -4,15 +4,23 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import '../../../config/config.dart' show AppTheme;
 
 class CodeVerificationInput extends StatelessWidget {
-  const CodeVerificationInput({super.key, this.controller, this.validator});
+  const CodeVerificationInput(
+      {super.key,
+      this.controller,
+      this.validator,
+      this.focusNode,
+      this.onEditingComplete});
 
   final TextEditingController? controller;
   final FormFieldValidator<String?>? validator;
+  final FocusNode? focusNode;
+  final VoidCallback? onEditingComplete;
 
   @override
   Widget build(BuildContext context) {
     return PinCodeTextField(
       controller: controller,
+      focusNode: focusNode,
       appContext: context,
       length: 6,
       obscureText: false,
@@ -49,6 +57,7 @@ class CodeVerificationInput extends StatelessWidget {
         return true;
       },
       validator: validator,
+      onEditingComplete: onEditingComplete,
     );
   }
 }

@@ -10,6 +10,7 @@ import '../../../../config/config.dart'
         AccountCubit,
         AccountState,
         AppTheme,
+        BlockCubit,
         HandlerNotification,
         NtsErrorResponse,
         Strings,
@@ -26,6 +27,7 @@ import '../../../widgets/widgets.dart'
         CircleAvatarProfile,
         CircularOutlineGradientButton,
         ConfigurationInputField,
+        CustomAlertDialog,
         CustomDropdownButton,
         DatePickerFormField,
         FilledColorizedButton,
@@ -178,72 +180,39 @@ class _AppBarAIDateState extends State<_AppBarAIDate> {
                                       BlocBuilder<AccountCubit, AccountState>(
                                     builder: (context, state) =>
                                         switch (state.status) {
-                                      UserRegisterStatus.initial => AlertDialog(
-                                          icon: const Icon(
-                                            Icons.info_outline_rounded,
-                                            size: 40,
-                                          ),
-                                          title: const Text('Exit AI Date'),
-                                          content: const Text(
-                                              'Are you sure you want to exit the app?'),
-                                          actions: [
-                                            FilledButton(
-                                              onPressed: () =>
-                                                  Navigator.of(context).pop(),
-                                              child: const Text('Cancel'),
-                                            ),
-                                            FilledButton(
-                                              onPressed: () =>
-                                                  _logOut(context, size: size),
-                                              child: const Text('Ok'),
-                                            ),
-                                          ],
+                                      UserRegisterStatus.initial =>
+                                        CustomAlertDialog(
+                                          title: 'Exit AI Date',
+                                          content:
+                                              'Are you sure you want to exit the app?',
+                                          onPressedCancel: () =>
+                                              Navigator.of(context).pop(),
+                                          onPressedOk: () =>
+                                              _logOut(context, size: size),
                                         ),
                                       UserRegisterStatus.loading =>
                                         const Center(
                                           child: CircularProgressIndicator(),
                                         ),
-                                      UserRegisterStatus.failure => AlertDialog(
-                                          icon: const Icon(
-                                            Icons.info_outline_rounded,
-                                            size: 40,
-                                          ),
-                                          title: const Text('Exit AI Date'),
-                                          content: const Text(
-                                              'Are you sure you want to exit the app?'),
-                                          actions: [
-                                            FilledButton(
-                                              onPressed: () =>
-                                                  Navigator.of(context).pop(),
-                                              child: const Text('Cancel'),
-                                            ),
-                                            FilledButton(
-                                              onPressed: () =>
-                                                  _logOut(context, size: size),
-                                              child: const Text('Ok'),
-                                            ),
-                                          ],
+                                      UserRegisterStatus.failure =>
+                                        CustomAlertDialog(
+                                          title: 'Exit AI Date',
+                                          content:
+                                              'Are you sure you want to exit the app?',
+                                          onPressedCancel: () =>
+                                              Navigator.of(context).pop(),
+                                          onPressedOk: () =>
+                                              _logOut(context, size: size),
                                         ),
-                                      UserRegisterStatus.success => AlertDialog(
-                                          icon: const Icon(
-                                            Icons.info_outline_rounded,
-                                            size: 40,
-                                          ),
-                                          title: const Text('Exit AI Date'),
-                                          content: const Text(
-                                              'Are you sure you want to exit the app?'),
-                                          actions: [
-                                            FilledButton(
-                                              onPressed: () =>
-                                                  Navigator.of(context).pop(),
-                                              child: const Text('Cancel'),
-                                            ),
-                                            FilledButton(
-                                              onPressed: () =>
-                                                  _logOut(context, size: size),
-                                              child: const Text('Ok'),
-                                            ),
-                                          ],
+                                      UserRegisterStatus.success =>
+                                        CustomAlertDialog(
+                                          title: 'Exit AI Date',
+                                          content:
+                                              'Are you sure you want to exit the app?',
+                                          onPressedCancel: () =>
+                                              Navigator.of(context).pop(),
+                                          onPressedOk: () =>
+                                              _logOut(context, size: size),
                                         ),
                                     },
                                   ),
@@ -1376,7 +1345,9 @@ class _UserCardState extends State<_UserCard> {
                           controller: scrollController,
                           child: Column(
                             children: [
-                              const _CardSeeProfileDetails(),
+                              _CardSeeProfileDetails(
+                                user: null,
+                              ),
                               SizedBox(height: size.height * 0.02),
                               _SmallDescriptionProfile(size: size),
                               const ButtonsInfoProfile(
@@ -2053,7 +2024,8 @@ class _SmallDescriptionProfile extends StatelessWidget {
 }
 
 class _CardSeeProfileDetails extends StatefulWidget {
-  const _CardSeeProfileDetails();
+  const _CardSeeProfileDetails({this.user});
+  final UserEntity? user;
 
   @override
   State<_CardSeeProfileDetails> createState() => _CardSeeProfileDetailsState();
@@ -2062,6 +2034,7 @@ class _CardSeeProfileDetails extends StatefulWidget {
 class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
     with TickerProviderStateMixin {
   late TabController _tabControllerReport;
+  final notifications = getIt<HandlerNotification>();
   final List<Tab> tabsReport = <Tab>[
     const Tab(
       icon: Row(
@@ -2099,6 +2072,41 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
       ],
     )),
   ];
+
+  void _handleBlockUser(BuildContext context, {required Size size}) async {
+    try {
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+      await context.read<BlockCubit>().blockedUser(id: widget.user?.id ?? -1);
+      if (!mounted) return;
+      await notifications.ntsSuccessNotification(
+        context,
+        message: 'User successfully blocked',
+        height: size.height * 0.12,
+        width: size.width * 0.90,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      Navigator.of(context).pop();
+      if (e is NtsErrorResponse) {
+        notifications.ntsErrorNotification(
+          context,
+          message: e.message ?? '',
+          height: size.height * 0.12,
+          width: size.width * 0.90,
+        );
+      }
+
+      if (e is DioException) {
+        notifications.ntsErrorNotification(
+          context,
+          message: 'Sorry. Something went wrong. Please try again later',
+          height: size.height * 0.12,
+          width: size.width * 0.90,
+        );
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -2264,7 +2272,10 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
                                                           width:
                                                               size.width * 0.40,
                                                           child: FilledButton(
-                                                            onPressed: () {},
+                                                            onPressed: () =>
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop(),
                                                             style: FilledButton
                                                                 .styleFrom(
                                                               padding:
@@ -2294,6 +2305,11 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
                                                               size.width * 0.40,
                                                           child: FilledButton(
                                                             onPressed: () {},
+                                                            // =>
+                                                            //     _handleBlockUser(
+                                                            //   context,
+                                                            //   size: size,
+                                                            // ),
                                                             style: FilledButton
                                                                 .styleFrom(
                                                               padding:

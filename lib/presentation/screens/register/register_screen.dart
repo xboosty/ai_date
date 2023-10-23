@@ -55,6 +55,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _emailUserCtrl = TextEditingController();
   final TextEditingController _passwordCtrl = TextEditingController();
   final TextEditingController _verificationCtrl = TextEditingController();
+  final FocusNode _focusNodeName = FocusNode();
+  final FocusNode _focusNodePhone = FocusNode();
+  final FocusNode _focusNodeEmail = FocusNode();
+  final FocusNode _focusNodePassword = FocusNode();
+  final FocusNode _focusNodeVerification = FocusNode();
 
   bool isLastPage = false;
   bool isNotifyPage = false;
@@ -67,18 +72,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late Sexuality? _sexualitySelected;
 
   final List<Genders> _genders = [
+    Genders(id: 1, name: 'Woman'),
+    Genders(id: 0, name: 'Man'),
     Genders(id: 3, name: 'Non Binary'),
-    Genders(id: 2, name: 'Woman'),
-    Genders(id: 1, name: 'Man'),
   ];
 
   final List<Sexuality> _sexualities = [
-    Sexuality(id: 1, name: 'Prefer not to say'),
-    Sexuality(id: 2, name: 'Straight'),
-    Sexuality(id: 3, name: 'Gay'),
-    Sexuality(id: 4, name: 'Lesbian'),
-    Sexuality(id: 5, name: 'Bisexual'),
-    Sexuality(id: 6, name: 'Transgender'),
+    Sexuality(id: 4, name: 'Prefer not to say'),
+    Sexuality(id: 0, name: 'Hetero'),
+    Sexuality(id: 1, name: 'Bisexual'),
+    Sexuality(id: 2, name: 'Homosexual'),
+    Sexuality(id: 3, name: 'Transexual'),
   ];
 
   // Validations
@@ -345,511 +349,523 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildPageUsername(Size size) {
-    return SizedBox(
-      width: double.infinity,
-      height: size.height,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              width: size.width,
-              height: size.height * 0.36,
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              // color: Colors.red,
-              child: Stack(
-                children: [
-                  Center(
-                    child: Image.asset(
-                      'assets/imgs/vector_robot_chat.png',
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: SizedBox(
+        width: double.infinity,
+        height: size.height,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                width: size.width,
+                height: size.height * 0.36,
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                // color: Colors.red,
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        'assets/imgs/vector_robot_chat.png',
+                      ),
                     ),
-                  ),
-                  Center(child: Image.asset('assets/imgs/robot_chat.png')),
-                  SafeArea(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back_rounded,
-                            color: AppTheme.disabledColor,
-                            size: 32,
+                    Center(child: Image.asset('assets/imgs/robot_chat.png')),
+                    SafeArea(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.arrow_back_rounded,
+                              color: AppTheme.disabledColor,
+                              size: 32,
+                            ),
+                            onPressed: () => Navigator.of(context).pop(),
                           ),
-                          onPressed: () => Navigator.of(context).pop(),
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.cancel_outlined,
-                            color: AppTheme.disabledColor,
-                            size: 32,
-                          ),
-                          onPressed: () => _exitSetup(),
-                        )
-                      ],
+                          IconButton(
+                            icon: const Icon(
+                              Icons.cancel_outlined,
+                              color: AppTheme.disabledColor,
+                              size: 32,
+                            ),
+                            onPressed: () => _exitSetup(),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: size.height / 40),
-              child: const Text(
-                'What\'s your name?',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color(0xFF261638),
-                  fontSize: 28,
-                  fontFamily: Strings.fontFamily,
-                  fontWeight: FontWeight.w700,
+                  ],
                 ),
               ),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: size.width / 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextFormField(
-                    controller: _fullNameCtrl,
-                    decoration: const InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0xFF686E8C),
-                          width: 2.0,
-                        ),
-                      ),
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0xFF686E8C),
-                          width: 2.0,
-                        ),
-                      ),
-                    ),
-                    style: const TextStyle(
-                      color: Color(0xFF686E8C),
-                      fontSize: 24,
-                      fontFamily: Strings.fontFamily,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    keyboardType: TextInputType.name,
-                    validator: (value) => _validateUsername(value ?? ''),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: size.height / 40),
+                child: const Text(
+                  'What\'s your name?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF261638),
+                    fontSize: 28,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w700,
                   ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20.0),
-                    child: Text(
-                      'This is how it\'ll appear on your profile',
-                      style: TextStyle(
-                        color: Color(0xFF9CA4BF),
-                        fontSize: 12,
-                        fontFamily: Strings.fontFamily,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ],
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: size.width / 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextFormField(
+                      controller: _fullNameCtrl,
+                      focusNode: _focusNodeName,
+                      decoration: const InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xFF686E8C),
+                            width: 2.0,
+                          ),
+                        ),
+                        border: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xFF686E8C),
+                            width: 2.0,
+                          ),
+                        ),
+                      ),
+                      style: const TextStyle(
+                        color: Color(0xFF686E8C),
+                        fontSize: 24,
+                        fontFamily: Strings.fontFamily,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      keyboardType: TextInputType.name,
+                      validator: (value) => _validateUsername(value ?? ''),
+                      onEditingComplete: () => _focusNodeName.unfocus(),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20.0),
+                      child: Text(
+                        'This is how it\'ll appear on your profile',
+                        style: TextStyle(
+                          color: Color(0xFF9CA4BF),
+                          fontSize: 12,
+                          fontFamily: Strings.fontFamily,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildPagePhoneNumber(Size size) {
-    return SizedBox(
-      width: double.infinity,
-      height: size.height,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              width: size.width,
-              height: size.height * 0.36,
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              child: Stack(
-                children: [
-                  Center(
-                    child: Image.asset(
-                      'assets/imgs/vector_phone_number.png',
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: SizedBox(
+        width: double.infinity,
+        height: size.height,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                width: size.width,
+                height: size.height * 0.36,
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        'assets/imgs/vector_phone_number.png',
+                      ),
                     ),
+                    Center(
+                      child: Image.asset('assets/imgs/phone_number_img.png'),
+                    ),
+                    SafeArea(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.arrow_back_rounded,
+                              color: AppTheme.disabledColor,
+                              size: 32,
+                            ),
+                            onPressed: () => _backPage(),
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.cancel_outlined,
+                              color: AppTheme.disabledColor,
+                              size: 32,
+                            ),
+                            onPressed: () => _exitSetup(),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: size.height / 40),
+                child: const Text(
+                  'What\'s your phone number?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF261638),
+                    fontSize: 28,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w700,
                   ),
-                  Center(
-                    child: Image.asset('assets/imgs/phone_number_img.png'),
-                  ),
-                  SafeArea(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: size.width / 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back_rounded,
-                            color: AppTheme.disabledColor,
-                            size: 32,
+                        SizedBox(
+                          width: size.width * 0.90,
+                          // height: size.height * 0.20,
+                          child: InternationalPhoneNumberInput(
+                            focusNode: _focusNodePhone,
+                            countrySelectorScrollControlled: false,
+                            autoValidateMode: AutovalidateMode.disabled,
+                            maxLength: 11,
+                            onInputChanged: (PhoneNumber number) {
+                              codeNumber = number.dialCode ?? '-1';
+                              phoneNumberUser = number.parseNumber();
+                            },
+                            validator: (value) =>
+                                _validatePhoneNumber(value ?? ''),
                           ),
-                          onPressed: () => _backPage(),
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.cancel_outlined,
-                            color: AppTheme.disabledColor,
-                            size: 32,
-                          ),
-                          onPressed: () => _exitSetup(),
                         )
                       ],
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: size.height / 40),
-              child: const Text(
-                'What\'s your phone number?',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color(0xFF261638),
-                  fontSize: 28,
-                  fontFamily: Strings.fontFamily,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: size.width / 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: size.width * 0.90,
-                        // height: size.height * 0.20,
-                        child: InternationalPhoneNumberInput(
-                          countrySelectorScrollControlled: false,
-                          autoValidateMode: AutovalidateMode.disabled,
-                          maxLength: 11,
-                          onInputChanged: (PhoneNumber number) {
-                            codeNumber = number.dialCode ?? '-1';
-                            phoneNumberUser = number.parseNumber();
-                          },
-                          validator: (value) =>
-                              _validatePhoneNumber(value ?? ''),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20.0),
+                      child: Text(
+                        'AI Date will send you a text with a verification code. Message and date rates may apply.',
+                        style: TextStyle(
+                          color: Color(0xFF9CA4BF),
+                          fontSize: 12,
+                          fontFamily: Strings.fontFamily,
+                          fontWeight: FontWeight.w500,
                         ),
-                      )
-                    ],
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20.0),
-                    child: Text(
-                      'AI Date will send you a text with a verification code. Message and date rates may apply.',
-                      style: TextStyle(
-                        color: Color(0xFF9CA4BF),
-                        fontSize: 12,
-                        fontFamily: Strings.fontFamily,
-                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildPageCode(Size size) {
-    return SizedBox(
-      width: double.infinity,
-      height: size.height,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              width: size.width,
-              height: size.height * 0.36,
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              child: Stack(
-                children: [
-                  Center(
-                    child: Image.asset(
-                      'assets/imgs/vector_code.png',
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: SizedBox(
+        width: double.infinity,
+        height: size.height,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                width: size.width,
+                height: size.height * 0.36,
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        'assets/imgs/vector_code.png',
+                      ),
                     ),
-                  ),
-                  Center(child: Image.asset('assets/imgs/code_img.png')),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 30.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back_rounded,
-                            color: AppTheme.disabledColor,
-                            size: 32,
+                    Center(child: Image.asset('assets/imgs/code_img.png')),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 30.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.arrow_back_rounded,
+                              color: AppTheme.disabledColor,
+                              size: 32,
+                            ),
+                            onPressed: () => _backPage(),
                           ),
-                          onPressed: () => _backPage(),
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.cancel_outlined,
-                            color: AppTheme.disabledColor,
-                            size: 32,
-                          ),
-                          onPressed: () => _exitSetup(),
-                        )
-                      ],
+                          IconButton(
+                            icon: const Icon(
+                              Icons.cancel_outlined,
+                              color: AppTheme.disabledColor,
+                              size: 32,
+                            ),
+                            onPressed: () => _exitSetup(),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: size.height / 40),
-              child: const Text(
-                'Enter your code',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color(0xFF261638),
-                  fontSize: 28,
-                  fontFamily: Strings.fontFamily,
-                  fontWeight: FontWeight.w700,
+                  ],
                 ),
               ),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: size.width / 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CodeVerificationInput(
-                    controller: _verificationCtrl,
-                    validator: (value) =>
-                        _validateVerificationCode(value ?? ''),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: size.height / 40),
+                child: const Text(
+                  'Enter your code',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF261638),
+                    fontSize: 28,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w700,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20.0),
-                    child: TextButton(
-                      onPressed: () {},
-                      style: TextButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: size.width / 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CodeVerificationInput(
+                      focusNode: _focusNodeVerification,
+                      controller: _verificationCtrl,
+                      validator: (value) =>
+                          _validateVerificationCode(value ?? ''),
+                      onEditingComplete: () => _focusNodeVerification.unfocus(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
+                      child: TextButton(
+                        onPressed: () {},
+                        style: TextButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
-                      ),
-                      child: const Text(
-                        'Resend code',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontFamily: Strings.fontFamily,
-                          fontWeight: FontWeight.w600,
+                        child: const Text(
+                          'Resend code',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontFamily: Strings.fontFamily,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildPageEmail(Size size) {
-    return SizedBox(
-      width: double.infinity,
-      height: size.height,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              width: size.width,
-              height: size.height * 0.36,
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              child: Stack(
-                children: [
-                  Center(
-                    child: Image.asset(
-                      'assets/imgs/vector_email.png',
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: SizedBox(
+        width: double.infinity,
+        height: size.height,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                width: size.width,
+                height: size.height * 0.36,
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        'assets/imgs/vector_email.png',
+                      ),
                     ),
-                  ),
-                  Center(child: Image.asset('assets/imgs/email_img.png')),
-                  SafeArea(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back_rounded,
-                            color: AppTheme.disabledColor,
-                            size: 32,
+                    Center(child: Image.asset('assets/imgs/email_img.png')),
+                    SafeArea(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.arrow_back_rounded,
+                              color: AppTheme.disabledColor,
+                              size: 32,
+                            ),
+                            onPressed: () => _backPage(),
                           ),
-                          onPressed: () => _backPage(),
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.cancel_outlined,
-                            color: AppTheme.disabledColor,
-                            size: 32,
-                          ),
-                          onPressed: () => _exitSetup(),
-                        )
-                      ],
+                          IconButton(
+                            icon: const Icon(
+                              Icons.cancel_outlined,
+                              color: AppTheme.disabledColor,
+                              size: 32,
+                            ),
+                            onPressed: () => _exitSetup(),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: size.height / 40),
-              child: const Text(
-                'What\'s your email address?',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color(0xFF261638),
-                  fontSize: 28,
-                  fontFamily: Strings.fontFamily,
-                  fontWeight: FontWeight.w700,
+                  ],
                 ),
               ),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: size.width / 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  EmailInput(
-                    controller: _emailUserCtrl,
-                    validator: (value) => _validateEmail(value ?? ''),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: size.height / 40),
+                child: const Text(
+                  'What\'s your email address?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF261638),
+                    fontSize: 28,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w700,
                   ),
-                  // const Padding(
-                  //   padding: EdgeInsets.symmetric(vertical: 20.0),
-                  //   child: Text(
-                  //     'This is how it´ll appear on your profile',
-                  //     style: TextStyle(
-                  //       color: Color(0xFF9CA4BF),
-                  //       fontSize: 12,
-                  //       fontFamily: Strings.fontFamily,
-                  //       fontWeight: FontWeight.w500,
-                  //     ),
-                  //   ),
-                  // ),
-                ],
+                ),
               ),
-            ),
-          ],
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: size.width / 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    EmailInput(
+                      controller: _emailUserCtrl,
+                      focusNode: _focusNodeEmail,
+                      validator: (value) => _validateEmail(value ?? ''),
+                      onEditingComplete: () => _focusNodeEmail.unfocus(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildPagePassword(Size size) {
-    return SizedBox(
-      width: double.infinity,
-      height: size.height,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              width: size.width,
-              height: size.height * 0.36,
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              // color: Colors.red,
-              child: Stack(
-                children: [
-                  Center(
-                    child: Image.asset(
-                      'assets/imgs/vector_password.png',
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: SizedBox(
+        width: double.infinity,
+        height: size.height,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                width: size.width,
+                height: size.height * 0.36,
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                // color: Colors.red,
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        'assets/imgs/vector_password.png',
+                      ),
                     ),
-                  ),
-                  Center(child: Image.asset('assets/imgs/password_img.png')),
-                  SafeArea(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back_rounded,
-                            color: AppTheme.disabledColor,
-                            size: 32,
+                    Center(child: Image.asset('assets/imgs/password_img.png')),
+                    SafeArea(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.arrow_back_rounded,
+                              color: AppTheme.disabledColor,
+                              size: 32,
+                            ),
+                            onPressed: () => _backPage(),
                           ),
-                          onPressed: () => _backPage(),
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.cancel_outlined,
-                            color: AppTheme.disabledColor,
-                            size: 32,
-                          ),
-                          onPressed: () => _exitSetup(),
-                        )
-                      ],
+                          IconButton(
+                            icon: const Icon(
+                              Icons.cancel_outlined,
+                              color: AppTheme.disabledColor,
+                              size: 32,
+                            ),
+                            onPressed: () => _exitSetup(),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: size.height / 40),
-              child: const Text(
-                'Set your account password',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Color(0xFF261638),
-                  fontSize: 28,
-                  fontFamily: Strings.fontFamily,
-                  fontWeight: FontWeight.w700,
+                  ],
                 ),
               ),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: size.width / 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextFormField(
-                    controller: _passwordCtrl,
-                    decoration: const InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0xFF686E8C),
-                          width: 2.0,
-                        ),
-                      ),
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0xFF686E8C),
-                          width: 2.0,
-                        ),
-                      ),
-                    ),
-                    style: const TextStyle(
-                      color: Color(0xFF686E8C),
-                      fontSize: 24,
-                      fontFamily: Strings.fontFamily,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    obscureText: true,
-                    keyboardType: TextInputType.visiblePassword,
-                    validator: (value) => _validatePassword(value ?? ''),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: size.height / 40),
+                child: const Text(
+                  'Set your account password',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF261638),
+                    fontSize: 28,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w700,
                   ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20.0),
-                    child: Text(
-                      'Your password should be at least 8 characters long and include a combination of uppercase letters, lowercase letters, numbers, and special characters for added security',
-                      style: TextStyle(
-                        color: Color(0xFF9CA4BF),
-                        fontSize: 12,
-                        fontFamily: Strings.fontFamily,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ],
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: size.width / 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextFormField(
+                      controller: _passwordCtrl,
+                      focusNode: _focusNodePassword,
+                      decoration: const InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xFF686E8C),
+                            width: 2.0,
+                          ),
+                        ),
+                        border: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xFF686E8C),
+                            width: 2.0,
+                          ),
+                        ),
+                      ),
+                      style: const TextStyle(
+                        color: Color(0xFF686E8C),
+                        fontSize: 24,
+                        fontFamily: Strings.fontFamily,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      obscureText: true,
+                      keyboardType: TextInputType.visiblePassword,
+                      validator: (value) => _validatePassword(value ?? ''),
+                      onEditingComplete: () => _focusNodePassword.unfocus(),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20.0),
+                      child: Text(
+                        'Your password should be at least 8 characters long and include a combination of uppercase letters, lowercase letters, numbers, and special characters for added security',
+                        style: TextStyle(
+                          color: Color(0xFF9CA4BF),
+                          fontSize: 12,
+                          fontFamily: Strings.fontFamily,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -941,7 +957,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               });
                             },
                           ),
-                          gender.id != 1 ? const Divider() : Container(),
+                          gender.id != _genders.length - 3
+                              ? const Divider()
+                              : Container(),
                         ],
                       ),
                     )
@@ -1074,7 +1092,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         });
                       },
                     ),
-                    const Divider(),
+                    index != _sexualities.length - 1
+                        ? const Divider()
+                        : Container(),
                   ],
                 ),
               ),
@@ -1227,8 +1247,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
+    // Page Controller Dispose
     pageviewController.removeListener(_pageListener);
     pageviewController.dispose();
+    // TextEditing Dispose
+    _fullNameCtrl.dispose();
+    _emailUserCtrl.dispose();
+    _passwordCtrl.dispose();
+    _verificationCtrl.dispose();
+    // Focus Node Dispose
+    _focusNodeName.dispose();
+    _focusNodePhone.dispose();
+    _focusNodeEmail.dispose();
+    _focusNodePassword.dispose();
+    _focusNodeVerification.dispose();
     super.dispose();
   }
 
@@ -1302,6 +1334,7 @@ class _ButtonCircularProgressState extends State<ButtonCircularProgress> {
   double currentPage = 0;
 
   void _onPressButtonPage() {
+    FocusScope.of(context).unfocus();
     widget.onNextPage!(widget.pageviewController.page ?? -1);
 
     setState(() {

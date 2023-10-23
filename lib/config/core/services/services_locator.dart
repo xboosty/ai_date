@@ -12,11 +12,15 @@ GetIt getIt = GetIt.instance;
 
 void serviceLocatorBlocsInit() {
   getIt.registerSingleton(AccountCubit());
+  getIt.registerSingleton(BlockCubit());
 }
 
 void serviceLocatorRepositoryInit() {
   getIt.registerSingleton(
     NtsAccountAuthRepository(datasource: NtsAccountAuthDatasource.ds),
+  );
+  getIt.registerSingleton(
+    NtsBlockRepository(datasource: NtSprintBlockDatasource.ds),
   );
 }
 

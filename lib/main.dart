@@ -10,12 +10,12 @@ import 'config/config.dart'
         AccountCubit,
         AppRouter,
         AppTheme,
+        BlockCubit,
         SharedPref,
         getIt,
         serviceLocatorBlocsInit,
         serviceLocatorNotificationInit,
         serviceLocatorRepositoryInit;
-import 'test_page.dart';
 
 void main() async {
   // Start Widget
@@ -46,6 +46,9 @@ class BlocsProviders extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => getIt<AccountCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => getIt<BlockCubit>(),
         ),
       ],
       child: const AIDateApp(),
