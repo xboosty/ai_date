@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../presentation/screens/screens.dart';
+import '../../test_page.dart';
 
 class AppRouter {
   static const String initialRoute = SplashScreen.routeName;
@@ -17,5 +18,6 @@ class AppRouter {
         BloquedListScreen.routeName: (_) => const BloquedListScreen(),
         HomeScreen.routeName: (_) => const HomeScreen(),
         InterviewChatScreen.routeName: (_) => const InterviewChatScreen(),
+        TestPage.routeName: (_) => const TestPage(),
       };
 }

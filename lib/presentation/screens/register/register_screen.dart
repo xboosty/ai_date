@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:elegant_notification/elegant_notification.dart';
-import 'package:elegant_notification/resources/arrays.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:location/location.dart';
 
@@ -168,7 +166,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  void _submitPhoneNumber() {
+  void _submitPhoneNumber({required Size size}) {
     if (_formKey.currentState!.validate()) {
       // If the form is valid, save the form and perform an action.
       _formKey.currentState!.save();
@@ -176,18 +174,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
       print('Phone Number: $phoneNumberUser');
       _nextPage();
     } else {
-      ElegantNotification.error(
-        notificationPosition: NotificationPosition.bottomCenter,
-        animation: AnimationType.fromBottom,
-        background: Colors.red.shade100,
-        showProgressIndicator: true,
-        description: const Text(
-          "The phone number must be at least 11 digits.",
-          style: TextStyle(
-            color: Colors.black,
-          ),
-        ),
-      ).show(context);
+      _notifications.ntsErrorNotification(
+        context,
+        message: 'The phone number must be at least 11 digits.',
+        height: size.height * 0.12,
+        width: size.width * 0.90,
+      );
+      // ElegantNotification.error(
+      //   notificationPosition: NotificationPosition.bottomCenter,
+      //   animation: AnimationType.fromBottom,
+      //   background: Colors.red.shade100,
+      //   showProgressIndicator: true,
+      //   description: const Text(
+      //     "",
+      //     style: TextStyle(
+      //       color: Colors.black,
+      //     ),
+      //   ),
+      // ).show(context);
     }
   }
 
@@ -211,7 +215,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  Future<void> _submitRegisterUser(BuildContext context) async {
+  Future<void> _submitRegisterUser(BuildContext context,
+      {required Size size}) async {
     final user = {
       "fullName": _fullNameCtrl.text,
       "password": _passwordCtrl.text,
@@ -230,19 +235,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
       if (e is NtsErrorResponse) {
         _notifications.ntsErrorNotification(
           context,
-          title: "Error",
           message: e.message ?? '',
+          height: size.height * 0.12,
+          width: size.width * 0.90,
         );
       }
 
       if (e is DioException) {
-        _notifications.errorDioNotification(context);
+        _notifications.ntsErrorNotification(
+          context,
+          message: 'Sorry. Something went wrong. Please try again later',
+          height: size.height * 0.12,
+          width: size.width * 0.90,
+        );
       }
-      // e as NtsErrorResponse;
     }
   }
 
-  Future<void> _submitVerificationCode(BuildContext context) async {
+  Future<void> _submitVerificationCode(BuildContext context,
+      {required Size size}) async {
     if (_formKey.currentState!.validate()) {
       final verification = {
         "phone": {"code": codeNumber, "number": phoneNumberUser},
@@ -253,37 +264,43 @@ class _RegisterScreenState extends State<RegisterScreen> {
       try {
         await context.read<AccountCubit>().verificationCode(verification);
         if (!mounted) return;
-        Navigator.of(context).pushNamed(SignInScreen.routeName);
-        _notifications.ntsSuccessNotification(
+        _notifications.successRobotNotification(
           context,
-          title: "Account registration",
-          message: 'Account created successfully',
+          message:
+              'Congratulation. Your account has been created with success.',
         );
+        Navigator.of(context).pushNamed(SignInScreen.routeName);
       } catch (e) {
         if (!mounted) return;
         Navigator.of(context).pushNamed(SignInScreen.routeName);
         if (e is NtsErrorResponse) {
           _notifications.ntsErrorNotification(
             context,
-            title: "Verification Error",
             message: e.message ?? '',
+            height: size.height * 0.12,
+            width: size.width * 0.90,
           );
         }
         if (e is DioException) {
-          _notifications.errorDioNotification(context);
+          _notifications.ntsErrorNotification(
+            context,
+            message: 'Sorry. Something went wrong. Please try again later',
+            height: size.height * 0.12,
+            width: size.width * 0.90,
+          );
         }
       }
     }
   }
 
   Future<void> _formRegisterSubmit(BuildContext context,
-      {required double page}) async {
+      {required double page, required Size size}) async {
     switch (page) {
       case 0:
         _submitUsername();
         break;
       case 1:
-        _submitPhoneNumber();
+        _submitPhoneNumber(size: size);
         break;
       case 2:
         _submitEmail();
@@ -298,11 +315,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _nextPage();
         break;
       case 6:
-        await _submitRegisterUser(context);
+        await _submitRegisterUser(context, size: size);
         break;
       case 7:
         if (!mounted) return;
-        await _submitVerificationCode(context);
+        await _submitVerificationCode(context, size: size);
         break;
       default:
         break;
@@ -1150,10 +1167,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     title: 'DON\'T ALLOW',
                     isTrailingIcon: false,
                     onTap: () {
-                      _formRegisterSubmit(
-                        context,
-                        page: pageviewController.page ?? 0.0,
-                      );
+                      _formRegisterSubmit(context,
+                          page: pageviewController.page ?? 0.0, size: size);
                     }),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 20.0),
@@ -1249,15 +1264,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
           UserRegisterStatus.loading => const CircularProgressIndicator(),
           UserRegisterStatus.initial => ButtonCircularProgress(
               pageviewController: pageviewController,
-              onNextPage: (page) => _formRegisterSubmit(context, page: page),
+              onNextPage: (page) =>
+                  _formRegisterSubmit(context, page: page, size: size),
             ),
           UserRegisterStatus.success => ButtonCircularProgress(
               pageviewController: pageviewController,
-              onNextPage: (page) => _formRegisterSubmit(context, page: page),
+              onNextPage: (page) =>
+                  _formRegisterSubmit(context, page: page, size: size),
             ),
           UserRegisterStatus.failure => ButtonCircularProgress(
               pageviewController: pageviewController,
-              onNextPage: (page) => _formRegisterSubmit(context, page: page),
+              onNextPage: (page) =>
+                  _formRegisterSubmit(context, page: page, size: size),
             ),
         },
       ),

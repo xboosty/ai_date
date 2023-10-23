@@ -200,7 +200,7 @@ class _SignInFormState extends State<SignInForm> {
     Navigator.of(context).pushNamed(ForgotPasswordScreen.routeName);
   }
 
-  void _startSession(BuildContext context) async {
+  void _startSession(BuildContext context, {required Size size}) async {
     if (_formKey.currentState?.validate() ?? false) {
       List<String> credentialsList = [];
 
@@ -215,13 +215,12 @@ class _SignInFormState extends State<SignInForm> {
         credentialsList.add(credentials['password'] ?? '');
       }
 
-      // Recordar credenciales en Shared Preferences
-      SharedPref.pref.isRememberCredential = _isRemember;
-
       try {
         await context.read<AccountCubit>().signInUser(credentials);
         // Saved preference if sign in success
         if (_isRemember && credentials.isNotEmpty) {
+          // Recordar credenciales en Shared Preferences
+          SharedPref.pref.isRememberCredential = _isRemember;
           SharedPref.pref.loginCredential = credentialsList;
         } else if (_isRemember == false) {
           SharedPref.pref.loginCredential = [];
@@ -245,13 +244,19 @@ class _SignInFormState extends State<SignInForm> {
         if (e is NtsErrorResponse) {
           _notifications.ntsErrorNotification(
             context,
-            title: "Error",
             message: e.message ?? '',
+            height: size.height * 0.12,
+            width: size.width * 0.90,
           );
         }
 
         if (e is DioException) {
-          _notifications.errorDioNotification(context);
+          _notifications.ntsErrorNotification(
+            context,
+            message: 'Sorry. Something went wrong. Please try again later',
+            height: size.height * 0.12,
+            width: size.width * 0.90,
+          );
         }
       }
     }
@@ -501,7 +506,7 @@ class _SignInFormState extends State<SignInForm> {
                       height: 50,
                       title: 'SIGN IN',
                       isTrailingIcon: false,
-                      onTap: () => _startSession(context),
+                      onTap: () => _startSession(context, size: size),
                     ),
                   UserRegisterStatus.loading =>
                     const CircularProgressIndicator(),
@@ -510,14 +515,14 @@ class _SignInFormState extends State<SignInForm> {
                       height: 50,
                       title: 'SIGN IN',
                       isTrailingIcon: false,
-                      onTap: () => _startSession(context),
+                      onTap: () => _startSession(context, size: size),
                     ),
                   UserRegisterStatus.success => FilledColorizedOutlineButton(
                       width: 150,
                       height: 50,
                       title: 'SIGN IN',
                       isTrailingIcon: false,
-                      onTap: () => _startSession(context),
+                      onTap: () => _startSession(context, size: size),
                     ),
                 },
               ),

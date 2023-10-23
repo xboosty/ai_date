@@ -86,7 +86,7 @@ class _AppBarAIDate extends StatefulWidget {
 }
 
 class _AppBarAIDateState extends State<_AppBarAIDate> {
-  Future<void> _logOut(BuildContext context) async {
+  Future<void> _logOut(BuildContext context, {required Size size}) async {
     final notifications = getIt<HandlerNotification>();
     try {
       await context.read<AccountCubit>().logOutUser();
@@ -99,13 +99,19 @@ class _AppBarAIDateState extends State<_AppBarAIDate> {
       if (e is NtsErrorResponse) {
         notifications.ntsErrorNotification(
           context,
-          title: "Error",
           message: e.message ?? '',
+          height: size.height * 0.12,
+          width: size.width * 0.90,
         );
       }
 
       if (e is DioException) {
-        notifications.errorDioNotification(context);
+        notifications.ntsErrorNotification(
+          context,
+          message: 'Sorry. Something went wrong. Please try again later',
+          height: size.height * 0.14,
+          width: size.width * 0.90,
+        );
       }
     }
   }
@@ -187,7 +193,8 @@ class _AppBarAIDateState extends State<_AppBarAIDate> {
                                               child: const Text('Cancel'),
                                             ),
                                             FilledButton(
-                                              onPressed: () => _logOut(context),
+                                              onPressed: () =>
+                                                  _logOut(context, size: size),
                                               child: const Text('Ok'),
                                             ),
                                           ],
@@ -211,7 +218,8 @@ class _AppBarAIDateState extends State<_AppBarAIDate> {
                                               child: const Text('Cancel'),
                                             ),
                                             FilledButton(
-                                              onPressed: () => _logOut(context),
+                                              onPressed: () =>
+                                                  _logOut(context, size: size),
                                               child: const Text('Ok'),
                                             ),
                                           ],
@@ -231,7 +239,8 @@ class _AppBarAIDateState extends State<_AppBarAIDate> {
                                               child: const Text('Cancel'),
                                             ),
                                             FilledButton(
-                                              onPressed: () => _logOut(context),
+                                              onPressed: () =>
+                                                  _logOut(context, size: size),
                                               child: const Text('Ok'),
                                             ),
                                           ],

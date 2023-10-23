@@ -92,7 +92,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   // For Register User
-  void _submitChangePassword() async {
+  void _submitChangePassword({required Size size}) async {
     if (_formKey.currentState!.validate()) {
       // If the form is valid, save the form and perform an action.
       _formKey.currentState!.save();
@@ -108,21 +108,30 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         if (!mounted) return;
         Navigator.of(context).pop();
         Navigator.of(context).pop();
-        _notifications.ntsSuccessNotification(context,
-            title: 'password changed',
-            message: 'password changed successfully');
+        _notifications.ntsSuccessNotification(
+          context,
+          message: 'Password changed successfully',
+          height: size.height * 0.12,
+          width: size.width * 0.90,
+        );
       } catch (e) {
         if (!mounted) return;
         if (e is NtsErrorResponse) {
           _notifications.ntsErrorNotification(
             context,
-            title: "Error",
             message: e.message ?? '',
+            height: size.height * 0.12,
+            width: size.width * 0.90,
           );
         }
 
         if (e is DioException) {
-          _notifications.errorDioNotification(context);
+          _notifications.ntsErrorNotification(
+            context,
+            message: 'Sorry. Something went wrong. Please try again later',
+            height: size.height * 0.12,
+            width: size.width * 0.90,
+          );
         }
       }
     }
@@ -231,7 +240,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       builder: (context, state) {
                         return switch (state.status) {
                           UserRegisterStatus.initial => FilledButton(
-                              onPressed: () => _submitChangePassword(),
+                              onPressed: () =>
+                                  _submitChangePassword(size: size),
                               style: FilledButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 15, vertical: 15),
@@ -251,7 +261,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           UserRegisterStatus.loading =>
                             const CircularProgressIndicator(),
                           UserRegisterStatus.failure => FilledButton(
-                              onPressed: () => _submitChangePassword(),
+                              onPressed: () =>
+                                  _submitChangePassword(size: size),
                               style: FilledButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 15, vertical: 15),
@@ -269,7 +280,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               ),
                             ),
                           UserRegisterStatus.success => FilledButton(
-                              onPressed: () => _submitChangePassword(),
+                              onPressed: () =>
+                                  _submitChangePassword(size: size),
                               style: FilledButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 15, vertical: 15),
