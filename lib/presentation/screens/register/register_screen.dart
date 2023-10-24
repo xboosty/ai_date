@@ -24,6 +24,8 @@ import '../../widgets/widgets.dart'
         VisibleOnProfile;
 import '../screens.dart' show SignInScreen;
 
+part 'password_register.dart';
+
 class Genders {
   final int id;
   final String name;
@@ -360,8 +362,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Container(
                 width: size.width,
                 height: size.height * 0.36,
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                // color: Colors.red,
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Stack(
                   children: [
                     Center(
@@ -371,26 +372,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     Center(child: Image.asset('assets/imgs/robot_chat.png')),
                     SafeArea(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.arrow_back_rounded,
-                              color: AppTheme.disabledColor,
-                              size: 32,
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.arrow_back_rounded,
+                                color: AppTheme.disabledColor,
+                                // size: 32,
+                              ),
+                              onPressed: () => Navigator.of(context).pop(),
                             ),
-                            onPressed: () => Navigator.of(context).pop(),
-                          ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.cancel_outlined,
-                              color: AppTheme.disabledColor,
-                              size: 32,
-                            ),
-                            onPressed: () => _exitSetup(),
-                          )
-                        ],
+                            IconButton(
+                              icon: const Icon(
+                                Icons.cancel_outlined,
+                                color: AppTheme.disabledColor,
+                                // size: 32,
+                              ),
+                              onPressed: () => _exitSetup(),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -475,7 +479,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Container(
                 width: size.width,
                 height: size.height * 0.36,
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Stack(
                   children: [
                     Center(
@@ -487,26 +491,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: Image.asset('assets/imgs/phone_number_img.png'),
                     ),
                     SafeArea(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.arrow_back_rounded,
-                              color: AppTheme.disabledColor,
-                              size: 32,
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.arrow_back_rounded,
+                                color: AppTheme.disabledColor,
+                              ),
+                              onPressed: () => _backPage(),
                             ),
-                            onPressed: () => _backPage(),
-                          ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.cancel_outlined,
-                              color: AppTheme.disabledColor,
-                              size: 32,
-                            ),
-                            onPressed: () => _exitSetup(),
-                          )
-                        ],
+                            IconButton(
+                              icon: const Icon(
+                                Icons.cancel_outlined,
+                                color: AppTheme.disabledColor,
+                              ),
+                              onPressed: () => _exitSetup(),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -584,7 +589,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Container(
                 width: size.width,
                 height: size.height * 0.36,
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Stack(
                   children: [
                     Center(
@@ -593,28 +598,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     Center(child: Image.asset('assets/imgs/code_img.png')),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 30.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.arrow_back_rounded,
-                              color: AppTheme.disabledColor,
-                              size: 32,
+                    SafeArea(
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 5.0),
+                        // padding: const EdgeInsets.symmetric(vertical: 30.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.arrow_back_rounded,
+                                color: AppTheme.disabledColor,
+                                // size: 32,
+                              ),
+                              onPressed: () => _backPage(),
                             ),
-                            onPressed: () => _backPage(),
-                          ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.cancel_outlined,
-                              color: AppTheme.disabledColor,
-                              size: 32,
-                            ),
-                            onPressed: () => _exitSetup(),
-                          )
-                        ],
+                            IconButton(
+                              icon: const Icon(
+                                Icons.cancel_outlined,
+                                color: AppTheme.disabledColor,
+                                // size: 32,
+                              ),
+                              onPressed: () => _exitSetup(),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -648,7 +656,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20.0),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () =>
+                            _submitRegisterUser(context, size: size),
                         style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -686,7 +695,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Container(
                 width: size.width,
                 height: size.height * 0.36,
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Stack(
                   children: [
                     Center(
@@ -696,26 +705,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     Center(child: Image.asset('assets/imgs/email_img.png')),
                     SafeArea(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.arrow_back_rounded,
-                              color: AppTheme.disabledColor,
-                              size: 32,
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.arrow_back_rounded,
+                                color: AppTheme.disabledColor,
+                                // size: 32,
+                              ),
+                              onPressed: () => _backPage(),
                             ),
-                            onPressed: () => _backPage(),
-                          ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.cancel_outlined,
-                              color: AppTheme.disabledColor,
-                              size: 32,
-                            ),
-                            onPressed: () => _exitSetup(),
-                          )
-                        ],
+                            IconButton(
+                              icon: const Icon(
+                                Icons.cancel_outlined,
+                                color: AppTheme.disabledColor,
+                                // size: 32,
+                              ),
+                              onPressed: () => _exitSetup(),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -767,7 +779,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Container(
                 width: size.width,
                 height: size.height * 0.36,
-                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 // color: Colors.red,
                 child: Stack(
                   children: [
@@ -778,26 +790,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     Center(child: Image.asset('assets/imgs/password_img.png')),
                     SafeArea(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            icon: const Icon(
-                              Icons.arrow_back_rounded,
-                              color: AppTheme.disabledColor,
-                              size: 32,
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.arrow_back_rounded,
+                                color: AppTheme.disabledColor,
+                                // size: 32,
+                              ),
+                              onPressed: () => _backPage(),
                             ),
-                            onPressed: () => _backPage(),
-                          ),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.cancel_outlined,
-                              color: AppTheme.disabledColor,
-                              size: 32,
-                            ),
-                            onPressed: () => _exitSetup(),
-                          )
-                        ],
+                            IconButton(
+                              icon: const Icon(
+                                Icons.cancel_outlined,
+                                color: AppTheme.disabledColor,
+                                // size: 32,
+                              ),
+                              onPressed: () => _exitSetup(),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -816,54 +831,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: size.width / 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextFormField(
-                      controller: _passwordCtrl,
-                      focusNode: _focusNodePassword,
-                      decoration: const InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF686E8C),
-                            width: 2.0,
-                          ),
-                        ),
-                        border: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF686E8C),
-                            width: 2.0,
-                          ),
-                        ),
-                      ),
-                      style: const TextStyle(
-                        color: Color(0xFF686E8C),
-                        fontSize: 24,
-                        fontFamily: Strings.fontFamily,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      obscureText: true,
-                      keyboardType: TextInputType.visiblePassword,
-                      validator: (value) => _validatePassword(value ?? ''),
-                      onEditingComplete: () => _focusNodePassword.unfocus(),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20.0),
-                      child: Text(
-                        'Your password should be at least 8 characters long and include a combination of uppercase letters, lowercase letters, numbers, and special characters for added security',
-                        style: TextStyle(
-                          color: Color(0xFF9CA4BF),
-                          fontSize: 12,
-                          fontFamily: Strings.fontFamily,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              PasswordRegister(
+                passwordCtrl: _passwordCtrl,
+                focusNodePassword: _focusNodePassword,
+                validator: (value) => _validatePassword(value ?? ''),
+                onEditingComplete: () => _focusNodePassword.unfocus(),
+              )
             ],
           ),
         ),
@@ -881,8 +854,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             Container(
               width: size.width,
               height: size.height * 0.36,
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              // color: Colors.red,
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Stack(
                 children: [
                   Center(
@@ -892,26 +864,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   Center(child: Image.asset('assets/imgs/gender_img.png')),
                   SafeArea(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back_rounded,
-                            color: AppTheme.disabledColor,
-                            size: 32,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.arrow_back_rounded,
+                              color: AppTheme.disabledColor,
+                              // size: 32,
+                            ),
+                            onPressed: () => _backPage(),
                           ),
-                          onPressed: () => _backPage(),
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.cancel_outlined,
-                            color: AppTheme.disabledColor,
-                            size: 32,
-                          ),
-                          onPressed: () => _exitSetup(),
-                        )
-                      ],
+                          IconButton(
+                            icon: const Icon(
+                              Icons.cancel_outlined,
+                              color: AppTheme.disabledColor,
+                              // size: 32,
+                            ),
+                            onPressed: () => _exitSetup(),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -931,73 +906,71 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
             ),
             Container(
+              height: size.height * 0.32,
               padding: EdgeInsets.symmetric(horizontal: size.width / 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: _genders
-                    .map(
-                      (gender) => Column(
-                        children: [
-                          RadioListTile<Genders>(
-                            controlAffinity: ListTileControlAffinity.trailing,
-                            title: Text(
-                              gender.name,
-                              style: const TextStyle(
-                                color: Color(0xFF686E8C),
-                                fontSize: 14,
-                                fontFamily: Strings.fontFamily,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            value: gender,
-                            groupValue: _genderSelected,
-                            onChanged: (Genders? value) {
-                              setState(() {
-                                _genderSelected = value;
-                              });
-                            },
-                          ),
-                          gender.id != _genders.length - 3
-                              ? const Divider()
-                              : Container(),
-                        ],
+              child: ListView.builder(
+                itemCount: _genders.length,
+                itemBuilder: (context, index) => Column(
+                  children: [
+                    RadioListTile<Genders>(
+                      controlAffinity: ListTileControlAffinity.trailing,
+                      title: Text(
+                        _genders[index].name,
+                        style: const TextStyle(
+                          color: Color(0xFF686E8C),
+                          fontSize: 14,
+                          fontFamily: Strings.fontFamily,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    )
-                    .toList(),
-
-                // [
-                //   RadioListTile<Genders>(
-                //     title: const Text('Lafayette'),
-                //     value: _genders[0],
-                //     groupValue: _genderSelected,
-                //     onChanged: (Genders? value) {
-                //       setState(() {
-                //         _genderSelected = value;
-                //       });
-                //     },
-                //   ),
-                //   RadioListTile<Genders>(
-                //     title: const Text('Thomas Jefferson'),
-                //     value: _genders[1],
-                //     groupValue: _genderSelected,
-                //     onChanged: (Genders? value) {
-                //       setState(() {
-                //         _genderSelected = value;
-                //       });
-                //     },
-                //   ),
-                //   RadioListTile<Genders>(
-                //     title: const Text('Thomas Jefferson'),
-                //     value: _genders[2],
-                //     groupValue: _genderSelected,
-                //     onChanged: (Genders? value) {
-                //       setState(() {
-                //         _genderSelected = value;
-                //       });
-                //     },
-                //   ),
-                // ],
+                      value: _genders[index],
+                      groupValue: _genderSelected,
+                      onChanged: (Genders? value) {
+                        setState(() {
+                          _genderSelected = value;
+                        });
+                      },
+                    ),
+                    index != _genders.length - 1
+                        ? const Divider()
+                        : Container(),
+                  ],
+                ),
               ),
+              // Column(
+              //   crossAxisAlignment: CrossAxisAlignment.start,
+              //   children:
+              //   _genders
+              //       .map(
+              //         (gender) => Column(
+              //           children: [
+              //             RadioListTile<Genders>(
+              //               controlAffinity: ListTileControlAffinity.trailing,
+              //               title: Text(
+              //                 gender.name,
+              //                 style: const TextStyle(
+              //                   color: Color(0xFF686E8C),
+              //                   fontSize: 14,
+              //                   fontFamily: Strings.fontFamily,
+              //                   fontWeight: FontWeight.w600,
+              //                 ),
+              //               ),
+              //               value: gender,
+              //               groupValue: _genderSelected,
+              //               onChanged: (Genders? value) {
+              //                 setState(() {
+              //                   _genderSelected = value;
+              //                 });
+              //               },
+              //             ),
+              //             gender.id != _genders.length - 3
+              //                 ? const Divider()
+              //                 : Container(),
+              //           ],
+              //         ),
+              //       )
+              //       .toList(),
+              // ),
             ),
             VisibleOnProfile(isVisible: isGenderVisibleProfile)
           ],
@@ -1016,7 +989,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             Container(
               width: size.width,
               height: size.height * 0.36,
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
               // color: Colors.red,
               child: Stack(
                 children: [
@@ -1027,26 +1000,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   Center(child: Image.asset('assets/imgs/heart_img.png')),
                   SafeArea(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back_rounded,
-                            color: AppTheme.disabledColor,
-                            size: 32,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: const Icon(
+                              Icons.arrow_back_rounded,
+                              color: AppTheme.disabledColor,
+                              // size: 32,
+                            ),
+                            onPressed: () => _backPage(),
                           ),
-                          onPressed: () => _backPage(),
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.cancel_outlined,
-                            color: AppTheme.disabledColor,
-                            size: 32,
-                          ),
-                          onPressed: () => _exitSetup(),
-                        )
-                      ],
+                          IconButton(
+                            icon: const Icon(
+                              Icons.cancel_outlined,
+                              color: AppTheme.disabledColor,
+                              // size: 32,
+                            ),
+                            onPressed: () => _exitSetup(),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -1067,10 +1043,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             Container(
               height: size.height * 0.38,
-              // color: Colors.red,
               padding: EdgeInsets.symmetric(horizontal: size.width / 20),
               child: ListView.builder(
-                itemCount: 5,
+                itemCount: _sexualities.length,
                 itemBuilder: (context, index) => Column(
                   children: [
                     RadioListTile<Sexuality>(
@@ -1115,7 +1090,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           Container(
             width: size.width,
             height: size.height * 0.36,
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
             // color: Colors.red,
             child: Stack(
               children: [
@@ -1126,26 +1101,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 Center(child: Image.asset('assets/imgs/location_img.png')),
                 SafeArea(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back_rounded,
-                          color: AppTheme.disabledColor,
-                          size: 32,
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 5.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back_rounded,
+                            color: AppTheme.disabledColor,
+                            // size: 32,
+                          ),
+                          onPressed: () => _backPage(),
                         ),
-                        onPressed: () => _backPage(),
-                      ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.cancel_outlined,
-                          color: AppTheme.disabledColor,
-                          size: 32,
-                        ),
-                        onPressed: () => _exitSetup(),
-                      )
-                    ],
+                        IconButton(
+                          icon: const Icon(
+                            Icons.cancel_outlined,
+                            color: AppTheme.disabledColor,
+                            // size: 32,
+                          ),
+                          onPressed: () => _exitSetup(),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ],
