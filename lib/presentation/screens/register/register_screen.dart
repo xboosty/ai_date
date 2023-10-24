@@ -587,7 +587,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       children: [
                         SizedBox(
                           width: size.width * 0.90,
-                          // height: size.height * 0.20,
                           child: InternationalPhoneNumberInput(
                             focusNode: _focusNodePhone,
                             initialValue: _initialNumber,
