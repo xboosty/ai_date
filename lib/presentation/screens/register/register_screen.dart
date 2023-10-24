@@ -87,6 +87,54 @@ class _RegisterScreenState extends State<RegisterScreen> {
     Sexuality(id: 3, name: 'Transexual'),
   ];
 
+  final PhoneNumber _initialNumber = PhoneNumber(isoCode: 'US');
+
+  final List<String> _countriesISO = [
+    'US', // Estados Unidos
+    'IN', // India
+    'CN', // China
+    'ID', // Indonesia
+    'PK', // Pakistán
+    'BR', // Brasil
+    'NG', // Nigeria
+    'BD', // Bangladesh
+    'RU', // Rusia
+    'MX', // México
+    'JP', // Japón
+    'ET', // Etiopía
+    'PH', // Filipinas
+    'EG', // Egipto
+    'VN', // Vietnam
+    'CD', // República Democrática del Congo
+    'TR', // Turquía
+    'IR', // Irán
+    'DE', // Alemania
+    'TH', // Tailandia
+    'GB', // Reino Unido
+    'FR', // Francia
+    'TZ', // Tanzania
+    'IT', // Italia
+    'ZA', // Sudáfrica
+    'MM', // Myanmar (Birmania)
+    'KR', // Corea del Sur
+    'CO', // Colombia
+    'ES', // España
+    'UG', // Uganda
+    'AR', // Argentina
+    'UA', // Ucrania
+    'AL', // Albania
+    'KE', // Kenia
+    'SD', // Sudán
+    'PL', // Polonia
+    'CA', // Canadá
+    'MA', // Marruecos
+    'UZ', // Uzbekistán
+    'MY', // Malasia
+    'PE', // Perú
+    'BE', // Bélgica
+    'CU', // Cuba
+  ];
+
   // Validations
   String? _validateUsername(String value) {
     // Define your validation logic here.
@@ -542,6 +590,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           // height: size.height * 0.20,
                           child: InternationalPhoneNumberInput(
                             focusNode: _focusNodePhone,
+                            initialValue: _initialNumber,
+                            countries: _countriesISO,
                             countrySelectorScrollControlled: false,
                             autoValidateMode: AutovalidateMode.disabled,
                             maxLength: 11,
