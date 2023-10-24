@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     BottomNavigationBarItem(
       label: 'Profile',
       icon: Icon(
-        Icons.contacts,
+        Icons.contacts_outlined,
         size: 32,
       ),
     ),
@@ -33,21 +33,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     BottomNavigationBarItem(
       label: 'Premium',
       icon: Icon(
-        Icons.diamond,
+        Icons.diamond_outlined,
         size: 32,
       ),
     ),
     BottomNavigationBarItem(
       label: 'Discover',
       icon: Icon(
-        Icons.swipe_right,
+        Icons.swipe_right_outlined,
         size: 32,
       ),
     ),
     BottomNavigationBarItem(
       label: 'Chat',
       icon: Icon(
-        Icons.message,
+        Icons.message_outlined,
         size: 32,
       ),
     ),

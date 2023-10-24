@@ -59,79 +59,85 @@ class SignInBox extends StatelessWidget {
 
     return Center(
       child: SingleChildScrollView(
-        child: Container(
-          width: size.width * 0.93,
-          height: size.height * 0.83,
-          decoration: BoxDecoration(
+        child: Card(
+          elevation: 8.0,
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              const SignInForm(),
-              Expanded(
-                child: Container(
-                  width: size.width,
-                  decoration: const BoxDecoration(
-                    gradient: AppTheme.linearGradientTopRightBottomLeft,
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30),
+          child: Container(
+            width: size.width * 0.93,
+            height: size.height * 0.83,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                const SignInForm(),
+                Expanded(
+                  child: Container(
+                    width: size.width,
+                    decoration: const BoxDecoration(
+                      gradient: AppTheme.linearGradientTopRightBottomLeft,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(30),
+                        bottomRight: Radius.circular(30),
+                      ),
                     ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      const Text(
-                        'New here?',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 28,
-                          fontFamily: Strings.fontFamily,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const Text(
-                        'Elevate your love life with AI Precision',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontFamily: Strings.fontFamily,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      SizedBox(height: size.height * 0.02),
-                      FilledButton(
-                        style: FilledButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 10,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        const Text(
+                          'New here?',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 28,
+                            fontFamily: Strings.fontFamily,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
-                        onPressed: () {
-                          Navigator.of(context)
-                              .pushNamed(IntroductionScreen.routeName);
-                        },
-                        child: const Text(
-                          'SIGN UP',
+                        const Text(
+                          'Elevate your love life with AI Precision',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Color(0xFF6C2EBC),
+                            color: Colors.white,
                             fontSize: 16,
                             fontFamily: Strings.fontFamily,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
-                      )
-                    ],
+                        SizedBox(height: size.height * 0.02),
+                        FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 10,
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushNamed(IntroductionScreen.routeName);
+                          },
+                          child: const Text(
+                            'SIGN UP',
+                            style: TextStyle(
+                              color: Color(0xFF6C2EBC),
+                              fontSize: 16,
+                              fontFamily: Strings.fontFamily,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),

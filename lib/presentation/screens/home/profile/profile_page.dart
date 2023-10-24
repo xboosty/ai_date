@@ -127,7 +127,7 @@ class _AppBarAIDateState extends State<_AppBarAIDate> {
       children: [
         Image.asset(
           'assets/imgs/aidate_home.png',
-          height: 20,
+          height: 30,
         ),
         IconButton(
           onPressed: () {
@@ -163,11 +163,14 @@ class _AppBarAIDateState extends State<_AppBarAIDate> {
                           _NotificationsSetting(size: size),
                           _LegalSetting(size: size),
                           _HelpSupportSetting(size: size),
-                          SizedBox(height: size.height * 0.02),
+                          SizedBox(height: size.height * 0.04),
                           Center(
-                            child: Image.asset('assets/imgs/aidate-logo.png'),
+                            child: Image.asset(
+                              'assets/imgs/aidate-logo.png',
+                              height: 80,
+                            ),
                           ),
-                          SizedBox(height: size.height * 0.05),
+                          SizedBox(height: size.height * 0.03),
                           SizedBox(
                             width: size.width * 0.90,
                             child: FilledButton.icon(
