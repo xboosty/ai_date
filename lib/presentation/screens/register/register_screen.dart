@@ -287,7 +287,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } catch (e) {
       if (!mounted) return;
       if (e is NtsErrorResponse) {
-        _notifications.ntsErrorNotification(
+        await _notifications.ntsErrorNotification(
           context,
           message: e.message ?? '',
           height: size.height * 0.12,
@@ -295,8 +295,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         );
       }
 
+      if (!mounted) return;
       if (e is DioException) {
-        _notifications.ntsErrorNotification(
+        await _notifications.ntsErrorNotification(
           context,
           message: 'Sorry. Something went wrong. Please try again later',
           height: size.height * 0.12,
@@ -318,25 +319,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
       try {
         await context.read<AccountCubit>().verificationCode(verification);
         if (!mounted) return;
-        _notifications.successRobotNotification(
+        await _notifications.successRobotNotification(
           context,
           message:
               'Congratulation. Your account has been created with success.',
         );
+        if (!mounted) return;
         Navigator.of(context).pushNamed(SignInScreen.routeName);
       } catch (e) {
         if (!mounted) return;
-        Navigator.of(context).pushNamed(SignInScreen.routeName);
         if (e is NtsErrorResponse) {
-          _notifications.ntsErrorNotification(
+          await _notifications.errorRobotNotification(
             context,
             message: e.message ?? '',
-            height: size.height * 0.12,
-            width: size.width * 0.90,
           );
         }
+        if (!mounted) return;
         if (e is DioException) {
-          _notifications.ntsErrorNotification(
+          await _notifications.ntsErrorNotification(
             context,
             message: 'Sorry. Something went wrong. Please try again later',
             height: size.height * 0.12,
@@ -593,7 +593,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             countries: _countriesISO,
                             countrySelectorScrollControlled: false,
                             autoValidateMode: AutovalidateMode.disabled,
-                            maxLength: 11,
+                            maxLength: 15,
                             onInputChanged: (PhoneNumber number) {
                               codeNumber = number.dialCode ?? '-1';
                               phoneNumberUser = number.parseNumber();
