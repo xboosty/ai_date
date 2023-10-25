@@ -63,6 +63,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final FocusNode _focusNodePassword = FocusNode();
   final FocusNode _focusNodeVerification = FocusNode();
 
+  bool isShowFloatButton = true;
   bool isLastPage = false;
   bool isNotifyPage = false;
   bool isGenderVisibleProfile = false;
@@ -160,7 +161,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
     // You can use regular expressions or other methods to validate phone numbers.
     // Here, we're checking if the input consists of 10 digits.
-    if (!RegExp(r'^[0-9 ]+$').hasMatch(value)) {
+    if (!RegExp(r'^\d+(?:[-\s]?\d+)*$').hasMatch(value)) {
       return 'Invalid phone number.';
     }
     return null; // Return null if the input is valid.
@@ -220,33 +221,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  void _submitPhoneNumber({required Size size}) {
+  Future<void> _submitPhoneNumber({required Size size}) async {
     if (_formKey.currentState!.validate()) {
       // If the form is valid, save the form and perform an action.
       _formKey.currentState!.save();
       // Here, you can use the _phoneNumber variable for further processing.
-      print('Phone Number: $phoneNumberUser');
-      _nextPage();
-    } else {
-      _notifications.ntsErrorNotification(
-        context,
-        message: 'The phone number must be at least 11 digits.',
-        height: size.height * 0.12,
-        width: size.width * 0.90,
-      );
-      // ElegantNotification.error(
-      //   notificationPosition: NotificationPosition.bottomCenter,
-      //   animation: AnimationType.fromBottom,
-      //   background: Colors.red.shade100,
-      //   showProgressIndicator: true,
-      //   description: const Text(
-      //     "",
-      //     style: TextStyle(
-      //       color: Colors.black,
-      //     ),
-      //   ),
-      // ).show(context);
+      await _submitRegisterUser(context, size: size);
     }
+    // else {
+    //   _notifications.ntsErrorNotification(
+    //     context,
+    //     message: 'The phone number must be at least 15 digits.',
+    //     height: size.height * 0.12,
+    //     width: size.width * 0.90,
+    //   );
+    //   // ElegantNotification.error(
+    //   //   notificationPosition: NotificationPosition.bottomCenter,
+    //   //   animation: AnimationType.fromBottom,
+    //   //   background: Colors.red.shade100,
+    //   //   showProgressIndicator: true,
+    //   //   description: const Text(
+    //   //     "",
+    //   //     style: TextStyle(
+    //   //       color: Colors.black,
+    //   //     ),
+    //   //   ),
+    //   // ).show(context);
+    // }
   }
 
   void _submitEmail() {
@@ -354,7 +355,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _submitUsername();
         break;
       case 1:
-        _submitPhoneNumber(size: size);
+        _nextPage();
         break;
       case 2:
         _submitEmail();
@@ -369,7 +370,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _nextPage();
         break;
       case 6:
-        await _submitRegisterUser(context, size: size);
+        await _submitPhoneNumber(size: size);
         break;
       case 7:
         if (!mounted) return;
@@ -495,6 +496,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       onFieldSubmitted: (_) {
                         _submitUsername();
                       },
+                      // onTap: () {
+                      //   setState(() {
+                      //     isShowFloatButton = false;
+                      //   });
+                      // },
+                      // onEditingComplete: () {
+                      //   setState(() {
+                      //     isShowFloatButton = true;
+                      //   });
+                      // },
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 20.0),
@@ -610,7 +621,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ],
                     ),
                     const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20.0),
+                      padding: EdgeInsets.only(top: 20.0),
                       child: Text(
                         'AI Date will send you a text with a verification code. Message and date rates may apply.',
                         style: TextStyle(
@@ -621,6 +632,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                     ),
+                    // const Padding(
+                    //   padding: EdgeInsets.only(top: 20.0),
+                    //   child: Text(
+                    //     'AI Date will send you a text with a verification code. Message and date rates may apply.',
+                    //     style: TextStyle(
+                    //       color: Color(0xFF9CA4BF),
+                    //       fontSize: 12,
+                    //       fontFamily: Strings.fontFamily,
+                    //       fontWeight: FontWeight.w500,
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -1216,14 +1239,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 SizedBox(height: size.height * 0.02),
                 FilledColorizedOutlineButton(
-                    width: size.width * 0.90,
-                    height: size.height * 0.08,
-                    title: 'DON\'T ALLOW',
-                    isTrailingIcon: false,
-                    onTap: () {
-                      _formRegisterSubmit(context,
-                          page: pageviewController.page ?? 0.0, size: size);
-                    }),
+                  width: size.width * 0.90,
+                  height: size.height * 0.08,
+                  title: 'DON\'T ALLOW',
+                  isTrailingIcon: false,
+                  onTap: () => _nextPage(),
+                  // {
+                  //   _formRegisterSubmit(context,
+                  //       page: pageviewController.page ?? 0.0, size: size);
+                  // }
+                ),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 20.0),
                   child: Text(
@@ -1266,6 +1291,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         return;
       }
     }
+    _nextPage();
   }
 
   void _pageListener() {
@@ -1314,37 +1340,54 @@ class _RegisterScreenState extends State<RegisterScreen> {
             },
             children: [
               _buildPageUsername(size),
-              _buildPagePhoneNumber(size),
               _buildPageEmail(size),
               _buildPagePassword(size),
               _buildPageGender(size),
               _buildPageSexuality(size),
               _buildPageLocation(size),
+              _buildPagePhoneNumber(size),
               _buildPageCode(size),
             ],
           ),
         ),
       ),
-      floatingActionButton: BlocBuilder<AccountCubit, AccountState>(
-        builder: (context, state) => switch (state.status) {
+      floatingActionButton:
+          BlocBuilder<AccountCubit, AccountState>(builder: (context, state) {
+        if ((_focusNodeName.hasFocus) ||
+            (_focusNodePhone.hasFocus) ||
+            (_focusNodeEmail.hasFocus) ||
+            (_focusNodePassword.hasFocus) ||
+            (_focusNodeVerification.hasFocus)) {
+          isShowFloatButton = false;
+        } else {
+          isShowFloatButton = true;
+        }
+
+        return switch (state.status) {
           UserRegisterStatus.loading => const CircularProgressIndicator(),
-          UserRegisterStatus.initial => ButtonCircularProgress(
-              pageviewController: pageviewController,
-              onNextPage: (page) =>
-                  _formRegisterSubmit(context, page: page, size: size),
-            ),
-          UserRegisterStatus.success => ButtonCircularProgress(
-              pageviewController: pageviewController,
-              onNextPage: (page) =>
-                  _formRegisterSubmit(context, page: page, size: size),
-            ),
-          UserRegisterStatus.failure => ButtonCircularProgress(
-              pageviewController: pageviewController,
-              onNextPage: (page) =>
-                  _formRegisterSubmit(context, page: page, size: size),
-            ),
-        },
-      ),
+          UserRegisterStatus.initial => (isShowFloatButton)
+              ? ButtonCircularProgress(
+                  pageviewController: pageviewController,
+                  onNextPage: (page) =>
+                      _formRegisterSubmit(context, page: page, size: size),
+                )
+              : Container(),
+          UserRegisterStatus.success => (isShowFloatButton)
+              ? ButtonCircularProgress(
+                  pageviewController: pageviewController,
+                  onNextPage: (page) =>
+                      _formRegisterSubmit(context, page: page, size: size),
+                )
+              : Container(),
+          UserRegisterStatus.failure => (isShowFloatButton)
+              ? ButtonCircularProgress(
+                  pageviewController: pageviewController,
+                  onNextPage: (page) =>
+                      _formRegisterSubmit(context, page: page, size: size),
+                )
+              : Container(),
+        };
+      }),
     );
   }
 }
@@ -1389,9 +1432,10 @@ class _ButtonCircularProgressState extends State<ButtonCircularProgress> {
     return CircularProgressIndicatorButton(
       onPressed: () => _onPressButtonPage(),
       percent: percent,
-      backgroundColor: percent < 1
-          ? AppTheme.disabledColor
-          : const Color.fromARGB(255, 204, 66, 24),
+      backgroundColor: const Color.fromARGB(255, 204, 66, 24),
+      // percent < 1
+      //     ? AppTheme.disabledColor
+      //     : const Color.fromARGB(255, 204, 66, 24),
       // Relleno de color en los bordes basado en la página actual
     );
   }
