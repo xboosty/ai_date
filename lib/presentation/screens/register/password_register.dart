@@ -6,13 +6,17 @@ class PasswordRegister extends StatefulWidget {
     required this.passwordCtrl,
     required this.focusNodePassword,
     this.validator,
-    required this.onEditingComplete,
+    this.onEditingComplete,
+    this.textInputAction,
+    this.onFieldSubmitted,
   });
 
   final TextEditingController passwordCtrl;
   final FocusNode focusNodePassword;
   final FormFieldValidator<String>? validator;
-  final VoidCallback onEditingComplete;
+  final VoidCallback? onEditingComplete;
+  final TextInputAction? textInputAction;
+  final void Function(String?)? onFieldSubmitted;
 
   @override
   State<PasswordRegister> createState() => _PasswordRegisterState();
@@ -69,6 +73,8 @@ class _PasswordRegisterState extends State<PasswordRegister> {
             keyboardType: TextInputType.visiblePassword,
             validator: widget.validator,
             onEditingComplete: widget.onEditingComplete,
+            textInputAction: widget.textInputAction,
+            onFieldSubmitted: widget.onFieldSubmitted,
           ),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 20.0),

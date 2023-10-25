@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import '../../../config/config.dart' show Strings;
 
 class EmailInput extends StatelessWidget {
-  const EmailInput(
-      {super.key,
-      this.controller,
-      this.validator,
-      this.focusNode,
-      this.onEditingComplete,
-      this.textInputAction,
-      this.onFieldSubmitted});
+  const EmailInput({
+    super.key,
+    this.controller,
+    this.validator,
+    this.focusNode,
+    this.onEditingComplete,
+    this.textInputAction,
+    this.onFieldSubmitted,
+  });
 
   final TextEditingController? controller;
   final FormFieldValidator<String?>? validator;
