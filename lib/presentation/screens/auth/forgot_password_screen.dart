@@ -423,6 +423,8 @@ class _WizardScreenState extends State<_WizardScreen> {
                       focusNode: _focusNodeEmail,
                       validator: (value) => _validateEmail(value ?? ''),
                       onEditingComplete: () => _focusNodeEmail.unfocus(),
+                      textInputAction: TextInputAction.done,
+                      onFieldSubmitted: (_) => _submitEmail(size: size),
                     ),
                     button: BlocBuilder<AccountCubit, AccountState>(
                       builder: (context, state) {
@@ -549,8 +551,11 @@ class _WizardScreenState extends State<_WizardScreen> {
                                       !isObscureTextNewPassword;
                                 });
                               },
-                              onEditingComplete: () =>
-                                  _focusNodeNewPassword.unfocus(),
+                              textInputAction: TextInputAction.next,
+                              onFieldSubmitted: (_) {
+                                FocusScope.of(context)
+                                    .requestFocus(_focusNodeRepitPassword);
+                              },
                             ),
                             PasswordInput(
                               focusNode: _focusNodeRepitPassword,
@@ -565,8 +570,9 @@ class _WizardScreenState extends State<_WizardScreen> {
                                       !isObscureTextRepeatPassword;
                                 });
                               },
-                              onEditingComplete: () =>
-                                  _focusNodeRepitPassword.unfocus(),
+                              textInputAction: TextInputAction.done,
+                              onFieldSubmitted: (_) =>
+                                  _submitForgotPasswords(size: size),
                             ),
                           ],
                         ),

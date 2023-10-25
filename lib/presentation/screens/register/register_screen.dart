@@ -491,7 +491,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       keyboardType: TextInputType.name,
                       validator: (value) => _validateUsername(value ?? ''),
-                      onEditingComplete: () => _focusNodeName.unfocus(),
+                      textInputAction: TextInputAction.done,
+                      onFieldSubmitted: (_) {
+                        _submitUsername();
+                      },
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 20.0),
@@ -600,6 +603,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             },
                             validator: (value) =>
                                 _validatePhoneNumber(value ?? ''),
+                            onFieldSubmitted: (_) =>
+                                _submitPhoneNumber(size: size),
                           ),
                         )
                       ],
@@ -804,7 +809,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       controller: _emailUserCtrl,
                       focusNode: _focusNodeEmail,
                       validator: (value) => _validateEmail(value ?? ''),
-                      onEditingComplete: () => _focusNodeEmail.unfocus(),
+                      textInputAction: TextInputAction.done,
+                      onFieldSubmitted: (_) => _submitEmail(),
                     ),
                   ],
                 ),
@@ -884,7 +890,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 passwordCtrl: _passwordCtrl,
                 focusNodePassword: _focusNodePassword,
                 validator: (value) => _validatePassword(value ?? ''),
-                onEditingComplete: () => _focusNodePassword.unfocus(),
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (_) => _submitPassword(),
               )
             ],
           ),
