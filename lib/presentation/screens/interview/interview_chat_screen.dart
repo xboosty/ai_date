@@ -1,10 +1,12 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+
+import 'package:audioplayers/audioplayers.dart';
+// import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:social_media_recorder/audio_encoder_type.dart';
 import 'package:social_media_recorder/screen/social_media_recorder.dart';
-import 'package:voice_message_package/voice_message_package.dart';
-
+import 'package:record/record.dart';
 import '../../../config/config.dart' show AppTheme, Strings;
 
 class InterviewChatScreen extends StatefulWidget {
@@ -17,7 +19,62 @@ class InterviewChatScreen extends StatefulWidget {
 }
 
 class _InterviewChatScreenState extends State<InterviewChatScreen> {
-  String urlAudio = '';
+  late Record audioRecord;
+  late AudioPlayer audioPlayer;
+  String audioPath = '';
+  bool isRecording = false;
+  bool isRecordingCompleted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // audioCtrl = RecorderController();
+    audioPlayer = AudioPlayer();
+    audioRecord = Record();
+  }
+
+  @override
+  void dispose() {
+    // audioCtrl.dispose();
+    audioPlayer.dispose();
+    audioRecord.dispose();
+    super.dispose();
+  }
+
+  Future<void> startRecording() async {
+    try {
+      if (await audioRecord.hasPermission()) {
+        await audioRecord.start();
+        setState(() {
+          isRecording = true;
+        });
+      }
+    } catch (e) {
+      print('Error Start Recording: $e');
+    }
+  }
+
+  Future<void> stopRecording() async {
+    try {
+      String? path = await audioRecord.stop();
+      setState(() {
+        audioPath = path!;
+        isRecording = false;
+        isRecordingCompleted = true;
+      });
+    } catch (e) {
+      print('Error Start Recording: $e');
+    }
+  }
+
+  Future<void> playRecording() async {
+    try {
+      Source urlSource = UrlSource(audioPath);
+      await audioPlayer.play(urlSource);
+    } catch (e) {
+      print('Error playing recording: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,30 +171,39 @@ class _InterviewChatScreenState extends State<InterviewChatScreen> {
                     SizedBox(height: size.height * 0.01),
                     _ChatAI(size: size),
                     _ChatUser(size: size),
-                    urlAudio != ""
-                        ? Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                VoiceMessage(
-                                  contactBgColor: Colors.purple.shade300,
-                                  meBgColor: Colors.purple.shade300,
-                                  mePlayIconColor: Color(0xFF6D2EBC),
-                                  meFgColor: Color(0xFF6D2EBC),
-                                  contactPlayIconBgColor: Colors.white,
-                                  contactPlayIconColor: Colors.white,
-                                  audioSrc: urlAudio,
-                                  played: false, // To show played badge or not.
-                                  me: true, // Set message side.
-                                  onPlay:
-                                      () {}, // Do something when voice played.
-                                ),
-                              ],
-                            ),
-                          )
-                        : Container(),
+                    if (isRecordingCompleted)
+                      BubbleChatAudio(
+                        onPlay: () async => isRecordingCompleted
+                            ? await playRecording()
+                            : await stopRecording(),
+                        controlIcon: isRecordingCompleted
+                            ? const Icon(
+                                Icons.play_arrow_rounded,
+                              )
+                            : const Icon(
+                                Icons.pause_rounded,
+                              ),
+                      ),
+                    // if (isRecordingCompleted)
+                    // Container(
+                    //     color: Colors.red,
+                    //     child: AudioWaveforms(
+                    //       enableGesture: true,
+                    //       size:
+                    //           Size(MediaQuery.of(context).size.width / 2, 50),
+                    //       recorderController: audioCtrl,
+                    //       waveStyle: const WaveStyle(
+                    //         waveColor: Colors.blue,
+                    //         extendWaveform: true,
+                    //         showMiddleLine: false,
+                    //       ),
+                    //       decoration: BoxDecoration(
+                    //         borderRadius: BorderRadius.circular(12.0),
+                    //         color: const Color(0xFF1E1B26),
+                    //       ),
+                    //       padding: const EdgeInsets.only(left: 18),
+                    //       margin: const EdgeInsets.symmetric(horizontal: 15),
+                    //     )),
                   ],
                 ),
               ),
@@ -161,24 +227,78 @@ class _InterviewChatScreenState extends State<InterviewChatScreen> {
                   recordIconWhenLockBackGroundColor: const Color(0xFF6D2EBC),
                   recordIconBackGroundColor: const Color(0xFF6D2EBC),
                   radius: BorderRadius.circular(100),
-                  sendRequestFunction: (soundFile, _time) async {
+                  sendRequestFunction: (_, __) async {
+                    await startRecording();
+                    // await audioCtrl.record();
+                    // final hasPermission = await audioCtrl.checkPermission();
+                    // if (hasPermission) {
+                    //   print('tiene permiso de micro');
+                    //   setState(() {
+                    //     isRecordingCompleted = true;
+                    //   });
+                    // }
                     // soundFile represent the sound you recording
-                    print('Se mando el audio absolute ${soundFile.absolute}');
-                    print('Se mando el audio path ${soundFile.path}');
-                    // var statusAudio = await Permission.audio.request();
-                    var statusMicro = await Permission.microphone.request();
-                    if (statusMicro.isGranted) {
-                      setState(() {
-                        urlAudio = soundFile.path;
-                      });
-                    }
+                    // print('Se mando el audio absolute ${soundFile.absolute}');
+                    // print('Se mando el audio path ${soundFile.path}');
+                    // directory = await path.getApplicationDocumentsDirectory();
+                    // // var statusAudio = await Permission.audio.request();
+                    // var statusMicro = await Permission.microphone.request();
+                    // if (statusMicro.isGranted) {
+                    //   setState(() {
+                    //     pathUrlAudio = soundFile.path;
+                    //     urlAudio = '${directory.path}/${soundFile.path}';
+                    //   });
+                    // }
                   },
+                  stopRecording: (time) async => await stopRecording(),
                   encode: AudioEncoderType.AAC,
                 ),
               ),
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+// This widget
+class BubbleChatAudio extends StatelessWidget {
+  const BubbleChatAudio({
+    super.key,
+    required this.onPlay,
+    required this.controlIcon,
+  });
+
+  final VoidCallback onPlay;
+  final Icon controlIcon;
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+    return Container(
+      width: size.width * 0.89,
+      height: size.height * 0.10,
+      decoration: const BoxDecoration(
+        color: Color(0xFFCCC1EA),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+          bottomLeft: Radius.circular(20),
+          bottomRight: Radius.circular(5),
+        ),
+      ),
+      child: Row(
+        children: [
+          FilledButton(
+            onPressed: onPlay,
+            style: FilledButton.styleFrom(
+              shape: const CircleBorder(),
+            ),
+            child: controlIcon,
+          ),
+        ],
       ),
     );
   }
