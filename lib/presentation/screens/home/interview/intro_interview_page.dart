@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../config/config.dart' show SharedPref;
+import '../../../../config/config.dart' show SharedPref, Strings;
 import '../../../widgets/widgets.dart' show FilledColorizedButton, OutlineText;
 import 'interview_page.dart';
 
@@ -72,8 +72,7 @@ class _IntroInterviewPageState extends State<IntroInterviewPage> {
                 ],
               ),
             ),
-            SizedBox(
-              height: size.height * 0.35,
+            Expanded(
               child: ListView(
                 children: [
                   const Padding(
@@ -84,7 +83,7 @@ class _IntroInterviewPageState extends State<IntroInterviewPage> {
                       style: TextStyle(
                         color: Color(0xFF6C2EBC),
                         fontSize: 14,
-                        fontFamily: 'Montserrat',
+                        fontFamily: Strings.fontFamily,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
