@@ -450,6 +450,7 @@ class _SignInFormState extends State<SignInForm> {
                         ),
                       ),
                       validator: (value) => _validateCredential(value ?? ''),
+                      textInputAction: TextInputAction.next,
                     ),
                     // SizedBox(height: size.height * 0.02),
                     PasswordInput(
@@ -462,6 +463,10 @@ class _SignInFormState extends State<SignInForm> {
                       },
                       validator: (value) => _validatePassword(value ?? ''),
                       labelText: 'Password',
+                      textInputAction: TextInputAction.done,
+                      onFieldSubmitted: (_) {
+                        _startSession(context, size: size);
+                      },
                     ),
                   ],
                 ),
