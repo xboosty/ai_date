@@ -8,12 +8,16 @@ class EmailInput extends StatelessWidget {
       this.controller,
       this.validator,
       this.focusNode,
-      this.onEditingComplete});
+      this.onEditingComplete,
+      this.textInputAction,
+      this.onFieldSubmitted});
 
   final TextEditingController? controller;
   final FormFieldValidator<String?>? validator;
   final FocusNode? focusNode;
   final VoidCallback? onEditingComplete;
+  final TextInputAction? textInputAction;
+  final void Function(String?)? onFieldSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +47,8 @@ class EmailInput extends StatelessWidget {
       keyboardType: TextInputType.emailAddress,
       validator: validator,
       onEditingComplete: onEditingComplete,
+      textInputAction: textInputAction,
+      onFieldSubmitted: onFieldSubmitted,
     );
   }
 }
