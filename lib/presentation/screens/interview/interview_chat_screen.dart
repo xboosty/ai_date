@@ -1,8 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:audioplayers/audioplayers.dart';
-// import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:social_media_recorder/audio_encoder_type.dart';
 import 'package:social_media_recorder/screen/social_media_recorder.dart';
@@ -69,7 +67,7 @@ class _InterviewChatScreenState extends State<InterviewChatScreen> {
 
   Future<void> playRecording() async {
     try {
-      Source urlSource = UrlSource(audioPath);
+      Source urlSource = DeviceFileSource(audioPath);
       await audioPlayer.play(urlSource);
     } catch (e) {
       print('Error playing recording: $e');
