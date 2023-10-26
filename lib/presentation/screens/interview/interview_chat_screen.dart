@@ -192,7 +192,7 @@ class _InterviewChatScreenState extends State<InterviewChatScreen> {
               child: Container(
                 height: size.height * 0.08,
                 margin: EdgeInsets.only(
-                    bottom: size.height * 0.01, top: size.height * 0.01),
+                    bottom: size.height * 0.02, top: size.height * 0.01),
                 padding: const EdgeInsets.only(left: 4.0, right: 12.0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
