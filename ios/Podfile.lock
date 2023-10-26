@@ -5,7 +5,7 @@ PODS:
   - AppAuth/Core (1.6.2)
   - AppAuth/ExternalUserAgent (1.6.2):
     - AppAuth/Core
-  - audio_session (0.0.1):
+  - audio_waveforms (0.0.1):
     - Flutter
   - audioplayers_darwin (0.0.1):
     - Flutter
@@ -77,8 +77,6 @@ PODS:
     - AppAuth/Core (~> 1.6)
     - GTMSessionFetcher/Core (< 3.0, >= 1.5)
   - GTMSessionFetcher/Core (2.3.0)
-  - just_audio (0.0.1):
-    - Flutter
   - libphonenumber_plugin (0.0.1):
     - Flutter
     - PhoneNumberKit
@@ -104,7 +102,7 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
-  - audio_session (from `.symlinks/plugins/audio_session/ios`)
+  - audio_waveforms (from `.symlinks/plugins/audio_waveforms/ios`)
   - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
@@ -113,7 +111,6 @@ DEPENDENCIES:
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/ios`)
-  - just_audio (from `.symlinks/plugins/just_audio/ios`)
   - libphonenumber_plugin (from `.symlinks/plugins/libphonenumber_plugin/ios`)
   - location (from `.symlinks/plugins/location/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
@@ -142,8 +139,8 @@ SPEC REPOS:
     - RecaptchaInterop
 
 EXTERNAL SOURCES:
-  audio_session:
-    :path: ".symlinks/plugins/audio_session/ios"
+  audio_waveforms:
+    :path: ".symlinks/plugins/audio_waveforms/ios"
   audioplayers_darwin:
     :path: ".symlinks/plugins/audioplayers_darwin/ios"
   firebase_auth:
@@ -160,8 +157,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   google_sign_in_ios:
     :path: ".symlinks/plugins/google_sign_in_ios/ios"
-  just_audio:
-    :path: ".symlinks/plugins/just_audio/ios"
   libphonenumber_plugin:
     :path: ".symlinks/plugins/libphonenumber_plugin/ios"
   location:
@@ -177,7 +172,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AppAuth: 3bb1d1cd9340bd09f5ed189fb00b1cc28e1e8570
-  audio_session: 4f3e461722055d21515cf3261b64c973c062f345
+  audio_waveforms: cd736909ebc6b6a164eb74701d8c705ce3241e1c
   audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
   FBAEMKit: daac7466b918752f020345be5c7d9787f98cfc07
   FBSDKCoreKit: 2cb033464b2134af0138f87d20b859eb3f9be359
@@ -199,7 +194,6 @@ SPEC CHECKSUMS:
   GoogleUtilities: 13e2c67ede716b8741c7989e26893d151b2b2084
   GTMAppAuth: 0ff230db599948a9ad7470ca667337803b3fc4dd
   GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
-  just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
   libphonenumber_plugin: e8a7d64a6624a7c25f2c4ab0b7ead2a8e341e35e
   location: d5cf8598915965547c3f36761ae9cc4f4e87d22e
   path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
