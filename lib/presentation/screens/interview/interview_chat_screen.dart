@@ -184,74 +184,57 @@ class _InterviewChatScreenState extends State<InterviewChatScreen> {
                                 Icons.pause_rounded,
                               ),
                       ),
-                    // if (isRecordingCompleted)
-                    // Container(
-                    //     color: Colors.red,
-                    //     child: AudioWaveforms(
-                    //       enableGesture: true,
-                    //       size:
-                    //           Size(MediaQuery.of(context).size.width / 2, 50),
-                    //       recorderController: audioCtrl,
-                    //       waveStyle: const WaveStyle(
-                    //         waveColor: Colors.blue,
-                    //         extendWaveform: true,
-                    //         showMiddleLine: false,
-                    //       ),
-                    //       decoration: BoxDecoration(
-                    //         borderRadius: BorderRadius.circular(12.0),
-                    //         color: const Color(0xFF1E1B26),
-                    //       ),
-                    //       padding: const EdgeInsets.only(left: 18),
-                    //       margin: const EdgeInsets.symmetric(horizontal: 15),
-                    //     )),
                   ],
                 ),
               ),
             ),
-            Container(
-              height: size.height * 0.08,
-              margin: const EdgeInsets.only(bottom: 8.0),
-              padding: const EdgeInsets.only(left: 4.0, right: 12.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-              ),
-              alignment: Alignment.centerRight,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: SocialMediaRecorder(
-                  initRecordPackageWidth: 60,
-                  fullRecordPackageHeight: 60,
-                  backGroundColor: const Color(0xFFCCC2EB),
-                  counterBackGroundColor: const Color(0xFFCCC2EB),
-                  cancelTextBackGroundColor: const Color(0xFFCCC2EB),
-                  recordIconWhenLockBackGroundColor: const Color(0xFF6D2EBC),
-                  recordIconBackGroundColor: const Color(0xFF6D2EBC),
-                  radius: BorderRadius.circular(100),
-                  sendRequestFunction: (_, __) async {
-                    await startRecording();
-                    // await audioCtrl.record();
-                    // final hasPermission = await audioCtrl.checkPermission();
-                    // if (hasPermission) {
-                    //   print('tiene permiso de micro');
-                    //   setState(() {
-                    //     isRecordingCompleted = true;
-                    //   });
-                    // }
-                    // soundFile represent the sound you recording
-                    // print('Se mando el audio absolute ${soundFile.absolute}');
-                    // print('Se mando el audio path ${soundFile.path}');
-                    // directory = await path.getApplicationDocumentsDirectory();
-                    // // var statusAudio = await Permission.audio.request();
-                    // var statusMicro = await Permission.microphone.request();
-                    // if (statusMicro.isGranted) {
-                    //   setState(() {
-                    //     pathUrlAudio = soundFile.path;
-                    //     urlAudio = '${directory.path}/${soundFile.path}';
-                    //   });
-                    // }
-                  },
-                  stopRecording: (time) async => await stopRecording(),
-                  encode: AudioEncoderType.AAC,
+            SafeArea(
+              child: Container(
+                height: size.height * 0.08,
+                margin: EdgeInsets.only(
+                    bottom: size.height * 0.01, top: size.height * 0.01),
+                padding: const EdgeInsets.only(left: 4.0, right: 12.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                alignment: Alignment.centerRight,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: SocialMediaRecorder(
+                    initRecordPackageWidth: 60,
+                    fullRecordPackageHeight: 60,
+                    backGroundColor: const Color(0xFFCCC2EB),
+                    counterBackGroundColor: const Color(0xFFCCC2EB),
+                    cancelTextBackGroundColor: const Color(0xFFCCC2EB),
+                    recordIconWhenLockBackGroundColor: const Color(0xFF6D2EBC),
+                    recordIconBackGroundColor: const Color(0xFF6D2EBC),
+                    radius: BorderRadius.circular(100),
+                    sendRequestFunction: (_, __) async {
+                      await startRecording();
+                      // await audioCtrl.record();
+                      // final hasPermission = await audioCtrl.checkPermission();
+                      // if (hasPermission) {
+                      //   print('tiene permiso de micro');
+                      //   setState(() {
+                      //     isRecordingCompleted = true;
+                      //   });
+                      // }
+                      // soundFile represent the sound you recording
+                      // print('Se mando el audio absolute ${soundFile.absolute}');
+                      // print('Se mando el audio path ${soundFile.path}');
+                      // directory = await path.getApplicationDocumentsDirectory();
+                      // // var statusAudio = await Permission.audio.request();
+                      // var statusMicro = await Permission.microphone.request();
+                      // if (statusMicro.isGranted) {
+                      //   setState(() {
+                      //     pathUrlAudio = soundFile.path;
+                      //     urlAudio = '${directory.path}/${soundFile.path}';
+                      //   });
+                      // }
+                    },
+                    stopRecording: (time) async => await stopRecording(),
+                    encode: AudioEncoderType.AAC,
+                  ),
                 ),
               ),
             )

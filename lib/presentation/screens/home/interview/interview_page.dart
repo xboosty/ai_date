@@ -65,8 +65,7 @@ class InterViewPage extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
-            height: size.height * 0.60,
+          Expanded(
             child: ListView(
               children: [
                 _CardInterview(
