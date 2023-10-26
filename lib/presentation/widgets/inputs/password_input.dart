@@ -15,6 +15,7 @@ class PasswordInput extends StatelessWidget {
     this.onEditingComplete,
     this.textInputAction,
     this.onFieldSubmitted,
+    this.enabled,
   });
 
   final TextEditingController? controller;
@@ -27,10 +28,12 @@ class PasswordInput extends StatelessWidget {
   final VoidCallback? onEditingComplete;
   final TextInputAction? textInputAction;
   final void Function(String?)? onFieldSubmitted;
+  final bool? enabled;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      enabled: enabled,
       controller: controller,
       focusNode: focusNode,
       obscureText: obscureText,

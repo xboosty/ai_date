@@ -110,27 +110,115 @@ class SignInBox extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: size.height * 0.02),
-                        FilledButton(
-                          style: FilledButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 15,
-                              vertical: 10,
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pushNamed(IntroductionScreen.routeName);
+                        BlocBuilder<AccountCubit, AccountState>(
+                          builder: (context, state) => switch (state.status) {
+                            UserRegisterStatus.initial => SizedBox(
+                                width: 150,
+                                height: 50,
+                                child: FilledButton(
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 15,
+                                      vertical: 10,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pushNamed(
+                                        IntroductionScreen.routeName);
+                                  },
+                                  child: const Text(
+                                    'SIGN UP',
+                                    style: TextStyle(
+                                      color: Color(0xFF6C2EBC),
+                                      fontSize: 16,
+                                      fontFamily: Strings.fontFamily,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            UserRegisterStatus.loading => SizedBox(
+                                width: 150,
+                                height: 50,
+                                child: FilledButton(
+                                  style: FilledButton.styleFrom(
+                                    disabledBackgroundColor: Colors.grey,
+                                    disabledForegroundColor: Colors.grey,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 15,
+                                      vertical: 10,
+                                    ),
+                                  ),
+                                  onPressed: null,
+                                  child: Text(
+                                    'SIGN UP',
+                                    style: TextStyle(
+                                      color: Colors.grey.shade700,
+                                      fontSize: 16,
+                                      fontFamily: Strings.fontFamily,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            UserRegisterStatus.failure => SizedBox(
+                                width: 150,
+                                height: 50,
+                                child: FilledButton(
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 15,
+                                      vertical: 10,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pushNamed(
+                                        IntroductionScreen.routeName);
+                                  },
+                                  child: const Text(
+                                    'SIGN UP',
+                                    style: TextStyle(
+                                      color: Color(0xFF6C2EBC),
+                                      fontSize: 16,
+                                      fontFamily: Strings.fontFamily,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            UserRegisterStatus.success => SizedBox(
+                                width: 150,
+                                height: 50,
+                                child: FilledButton(
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 15,
+                                      vertical: 10,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pushNamed(
+                                        IntroductionScreen.routeName);
+                                  },
+                                  child: const Text(
+                                    'SIGN UP',
+                                    style: TextStyle(
+                                      color: Color(0xFF6C2EBC),
+                                      fontSize: 16,
+                                      fontFamily: Strings.fontFamily,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
                           },
-                          child: const Text(
-                            'SIGN UP',
-                            style: TextStyle(
-                              color: Color(0xFF6C2EBC),
-                              fontSize: 16,
-                              fontFamily: Strings.fontFamily,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+
+                          // {
+
+                          // },
                         )
                       ],
                     ),
@@ -160,6 +248,7 @@ class _SignInFormState extends State<SignInForm> {
   final _notifications = getIt<HandlerNotification>();
   bool _obscureText = true;
   bool _isRemember = false;
+  bool _isLoadingSignIn = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -207,6 +296,7 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   void _startSession(BuildContext context, {required Size size}) async {
+    FocusScope.of(context).unfocus();
     if (_formKey.currentState?.validate() ?? false) {
       List<String> credentialsList = [];
 
@@ -222,7 +312,14 @@ class _SignInFormState extends State<SignInForm> {
       }
 
       try {
+        setState(() {
+          _isLoadingSignIn = true;
+        });
         await context.read<AccountCubit>().signInUser(credentials);
+
+        setState(() {
+          _isLoadingSignIn = false;
+        });
         // Saved preference if sign in success
         if (_isRemember && credentials.isNotEmpty) {
           // Recordar credenciales en Shared Preferences
@@ -246,6 +343,9 @@ class _SignInFormState extends State<SignInForm> {
           (route) => false,
         );
       } catch (e) {
+        setState(() {
+          _isLoadingSignIn = false;
+        });
         if (!mounted) return;
         if (e is NtsErrorResponse) {
           _notifications.ntsErrorNotification(
@@ -356,27 +456,33 @@ class _SignInFormState extends State<SignInForm> {
                     semanticsLabel: 'Facebook Logo',
                     heroTag: 'facebookIcon',
                     backgroundColor: const Color(0xFFE9EAF6),
-                    onPressed: () {
-                      signInWithFacebook();
-                    },
+                    onPressed: _isLoadingSignIn
+                        ? null
+                        : () {
+                            signInWithFacebook();
+                          },
                   ),
                   IconButtonSvg(
                     urlSvg: 'assets/svgs/apple_icon.svg',
                     semanticsLabel: 'Apple Logo',
                     heroTag: 'appleIcon',
                     backgroundColor: const Color(0xFFE9EAF6),
-                    onPressed: () {
-                      signInWithApple();
-                    },
+                    onPressed: _isLoadingSignIn
+                        ? null
+                        : () {
+                            signInWithApple();
+                          },
                   ),
                   IconButtonSvg(
                     urlSvg: 'assets/svgs/google_icon.svg',
                     semanticsLabel: 'Google Logo',
                     heroTag: 'googleIcon',
                     backgroundColor: const Color(0xFFE9EAF6),
-                    onPressed: () {
-                      signInWithGoogle();
-                    },
+                    onPressed: _isLoadingSignIn
+                        ? null
+                        : () {
+                            signInWithGoogle();
+                          },
                   ),
                 ],
               ),
@@ -431,6 +537,7 @@ class _SignInFormState extends State<SignInForm> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     TextFormField(
+                      enabled: !_isLoadingSignIn,
                       controller: _emailCtrl,
                       keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
@@ -454,6 +561,7 @@ class _SignInFormState extends State<SignInForm> {
                     ),
                     // SizedBox(height: size.height * 0.02),
                     PasswordInput(
+                      enabled: !_isLoadingSignIn,
                       controller: _passwordCtrl,
                       obscureText: _obscureText,
                       onPressedSuffixIcon: () => {
@@ -476,11 +584,13 @@ class _SignInFormState extends State<SignInForm> {
                 children: [
                   Checkbox(
                     value: _isRemember,
-                    onChanged: (value) {
-                      setState(() {
-                        _isRemember = value ?? false;
-                      });
-                    },
+                    onChanged: _isLoadingSignIn
+                        ? null
+                        : (value) {
+                            setState(() {
+                              _isRemember = value ?? false;
+                            });
+                          },
                   ),
                   const Text(
                     'Remember me',
@@ -504,7 +614,8 @@ class _SignInFormState extends State<SignInForm> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    onPressed: () => _forgotPassword(),
+                    onPressed:
+                        _isLoadingSignIn ? null : () => _forgotPassword(),
                     child: const Text('Forgot Password?'),
                   ))
                 ],
