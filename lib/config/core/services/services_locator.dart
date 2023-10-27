@@ -13,6 +13,7 @@ GetIt getIt = GetIt.instance;
 void serviceLocatorBlocsInit() {
   getIt.registerSingleton(AccountCubit());
   getIt.registerSingleton(BlockCubit());
+  getIt.registerSingleton(CouplesCubit());
 }
 
 void serviceLocatorRepositoryInit() {
@@ -21,6 +22,9 @@ void serviceLocatorRepositoryInit() {
   );
   getIt.registerSingleton(
     NtsBlockRepository(datasource: NtSprintBlockDatasource.ds),
+  );
+  getIt.registerSingleton(
+    NtsCouplesRepository(datasource: NtSprintCouplesDatasource.ds),
   );
 }
 
