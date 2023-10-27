@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
@@ -11,8 +13,11 @@ import '../../../../config/config.dart'
         AccountState,
         AppTheme,
         BlockCubit,
+        Genders,
         HandlerNotification,
         NtsErrorResponse,
+        Sexuality,
+        SharedPref,
         Strings,
         UserRegisterStatus,
         getIt;
@@ -367,14 +372,21 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
   final emailCtrl = TextEditingController();
   UserEntity? user;
 
+  Genders? genderSelected;
+  Sexuality? sexualitySelected;
+
   @override
   void initState() {
     super.initState();
-    // Map<String, dynamic> userMap = jsonDecode(SharedPref.pref.account);
-    // user = UserEntity.fromJson(userMap);
-    // nameCtrl.text = user?.name ?? '';
-    // lastNameCtrl.text = '';
-    // emailCtrl.text = user?.email ?? '';
+    try {
+      Map<String, dynamic> userMap = jsonDecode(SharedPref.pref.account);
+      user = UserEntity.fromJson(userMap);
+      nameCtrl.text = user?.name ?? '';
+      lastNameCtrl.text = '';
+      emailCtrl.text = user?.email ?? '';
+    } catch (e) {
+      print('Ocurrio un error $e');
+    }
   }
 
   @override
@@ -390,7 +402,9 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
           lastNameCtrl: lastNameCtrl,
           emailCtrl: emailCtrl,
         ),
-        _CardGenderInfo(size: size),
+        _CardGenderInfo(
+          size: size,
+        ),
         const ListTile(
           leading: Icon(Icons.add_photo_alternate, size: 20),
           contentPadding: EdgeInsets.symmetric(vertical: 5.0),
@@ -472,11 +486,28 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
 }
 
 class _CardGenderInfo extends StatelessWidget {
-  const _CardGenderInfo({
+  _CardGenderInfo({
     required this.size,
   });
 
   final Size size;
+  final Genders genderSelected = Genders(id: 3, name: 'Non Binary');
+  final Sexuality sexualitySelected =
+      Sexuality(id: 4, name: 'Prefer not to say');
+
+  final List<Genders> _genders = [
+    Genders(id: 1, name: 'Woman'),
+    Genders(id: 0, name: 'Man'),
+    Genders(id: 3, name: 'Non Binary'),
+  ];
+
+  final List<Sexuality> _sexualities = [
+    Sexuality(id: 4, name: 'Prefer not to say'),
+    Sexuality(id: 0, name: 'Hetero'),
+    Sexuality(id: 1, name: 'Bisexual'),
+    Sexuality(id: 2, name: 'Homosexual'),
+    Sexuality(id: 3, name: 'Transexual'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -500,19 +531,32 @@ class _CardGenderInfo extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: size.height * 0.02),
-            CustomDropdownButton(
+            CustomDropdownButton<Genders>(
               hintText: const Text('Gender'),
-              listValues: const ['Non-Binary', 'Women', 'Men'],
-              dropdownValue: 'Non-Binary',
+              items: _genders.map<DropdownMenuItem<Genders>>((Genders item) {
+                return DropdownMenuItem<Genders>(
+                  alignment: Alignment.centerLeft,
+                  value: item,
+                  child: Text(item.name),
+                );
+              }).toList(),
+              dropdownValue: _genders[2],
               onChanged: (value) {
                 print(value);
               },
             ),
             SizedBox(height: size.height * 0.03),
-            CustomDropdownButton(
+            CustomDropdownButton<Sexuality>(
               hintText: const Text('Sexual Orientation'),
-              listValues: const ['Straight', 'Gay', 'Bisexual'],
-              dropdownValue: 'Straight',
+              items: _sexualities
+                  .map<DropdownMenuItem<Sexuality>>((Sexuality item) {
+                return DropdownMenuItem<Sexuality>(
+                  alignment: Alignment.centerLeft,
+                  value: item,
+                  child: Text(item.name),
+                );
+              }).toList(),
+              dropdownValue: _sexualities.first,
               onChanged: (value) {
                 print(value);
               },

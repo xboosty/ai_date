@@ -10,3 +10,5 @@ export 'core/services/services_locator.dart';
 export 'helpers/handler_notifications.dart';
 // Shared Preferences
 export 'shared/shared_pref.dart';
+// Utils
+export 'utils/utlis.dart';

@@ -9,8 +9,10 @@ import '../../../config/config.dart'
         AccountCubit,
         AccountState,
         AppTheme,
+        Genders,
         HandlerNotification,
         NtsErrorResponse,
+        Sexuality,
         Strings,
         UserRegisterStatus,
         getIt;
@@ -25,20 +27,6 @@ import '../../widgets/widgets.dart'
 import '../screens.dart' show SignInScreen;
 
 part 'password_register.dart';
-
-class Genders {
-  final int id;
-  final String name;
-
-  Genders({required this.id, required this.name});
-}
-
-class Sexuality {
-  final int id;
-  final String name;
-
-  Sexuality({required this.id, required this.name});
-}
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
