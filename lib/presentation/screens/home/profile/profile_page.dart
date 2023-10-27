@@ -1521,7 +1521,7 @@ class _UserCardState extends State<_UserCard> {
                                   description:
                                       'Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper',
                                 ),
-                                SizedBox(height: size.height * 0.02),
+                                SizedBox(height: size.height * 0.1),
                               ],
                             ),
                           ),
