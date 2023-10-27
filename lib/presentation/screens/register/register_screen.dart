@@ -471,6 +471,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       controller: _fullNameCtrl,
                       focusNode: _focusNodeName,
                       decoration: const InputDecoration(
+                        errorStyle: TextStyle(
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        errorMaxLines: 2,
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0xFF686E8C),
@@ -492,6 +496,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       keyboardType: TextInputType.name,
                       validator: (value) => _validateUsername(value ?? ''),
+
                       textInputAction: TextInputAction.done,
                       onFieldSubmitted: (_) {
                         _submitUsername();

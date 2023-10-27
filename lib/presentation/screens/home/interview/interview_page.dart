@@ -13,7 +13,7 @@ class InterViewPage extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: size.height,
-      padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -22,10 +22,7 @@ class InterViewPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Image.asset(
-                'assets/imgs/aidate_home.png',
-                height: 20,
-              ),
+              Image.asset('assets/imgs/aidate_home.png', height: 30),
             ],
           ),
           SizedBox(
@@ -72,12 +69,12 @@ class InterViewPage extends StatelessWidget {
                   size: size,
                   icon: const Icon(
                     Icons.diversity_2,
-                    color: Colors.white,
+                    color: Colors.purple,
                     size: 32,
                   ),
                   titleHeader: 'Personal Life',
                   title: 'What makes you, you',
-                  isAlreadyUsed: true,
+                  isAlreadyUsed: false,
                   percent: 25,
                 ),
                 SizedBox(height: size.height * 0.02),
@@ -98,12 +95,12 @@ class InterViewPage extends StatelessWidget {
                   size: size,
                   icon: const Icon(
                     Icons.supervised_user_circle,
-                    color: Colors.white,
+                    color: Colors.purple,
                     size: 32,
                   ),
                   titleHeader: 'Friends, Family, and Hobbies',
                   title: 'Your Circle',
-                  isAlreadyUsed: true,
+                  isAlreadyUsed: false,
                   percent: 100.0,
                 ),
                 SizedBox(height: size.height * 0.02),
@@ -140,32 +137,6 @@ class _CardInterview extends StatelessWidget {
     if (isAlreadyUsed) {
       return GestureDetector(
         onTap: () {
-          // showModalBottomSheet(
-          //   context: context,
-          //   showDragHandle: true,
-          //   enableDrag: true,
-          //   useSafeArea: true,
-          //   isScrollControlled: true,
-          //   builder: (BuildContext context) {
-          //     return DraggableScrollableSheet(
-          //       initialChildSize: 1.0,
-          //       minChildSize: 1.0,
-          //       maxChildSize: 1.0,
-          //       builder:
-          //           (BuildContext context, ScrollController scrollController) {
-          //         return SingleChildScrollView(
-          //           controller: scrollController,
-          //           child: Column(
-          //             children: [
-
-          //             ],
-          //           ),
-          //         );
-          //       },
-          //       controller: DraggableScrollableController(),
-          //     );
-          //   },
-          // );
           Navigator.of(context).pushNamed(InterviewChatScreen.routeName);
         },
         child: Container(
@@ -296,79 +267,84 @@ class _CardInterview extends StatelessWidget {
         ),
       );
     } else {
-      return Container(
-        height: size.height * 0.25,
-        width: size.width * 0.90,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            width: 2,
-            color: const Color(0xFF5005B0),
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            ListTile(
-              leading: Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: const Color(0x336C2EBC),
-                ),
-                child: Center(
-                  child: icon,
-                ),
-              ),
-              title: Text(
-                titleHeader,
-                style: const TextStyle(
-                  color: Color(0xFF7F87A6),
-                  fontSize: 12,
-                  fontFamily: Strings.fontFamily,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              subtitle: Text(
-                title,
-                style: const TextStyle(
-                  color: Color(0xFF6C2EBC),
-                  fontSize: 24,
-                  fontFamily: Strings.fontFamily,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
+      return GestureDetector(
+        onTap: () {
+          Navigator.of(context).pushNamed(InterviewChatScreen.routeName);
+        },
+        child: Container(
+          height: size.height * 0.25,
+          width: size.width * 0.90,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              width: 2,
+              color: const Color(0xFF5005B0),
             ),
-            InkWell(
-              onTap: onTap,
-              child: Container(
-                width: 170,
-                height: 50,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                decoration: const BoxDecoration(
-                  gradient: AppTheme.linearGradient,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ListTile(
+                leading: Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: const Color(0x336C2EBC),
+                  ),
+                  child: Center(
+                    child: icon,
                   ),
                 ),
-                child: const Center(
-                  child: Text(
-                    'START HERE',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontFamily: Strings.fontFamily,
-                      fontWeight: FontWeight.w600,
+                title: Text(
+                  titleHeader,
+                  style: const TextStyle(
+                    color: Color(0xFF7F87A6),
+                    fontSize: 12,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                subtitle: Text(
+                  title,
+                  style: const TextStyle(
+                    color: Color(0xFF6C2EBC),
+                    fontSize: 24,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: onTap,
+                child: Container(
+                  width: 170,
+                  height: 50,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  decoration: const BoxDecoration(
+                    gradient: AppTheme.linearGradient,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10),
+                    ),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'START HERE',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontFamily: Strings.fontFamily,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     }

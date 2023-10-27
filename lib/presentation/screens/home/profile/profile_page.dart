@@ -730,34 +730,32 @@ class _HelpSupportSetting extends StatelessWidget {
               ),
               const Divider(),
               ListTile(
-                title: const Text(
-                  'App Version',
-                  style: TextStyle(
-                    color: Color(0xFF686E8C),
-                    fontSize: 14,
-                    fontFamily: Strings.fontFamily,
-                    fontWeight: FontWeight.w600,
-                  ),
+                title: const Row(
+                  children: [
+                    Text(
+                      'App Version',
+                      style: TextStyle(
+                        color: Color(0xFF686E8C),
+                        fontSize: 14,
+                        fontFamily: Strings.fontFamily,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Spacer(),
+                    Text(
+                      'V1.0.1',
+                      style: TextStyle(
+                        color: Color(0xFFCCC1EA),
+                        fontSize: 14,
+                        fontFamily: Strings.fontFamily,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
-                trailing: const SizedBox(
-                  width: 61,
-                  child: Row(
-                    children: [
-                      Text(
-                        'V1.03',
-                        style: TextStyle(
-                          color: Color(0xFFCCC1EA),
-                          fontSize: 12,
-                          fontFamily: Strings.fontFamily,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        size: 15.0,
-                      ),
-                    ],
-                  ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 15.0,
                 ),
                 onTap: () {},
               ),
