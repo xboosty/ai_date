@@ -1335,7 +1335,10 @@ class _UserCardState extends State<_UserCard> {
                   useSafeArea: true,
                   isScrollControlled: true,
                   shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.zero,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(28),
+                      topRight: Radius.circular(28),
+                    ),
                   ),
                   builder: (BuildContext context) {
                     return DraggableScrollableSheet(
@@ -1344,177 +1347,183 @@ class _UserCardState extends State<_UserCard> {
                       maxChildSize: 1.0,
                       builder: (BuildContext context,
                           ScrollController scrollController) {
-                        return SingleChildScrollView(
-                          controller: scrollController,
-                          child: Column(
-                            children: [
-                              _CardSeeProfileDetails(
-                                user: null,
-                              ),
-                              SizedBox(height: size.height * 0.02),
-                              _SmallDescriptionProfile(size: size),
-                              const ButtonsInfoProfile(
-                                titleOne: '31 years old',
-                                titleTwo: '165 cm',
-                                titleThree: 'Virgo',
-                                iconOne: Icons.cake,
-                                iconTwo: Icons.straighten,
-                                iconThree: Icons.calendar_month,
-                              ),
-                              CardGradientPicture(
-                                image: const DecorationImage(
-                                  image: AssetImage('assets/imgs/girl2.png'),
-                                  fit: BoxFit.cover,
+                        return ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(28),
+                            topRight: Radius.circular(28),
+                          ),
+                          child: SingleChildScrollView(
+                            controller: scrollController,
+                            child: Column(
+                              children: [
+                                const _CardSeeProfileDetails(
+                                  user: null,
                                 ),
-                                width: size.width * 0.90,
-                                height: size.height * 0.55,
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.only(top: 15.0),
-                                child: Text(
-                                  'Personal questions & background',
+                                SizedBox(height: size.height * 0.02),
+                                _SmallDescriptionProfile(size: size),
+                                const ButtonsInfoProfile(
+                                  titleOne: '31 years old',
+                                  titleTwo: '165 cm',
+                                  titleThree: 'Virgo',
+                                  iconOne: Icons.cake,
+                                  iconTwo: Icons.straighten,
+                                  iconThree: Icons.calendar_month,
+                                ),
+                                CardGradientPicture(
+                                  image: const DecorationImage(
+                                    image: AssetImage('assets/imgs/girl2.png'),
+                                    fit: BoxFit.cover,
+                                  ),
+                                  width: size.width * 0.90,
+                                  height: size.height * 0.55,
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.only(top: 15.0),
+                                  child: Text(
+                                    'Personal questions & background',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Color(0xFF6C2EBC),
+                                      fontSize: 18,
+                                      fontFamily: Strings.fontFamily,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                const ButtonsInfoProfile(
+                                  titleOne: 'Vaccinated',
+                                  titleTwo: 'Sometimes',
+                                  titleThree: 'No',
+                                  iconOne: Icons.vaccines,
+                                  iconTwo: Icons.smoking_rooms,
+                                  iconThree: Icons.medication,
+                                ),
+                                _PersonalQuestionInfo(size: size),
+                                SizedBox(height: size.height * 0.02),
+                                _OthersPicturesProfile(size: size),
+                                const Padding(
+                                  padding: EdgeInsets.only(top: 15.0),
+                                  child: Text(
+                                    'Interests & lifestyle',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Color(0xFF6C2EBC),
+                                      fontSize: 18,
+                                      fontFamily: Strings.fontFamily,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                _HobbiesProfile(size: size, hobbies: _hobbies),
+                                SizedBox(height: size.height * 0.02),
+                                CardInfoProfile(
+                                  width: size.width * 0.95,
+                                  height: size.height * 0.42,
+                                  child: const Column(
+                                    children: [
+                                      ListTile(
+                                        leading: Icon(
+                                          Icons.eco,
+                                          color: Color(0xFFD9D9D9),
+                                        ),
+                                        title: Text(
+                                          'Vegetarian',
+                                          style: TextStyle(
+                                            color: Color(0xFF7F87A6),
+                                            fontSize: 14,
+                                            fontFamily: Strings.fontFamily,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                      Divider(),
+                                      ListTile(
+                                        leading: Icon(
+                                          Icons.fitness_center,
+                                          color: Color(0xFFD9D9D9),
+                                        ),
+                                        title: Text(
+                                          'Vegetarian',
+                                          style: TextStyle(
+                                            color: Color(0xFF7F87A6),
+                                            fontSize: 14,
+                                            fontFamily: Strings.fontFamily,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                      Divider(),
+                                      ListTile(
+                                        leading: Icon(
+                                          Icons.child_friendly,
+                                          color: Color(0xFFD9D9D9),
+                                        ),
+                                        title: Text(
+                                          'Has children',
+                                          style: TextStyle(
+                                            color: Color(0xFF7F87A6),
+                                            fontSize: 14,
+                                            fontFamily: Strings.fontFamily,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                      Divider(),
+                                      ListTile(
+                                        leading: Icon(
+                                          Icons.pets,
+                                          color: Color(0xFFD9D9D9),
+                                        ),
+                                        title: Text(
+                                          'Dog',
+                                          style: TextStyle(
+                                            color: Color(0xFF7F87A6),
+                                            fontSize: 14,
+                                            fontFamily: Strings.fontFamily,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: size.height * 0.02),
+                                CardGradientPicture(
+                                  width: size.width * 0.90,
+                                  height: size.height * 0.55,
+                                  image: const DecorationImage(
+                                    image: AssetImage('assets/imgs/girl7.png'),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                SizedBox(height: size.height * 0.02),
+                                const Text(
+                                  'Vision for the future',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Color(0xFF6C2EBC),
-                                    fontSize: 18,
+                                    fontSize: 20,
                                     fontFamily: Strings.fontFamily,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                              ),
-                              const ButtonsInfoProfile(
-                                titleOne: 'Vaccinated',
-                                titleTwo: 'Sometimes',
-                                titleThree: 'No',
-                                iconOne: Icons.vaccines,
-                                iconTwo: Icons.smoking_rooms,
-                                iconThree: Icons.medication,
-                              ),
-                              _PersonalQuestionInfo(size: size),
-                              SizedBox(height: size.height * 0.02),
-                              _OthersPicturesProfile(size: size),
-                              const Padding(
-                                padding: EdgeInsets.only(top: 15.0),
-                                child: Text(
-                                  'Interests & lifestyle',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Color(0xFF6C2EBC),
-                                    fontSize: 18,
-                                    fontFamily: Strings.fontFamily,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                SizedBox(height: size.height * 0.02),
+                                _OverviewProfileCard(
+                                  size: size,
+                                  title: 'FINANCIAL HABITS AND GOALS',
+                                  description:
+                                      'Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper',
                                 ),
-                              ),
-                              _HobbiesProfile(size: size, hobbies: _hobbies),
-                              SizedBox(height: size.height * 0.02),
-                              CardInfoProfile(
-                                width: size.width * 0.95,
-                                height: size.height * 0.42,
-                                child: const Column(
-                                  children: [
-                                    ListTile(
-                                      leading: Icon(
-                                        Icons.eco,
-                                        color: Color(0xFFD9D9D9),
-                                      ),
-                                      title: Text(
-                                        'Vegetarian',
-                                        style: TextStyle(
-                                          color: Color(0xFF7F87A6),
-                                          fontSize: 14,
-                                          fontFamily: Strings.fontFamily,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                    Divider(),
-                                    ListTile(
-                                      leading: Icon(
-                                        Icons.fitness_center,
-                                        color: Color(0xFFD9D9D9),
-                                      ),
-                                      title: Text(
-                                        'Vegetarian',
-                                        style: TextStyle(
-                                          color: Color(0xFF7F87A6),
-                                          fontSize: 14,
-                                          fontFamily: Strings.fontFamily,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                    Divider(),
-                                    ListTile(
-                                      leading: Icon(
-                                        Icons.child_friendly,
-                                        color: Color(0xFFD9D9D9),
-                                      ),
-                                      title: Text(
-                                        'Has children',
-                                        style: TextStyle(
-                                          color: Color(0xFF7F87A6),
-                                          fontSize: 14,
-                                          fontFamily: Strings.fontFamily,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                    Divider(),
-                                    ListTile(
-                                      leading: Icon(
-                                        Icons.pets,
-                                        color: Color(0xFFD9D9D9),
-                                      ),
-                                      title: Text(
-                                        'Dog',
-                                        style: TextStyle(
-                                          color: Color(0xFF7F87A6),
-                                          fontSize: 14,
-                                          fontFamily: Strings.fontFamily,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                SizedBox(height: size.height * 0.02),
+                                _OverviewProfileCard(
+                                  size: size,
+                                  title: 'RELATIONSHIP HISTORY AND VIEWS',
+                                  description:
+                                      'Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper',
                                 ),
-                              ),
-                              SizedBox(height: size.height * 0.02),
-                              CardGradientPicture(
-                                width: size.width * 0.90,
-                                height: size.height * 0.55,
-                                image: const DecorationImage(
-                                  image: AssetImage('assets/imgs/girl7.png'),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              SizedBox(height: size.height * 0.02),
-                              const Text(
-                                'Vision for the future',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Color(0xFF6C2EBC),
-                                  fontSize: 20,
-                                  fontFamily: Strings.fontFamily,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              SizedBox(height: size.height * 0.02),
-                              _OverviewProfileCard(
-                                size: size,
-                                title: 'FINANCIAL HABITS AND GOALS',
-                                description:
-                                    'Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper',
-                              ),
-                              SizedBox(height: size.height * 0.02),
-                              _OverviewProfileCard(
-                                size: size,
-                                title: 'RELATIONSHIP HISTORY AND VIEWS',
-                                description:
-                                    'Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper',
-                              ),
-                              SizedBox(height: size.height * 0.02),
-                            ],
+                                SizedBox(height: size.height * 0.1),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -2028,6 +2037,7 @@ class _SmallDescriptionProfile extends StatelessWidget {
 
 class _CardSeeProfileDetails extends StatefulWidget {
   const _CardSeeProfileDetails({this.user});
+
   final UserEntity? user;
 
   @override
