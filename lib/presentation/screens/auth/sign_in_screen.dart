@@ -381,8 +381,9 @@ class _SignInFormState extends State<SignInForm> {
       idToken: googleAuth?.idToken,
     );
 
-    final token = await FirebaseAuth.instance.signInWithCredential(credential);
-    await context.read<AccountCubit>().signInUserSocial(token.credential?.accessToken ?? '');
+    final firebaseUserCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+    final idToken = await firebaseUserCredential.user?.getIdTokenResult();
+    await context.read<AccountCubit>().signInUserSocial(idToken?.token ?? '');
 
     setState(() {
       _isLoadingSignIn = false;
