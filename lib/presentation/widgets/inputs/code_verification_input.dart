@@ -9,12 +9,14 @@ class CodeVerificationInput extends StatelessWidget {
       this.controller,
       this.validator,
       this.focusNode,
-      this.onEditingComplete});
+      this.onEditingComplete,
+      this.onSubmitted});
 
   final TextEditingController? controller;
   final FormFieldValidator<String?>? validator;
   final FocusNode? focusNode;
   final VoidCallback? onEditingComplete;
+  final ValueChanged<String>? onSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +60,7 @@ class CodeVerificationInput extends StatelessWidget {
       },
       validator: validator,
       onEditingComplete: onEditingComplete,
+      onSubmitted: onSubmitted,
     );
   }
 }

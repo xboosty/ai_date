@@ -9,8 +9,10 @@ import '../../../config/config.dart'
         AccountCubit,
         AccountState,
         AppTheme,
+        Genders,
         HandlerNotification,
         NtsErrorResponse,
+        Sexuality,
         Strings,
         UserRegisterStatus,
         getIt;
@@ -25,20 +27,6 @@ import '../../widgets/widgets.dart'
 import '../screens.dart' show SignInScreen;
 
 part 'password_register.dart';
-
-class Genders {
-  final int id;
-  final String name;
-
-  Genders({required this.id, required this.name});
-}
-
-class Sexuality {
-  final int id;
-  final String name;
-
-  Sexuality({required this.id, required this.name});
-}
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -471,6 +459,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       controller: _fullNameCtrl,
                       focusNode: _focusNodeName,
                       decoration: const InputDecoration(
+                        errorStyle: TextStyle(
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        errorMaxLines: 2,
                         enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0xFF686E8C),
@@ -492,6 +484,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       keyboardType: TextInputType.name,
                       validator: (value) => _validateUsername(value ?? ''),
+
                       textInputAction: TextInputAction.done,
                       onFieldSubmitted: (_) {
                         _submitUsername();

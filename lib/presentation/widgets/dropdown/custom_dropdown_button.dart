@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class CustomDropdownButton<T> extends StatelessWidget {
-  final List<T> listValues;
+  final List<DropdownMenuItem<T>>? items;
   final T dropdownValue;
   final ValueChanged<T?>? onChanged;
   final Widget? hintText;
 
   const CustomDropdownButton({
     super.key,
-    required this.listValues,
+    required this.items,
     required this.dropdownValue,
     required this.onChanged,
     this.hintText,
@@ -23,13 +23,7 @@ class CustomDropdownButton<T> extends StatelessWidget {
       child: DropdownButton<T>(
         value: dropdownValue,
         hint: hintText,
-        items: listValues.map<DropdownMenuItem<T>>((T item) {
-          return DropdownMenuItem<T>(
-            alignment: Alignment.centerLeft,
-            value: item,
-            child: Text(item.toString()),
-          );
-        }).toList(),
+        items: items,
         onChanged: onChanged,
         underline: Container(
           height: 2,

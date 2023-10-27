@@ -36,6 +36,10 @@ class _IntroInterviewPageState extends State<IntroInterviewPage> {
                   bottomLeft: Radius.circular(30),
                   bottomRight: Radius.circular(30),
                 ),
+                image: const DecorationImage(
+                  image: AssetImage('assets/imgs/heart_interview.png'),
+                  fit: BoxFit.cover,
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
