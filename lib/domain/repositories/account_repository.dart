@@ -8,6 +8,8 @@ abstract class AccountRepository<T> {
 
   Future<T> signInUserRepository(Map<String, dynamic> credentials);
 
+  Future<T> signInUserSocialRepository(String token);
+
   Future<bool> verificationCodeRepository(Map<String, dynamic> verify);
 
   Future<bool> logOutRepository();

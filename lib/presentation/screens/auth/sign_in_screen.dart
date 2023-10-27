@@ -368,7 +368,10 @@ class _SignInFormState extends State<SignInForm> {
     }
   }
 
-  Future<UserCredential> signInWithGoogle() async {
+  Future<void> signInWithGoogle() async {
+    setState(() {
+      _isLoadingSignIn = true;
+    });
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     final GoogleSignInAuthentication? googleAuth =
         await googleUser?.authentication;
@@ -378,7 +381,12 @@ class _SignInFormState extends State<SignInForm> {
       idToken: googleAuth?.idToken,
     );
 
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+    final token = await FirebaseAuth.instance.signInWithCredential(credential);
+    await context.read<AccountCubit>().signInUserSocial(token.credential?.accessToken ?? '');
+
+    setState(() {
+      _isLoadingSignIn = false;
+    });
   }
 
   Future<UserCredential> signInWithApple() async {

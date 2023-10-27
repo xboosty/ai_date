@@ -66,6 +66,25 @@ class AccountCubit extends Cubit<AccountState> {
     }
   }
 
+  Future<void> signInUserSocial(String token) async {
+    emit(const AccountState(status: UserRegisterStatus.loading));
+    try {
+      final user = await repo.signInUserSocialRepository(token);
+      emit(AccountState(status: UserRegisterStatus.success, user: user));
+      print('SignIn Success');
+    } catch (e) {
+      print(e.toString());
+      emit(
+        AccountState(
+          status: UserRegisterStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
+      print('SignIn Failure');
+      rethrow;
+    }
+  }
+
   Future<void> logOutUser() async {
     emit(const AccountState(status: UserRegisterStatus.loading));
     try {

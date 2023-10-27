@@ -7,6 +7,7 @@ import '../../infrastructure.dart'
 
 class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
   NtsAccountAuthDatasource._();
+
   static final ds = NtsAccountAuthDatasource._();
 
   // DIO Instance
@@ -96,6 +97,37 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
         // Devuelve la entidad
       } else {
         // Devuelve un error
+        throw NtsErrorResponse.fromJson(rs.data);
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<UserEntity> logInSocial(String token) async {
+    try {
+      final rs = await dio.get(
+        '/api/account/firebase',
+        queryParameters: {'idToken': token},
+        options: Options(
+          headers: _headers,
+          followRedirects: false,
+          validateStatus: (status) => true,
+        ),
+      );
+
+      if (rs.data["statusCode"] == 200) {
+        String? token = rs.headers.value('x-amzn-Remapped-Authorization');
+
+        SharedPref.pref.token = token ?? 'null';
+        final userResponse = NtsUserResponse.fromJson(rs.data);
+
+        final UserEntity userResult =
+            UserMapper.userResponseToEntity(userResponse.user);
+
+        return userResult;
+      } else {
         throw NtsErrorResponse.fromJson(rs.data);
       }
     } catch (e) {
