@@ -343,13 +343,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _submitUsername();
         break;
       case 1:
-        _nextPage();
-        break;
-      case 2:
         _submitEmail();
         break;
-      case 3:
+      case 2:
         _submitPassword();
+        break;
+      case 3:
+        _nextPage();
         break;
       case 4:
         _nextPage();
@@ -377,6 +377,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _backPage() {
+    FocusScope.of(context).unfocus();
     pageviewController.previousPage(
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
@@ -384,6 +385,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _exitSetup() {
+    FocusScope.of(context).unfocus();
     Navigator.of(context).pop();
   }
 
@@ -420,7 +422,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 color: AppTheme.disabledColor,
                                 // size: 32,
                               ),
-                              onPressed: () => Navigator.of(context).pop(),
+                              onPressed: () {
+                                FocusScope.of(context).unfocus();
+                                Navigator.of(context).pop();
+                              },
                             ),
                             IconButton(
                               icon: const Icon(
@@ -428,7 +433,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 color: AppTheme.disabledColor,
                                 // size: 32,
                               ),
-                              onPressed: () => _exitSetup(),
+                              onPressed: () {
+                                _exitSetup();
+                              },
                             )
                           ],
                         ),
@@ -1357,7 +1364,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
         }
 
         return switch (state.status) {
-          UserRegisterStatus.loading => const CircularProgressIndicator(),
+          UserRegisterStatus.loading => Container(
+              width: 60,
+              height: 60,
+              margin: const EdgeInsets.all(10.0),
+              child: const CircularProgressIndicator(),
+            ),
           UserRegisterStatus.initial => (isShowFloatButton)
               ? ButtonCircularProgress(
                   pageviewController: pageviewController,
