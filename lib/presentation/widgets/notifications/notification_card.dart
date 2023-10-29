@@ -2,8 +2,6 @@ import 'dart:async';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
-import '../../../config/config.dart';
-
 class NotificationCard extends StatefulWidget {
   final Text title;
   final Text message;
@@ -12,7 +10,7 @@ class NotificationCard extends StatefulWidget {
   final Color? color;
   final Icon icon;
 
-  NotificationCard({
+  const NotificationCard({
     required this.title,
     required this.message,
     required this.height,
@@ -26,7 +24,7 @@ class NotificationCard extends StatefulWidget {
 }
 
 class _NotificationCardState extends State<NotificationCard> {
-  double _progressValue = 0.0;
+  // double _progressValue = 0.0;
 
   @override
   void initState() {
