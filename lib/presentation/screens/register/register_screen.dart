@@ -463,8 +463,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextFormField(
+                      textCapitalization: TextCapitalization.none,
                       controller: _fullNameCtrl,
                       focusNode: _focusNodeName,
+                      enableSuggestions: false,
                       decoration: const InputDecoration(
                         errorStyle: TextStyle(
                           overflow: TextOverflow.ellipsis,
@@ -915,7 +917,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 validator: (value) => _validatePassword(value ?? ''),
                 textInputAction: TextInputAction.done,
                 onFieldSubmitted: (_) => _submitPassword(),
-              )
+              ),
             ],
           ),
         ),

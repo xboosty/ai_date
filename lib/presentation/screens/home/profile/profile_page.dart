@@ -136,6 +136,7 @@ class _AppBarAIDateState extends State<_AppBarAIDate> {
         ),
         IconButton(
           onPressed: () {
+            FocusScope.of(context).unfocus();
             showModalBottomSheet(
               context: context,
               showDragHandle: true,
@@ -583,7 +584,7 @@ class _CardGenderInfo extends StatelessWidget {
   }
 }
 
-class _CardPersonalInfo extends StatelessWidget {
+class _CardPersonalInfo extends StatefulWidget {
   const _CardPersonalInfo({
     required this.size,
     required TextEditingController dateCtrl,
@@ -601,11 +602,21 @@ class _CardPersonalInfo extends StatelessWidget {
   final UserEntity? user;
 
   @override
+  State<_CardPersonalInfo> createState() => _CardPersonalInfoState();
+}
+
+class _CardPersonalInfoState extends State<_CardPersonalInfo> {
+  final FocusNode _focusNodeFirstName = FocusNode();
+  final FocusNode _focusNodeLastName = FocusNode();
+  final FocusNode _focusNodePhone = FocusNode();
+  final FocusNode _focusNodeEmail = FocusNode();
+
+  @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: size.width * 0.90,
-        height: size.height * 0.42,
+        width: widget.size.width * 0.90,
+        height: widget.size.height * 0.42,
         margin: const EdgeInsets.symmetric(vertical: 20.0),
         padding: const EdgeInsets.only(
           top: 20,
@@ -622,28 +633,32 @@ class _CardPersonalInfo extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ConfigurationInputField(
-              controller: nameCtrl,
+              controller: widget.nameCtrl,
+              focusNode: _focusNodeFirstName,
               fontSize: 10,
               labelText: 'Name',
               colorLabel: const Color(0xFF6C2EBC),
+              textInputAction: TextInputAction.done,
             ),
             ConfigurationInputField(
-              controller: lastNameCtrl,
+              controller: widget.lastNameCtrl,
+              focusNode: _focusNodeLastName,
               fontSize: 10,
               labelText: 'Last Name',
               colorLabel: const Color(0xFF6C2EBC),
             ),
             ConfigurationInputField(
-              controller: emailCtrl,
+              controller: widget.emailCtrl,
+              focusNode: _focusNodeEmail,
               fontSize: 10,
               labelText: 'Email',
               colorLabel: const Color(0xFF6C2EBC),
               keyboardType: TextInputType.emailAddress,
             ),
-            SizedBox(height: size.height * 0.01),
+            SizedBox(height: widget.size.height * 0.01),
             DatePickerFormField(
               labelText: 'Date of birth',
-              controller: _dateCtrl,
+              controller: widget._dateCtrl,
               onDateSelected: (p0) => {},
             ),
           ],
