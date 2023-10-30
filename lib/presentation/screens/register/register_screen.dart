@@ -11,6 +11,7 @@ import '../../../config/config.dart'
         AppTheme,
         Genders,
         HandlerNotification,
+        NavigationsApp,
         NtsErrorResponse,
         Sexuality,
         Strings,
@@ -41,6 +42,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final PageController pageviewController = PageController();
   final _notifications = getIt<HandlerNotification>();
+  final _navigations = getIt<NavigationsApp>();
   final TextEditingController _fullNameCtrl = TextEditingController();
   final TextEditingController _emailUserCtrl = TextEditingController();
   final TextEditingController _passwordCtrl = TextEditingController();
@@ -186,18 +188,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return null; // Return null if the input is valid.
   }
 
-  String? _validateVerificationCode(String value) {
-    if (value.isEmpty) {
-      return 'Verification code is required';
-    }
-
-    if (value.length < 6) {
-      return 'Password must be at least 6 characters long';
-    }
-
-    return null;
-  }
-
   // For Register User
   void _submitUsername() {
     if (_formKey.currentState!.validate()) {
@@ -205,7 +195,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _formKey.currentState!.save();
       // Here, you can use the _username variable for further processing.
       print('Username: ${_fullNameCtrl.text}');
-      _nextPage();
+      _navigations.nextPage(pageviewController: pageviewController);
     }
   }
 
@@ -244,7 +234,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _formKey.currentState!.save();
       // Here, you can use the _email variable for further processing.
       print('Email: ${_emailUserCtrl.text}');
-      _nextPage();
+      _navigations.nextPage(pageviewController: pageviewController);
     }
   }
 
@@ -254,7 +244,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _formKey.currentState!.save();
       // Here, you can use the _email variable for further processing.
       print('Password: ${_passwordCtrl.text}');
-      _nextPage();
+      _navigations.nextPage(pageviewController: pageviewController);
     }
   }
 
@@ -268,11 +258,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       "birthday": "2023-10-07T05:16:16.305Z",
       "phone": {"code": codeNumber, "number": phoneNumberUser},
       "gender": _genderSelected?.id ?? -1,
-      "sexualOrientation": _sexualitySelected?.id ?? -1
+      "sexualOrientation": _sexualitySelected?.id ?? -1,
+      "isGenderVisible": isGenderVisibleProfile,
+      "isSexualityVisible": isSexualityVisibleProfile,
     };
     try {
       await context.read<AccountCubit>().registerUser(user);
-      _nextPage();
+      _navigations.nextPage(pageviewController: pageviewController);
     } catch (e) {
       if (!mounted) return;
       if (e is NtsErrorResponse) {
@@ -349,13 +341,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _submitPassword();
         break;
       case 3:
-        _nextPage();
+        _navigations.nextPage(pageviewController: pageviewController);
         break;
       case 4:
-        _nextPage();
+        _navigations.nextPage(pageviewController: pageviewController);
         break;
       case 5:
-        _nextPage();
+        _navigations.nextPage(pageviewController: pageviewController);
         break;
       case 6:
         await _submitPhoneNumber(size: size);
@@ -367,26 +359,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       default:
         break;
     }
-  }
-
-  void _nextPage() {
-    pageviewController.nextPage(
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  void _backPage() {
-    FocusScope.of(context).unfocus();
-    pageviewController.previousPage(
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  void _exitSetup() {
-    FocusScope.of(context).unfocus();
-    Navigator.of(context).pop();
   }
 
   Widget _buildPageUsername(Size size) {
@@ -434,7 +406,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 // size: 32,
                               ),
                               onPressed: () {
-                                _exitSetup();
+                                _navigations.exitSetup(context);
                               },
                             )
                           ],
@@ -565,14 +537,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 Icons.arrow_back_rounded,
                                 color: AppTheme.disabledColor,
                               ),
-                              onPressed: () => _backPage(),
+                              onPressed: () => _navigations.backPage(context,
+                                  pageviewController: pageviewController),
                             ),
                             IconButton(
                               icon: const Icon(
                                 Icons.cancel_outlined,
                                 color: AppTheme.disabledColor,
                               ),
-                              onPressed: () => _exitSetup(),
+                              onPressed: () => _navigations.exitSetup(context),
                             )
                           ],
                         ),
@@ -656,112 +629,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildPageCode(Size size) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: SizedBox(
-        width: double.infinity,
-        height: size.height,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                width: size.width,
-                height: size.height * 0.36,
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Image.asset(
-                        'assets/imgs/vector_code.png',
-                      ),
-                    ),
-                    Center(child: Image.asset('assets/imgs/code_img.png')),
-                    SafeArea(
-                      child: Container(
-                        margin: const EdgeInsets.only(top: 5.0),
-                        // padding: const EdgeInsets.symmetric(vertical: 30.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                              icon: const Icon(
-                                Icons.arrow_back_rounded,
-                                color: AppTheme.disabledColor,
-                                // size: 32,
-                              ),
-                              onPressed: () => _backPage(),
-                            ),
-                            IconButton(
-                              icon: const Icon(
-                                Icons.cancel_outlined,
-                                color: AppTheme.disabledColor,
-                                // size: 32,
-                              ),
-                              onPressed: () => _exitSetup(),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: size.height / 40),
-                child: const Text(
-                  'Enter your code',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Color(0xFF261638),
-                    fontSize: 28,
-                    fontFamily: Strings.fontFamily,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: size.width / 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CodeVerificationInput(
-                      focusNode: _focusNodeVerification,
-                      controller: _verificationCtrl,
-                      validator: (value) =>
-                          _validateVerificationCode(value ?? ''),
-                      onEditingComplete: () => _focusNodeVerification.unfocus(),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20.0),
-                      child: TextButton(
-                        onPressed: () =>
-                            _submitRegisterUser(context, size: size),
-                        style: TextButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: const Text(
-                          'Resend code',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontFamily: Strings.fontFamily,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildPageEmail(Size size) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -795,7 +662,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 color: AppTheme.disabledColor,
                                 // size: 32,
                               ),
-                              onPressed: () => _backPage(),
+                              onPressed: () => _navigations.backPage(context,
+                                  pageviewController: pageviewController),
                             ),
                             IconButton(
                               icon: const Icon(
@@ -803,7 +671,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 color: AppTheme.disabledColor,
                                 // size: 32,
                               ),
-                              onPressed: () => _exitSetup(),
+                              onPressed: () => _navigations.exitSetup(context),
                             )
                           ],
                         ),
@@ -881,7 +749,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 color: AppTheme.disabledColor,
                                 // size: 32,
                               ),
-                              onPressed: () => _backPage(),
+                              onPressed: () => _navigations.backPage(context,
+                                  pageviewController: pageviewController),
                             ),
                             IconButton(
                               icon: const Icon(
@@ -889,7 +758,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 color: AppTheme.disabledColor,
                                 // size: 32,
                               ),
-                              onPressed: () => _exitSetup(),
+                              onPressed: () => _navigations.exitSetup(context),
                             )
                           ],
                         ),
@@ -956,7 +825,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               color: AppTheme.disabledColor,
                               // size: 32,
                             ),
-                            onPressed: () => _backPage(),
+                            onPressed: () => _navigations.backPage(context,
+                                pageviewController: pageviewController),
                           ),
                           IconButton(
                             icon: const Icon(
@@ -964,7 +834,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               color: AppTheme.disabledColor,
                               // size: 32,
                             ),
-                            onPressed: () => _exitSetup(),
+                            onPressed: () => _navigations.exitSetup(context),
                           )
                         ],
                       ),
@@ -1053,7 +923,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               //       .toList(),
               // ),
             ),
-            VisibleOnProfile(isVisible: isGenderVisibleProfile)
+            VisibleOnProfile(
+              isVisible: isGenderVisibleProfile,
+              onChangedValue: (value) {
+                isGenderVisibleProfile = value ?? false;
+              },
+            ),
           ],
         ),
       ),
@@ -1092,7 +967,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               color: AppTheme.disabledColor,
                               // size: 32,
                             ),
-                            onPressed: () => _backPage(),
+                            onPressed: () => _navigations.backPage(context,
+                                pageviewController: pageviewController),
                           ),
                           IconButton(
                             icon: const Icon(
@@ -1100,7 +976,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               color: AppTheme.disabledColor,
                               // size: 32,
                             ),
-                            onPressed: () => _exitSetup(),
+                            onPressed: () => _navigations.exitSetup(context),
                           )
                         ],
                       ),
@@ -1155,7 +1031,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
             ),
-            VisibleOnProfile(isVisible: isSexualityVisibleProfile),
+            VisibleOnProfile(
+              isVisible: isSexualityVisibleProfile,
+              onChangedValue: (value) {
+                isSexualityVisibleProfile = value ?? false;
+              },
+            ),
           ],
         ),
       ),
@@ -1193,7 +1074,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             color: AppTheme.disabledColor,
                             // size: 32,
                           ),
-                          onPressed: () => _backPage(),
+                          onPressed: () => _navigations.backPage(context,
+                              pageviewController: pageviewController),
                         ),
                         IconButton(
                           icon: const Icon(
@@ -1201,7 +1083,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             color: AppTheme.disabledColor,
                             // size: 32,
                           ),
-                          onPressed: () => _exitSetup(),
+                          onPressed: () => _navigations.exitSetup(context),
                         )
                       ],
                     ),
@@ -1245,7 +1127,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: size.height * 0.08,
                   title: 'DON\'T ALLOW',
                   isTrailingIcon: false,
-                  onTap: () => _nextPage(),
+                  onTap: () => _navigations.nextPage(
+                      pageviewController: pageviewController),
                   // {
                   //   _formRegisterSubmit(context,
                   //       page: pageviewController.page ?? 0.0, size: size);
@@ -1293,7 +1176,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         return;
       }
     }
-    _nextPage();
+    _navigations.nextPage(pageviewController: pageviewController);
   }
 
   void _pageListener() {
@@ -1309,9 +1192,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
-    // Page Controller Dispose
-    pageviewController.removeListener(_pageListener);
-    pageviewController.dispose();
     // TextEditing Dispose
     _fullNameCtrl.dispose();
     _emailUserCtrl.dispose();
@@ -1323,6 +1203,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _focusNodeEmail.dispose();
     _focusNodePassword.dispose();
     _focusNodeVerification.dispose();
+    // Page Controller Dispose
+    pageviewController.removeListener(_pageListener);
+    pageviewController.dispose();
     super.dispose();
   }
 
@@ -1337,9 +1220,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: PageView(
             physics: const NeverScrollableScrollPhysics(),
             controller: pageviewController,
-            onPageChanged: (index) {
-              setState(() {});
-            },
             children: [
               _buildPageUsername(size),
               _buildPageEmail(size),
@@ -1348,7 +1228,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               _buildPageSexuality(size),
               _buildPageLocation(size),
               _buildPagePhoneNumber(size),
-              _buildPageCode(size),
+              _PageCodeVerification(
+                pageviewController: pageviewController,
+                focusNodeVerification: _focusNodeVerification,
+                verificationCtrl: _verificationCtrl,
+                onPressed: () => _submitRegisterUser(context, size: size),
+              ),
             ],
           ),
         ),
@@ -1444,6 +1329,150 @@ class _ButtonCircularProgressState extends State<ButtonCircularProgress> {
       //     ? AppTheme.disabledColor
       //     : const Color.fromARGB(255, 204, 66, 24),
       // Relleno de color en los bordes basado en la página actual
+    );
+  }
+}
+
+class _PageCodeVerification extends StatefulWidget {
+  const _PageCodeVerification({
+    required this.pageviewController,
+    required this.focusNodeVerification,
+    required this.verificationCtrl,
+    required this.onPressed,
+  });
+
+  final PageController pageviewController;
+  final FocusNode focusNodeVerification;
+  final TextEditingController verificationCtrl;
+  final VoidCallback onPressed;
+
+  @override
+  State<_PageCodeVerification> createState() => _PageCodeVerificationState();
+}
+
+class _PageCodeVerificationState extends State<_PageCodeVerification> {
+  final _navigations = getIt<NavigationsApp>();
+
+  String? _validateVerificationCode(String value) {
+    if (value.isEmpty) {
+      return 'Verification code is required';
+    }
+
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters long';
+    }
+
+    return null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: SizedBox(
+        width: double.infinity,
+        height: size.height,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                width: size.width,
+                height: size.height * 0.36,
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Image.asset(
+                        'assets/imgs/vector_code.png',
+                      ),
+                    ),
+                    Center(child: Image.asset('assets/imgs/code_img.png')),
+                    SafeArea(
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 5.0),
+                        // padding: const EdgeInsets.symmetric(vertical: 30.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.arrow_back_rounded,
+                                color: AppTheme.disabledColor,
+                                // size: 32,
+                              ),
+                              onPressed: () => _navigations.backPage(context,
+                                  pageviewController:
+                                      widget.pageviewController),
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.cancel_outlined,
+                                color: AppTheme.disabledColor,
+                                // size: 32,
+                              ),
+                              onPressed: () => _navigations.exitSetup(context),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: size.height / 40),
+                child: const Text(
+                  'Enter your code',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF261638),
+                    fontSize: 28,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: size.width / 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CodeVerificationInput(
+                      focusNode: widget.focusNodeVerification,
+                      controller: widget.verificationCtrl,
+                      validator: (value) =>
+                          _validateVerificationCode(value ?? ''),
+                      onEditingComplete: () =>
+                          widget.focusNodeVerification.unfocus(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
+                      child: TextButton(
+                        onPressed: widget.onPressed,
+                        style: TextButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: const Text(
+                          'Resend code',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontFamily: Strings.fontFamily,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 // Configs
-import '../../config.dart' show HandlerNotification;
+import '../../config.dart' show HandlerNotification, NavigationsApp;
 // Infrastructure
 import '../../../infrastructure/infrastructure.dart';
 export '../../../infrastructure/infrastructure.dart';
@@ -30,4 +30,8 @@ void serviceLocatorRepositoryInit() {
 
 void serviceLocatorNotificationInit() {
   getIt.registerSingleton(HandlerNotification());
+}
+
+void serviceNavigationAppInit() {
+  getIt.registerSingleton(NavigationsApp());
 }

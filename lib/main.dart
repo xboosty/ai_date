@@ -16,7 +16,8 @@ import 'config/config.dart'
         getIt,
         serviceLocatorBlocsInit,
         serviceLocatorNotificationInit,
-        serviceLocatorRepositoryInit;
+        serviceLocatorRepositoryInit,
+        serviceNavigationAppInit;
 
 void main() async {
   // Start Widget
@@ -29,6 +30,7 @@ void main() async {
   serviceLocatorRepositoryInit();
   serviceLocatorBlocsInit();
   serviceLocatorNotificationInit();
+  serviceNavigationAppInit();
 
   // Initializing SharedPreferences
   await SharedPref.pref.initPrefer();

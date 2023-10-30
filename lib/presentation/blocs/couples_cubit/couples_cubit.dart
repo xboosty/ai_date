@@ -11,7 +11,7 @@ class CouplesCubit extends Cubit<CouplesState> {
 
   final repo = getIt<NtsCouplesRepository>();
 
-  Future<void> fetchBlockedUsers() async {
+  Future<void> fetchCouplesUsers() async {
     await getCouplesFake();
   }
 

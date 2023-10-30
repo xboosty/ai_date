@@ -13,6 +13,8 @@ class UserEntity {
   final dynamic avatarMimeType;
   final String sexualOrientation;
   final String? token;
+  final bool isGenderVisible;
+  final bool isSexualityVisible;
 
   UserEntity({
     this.id,
@@ -29,6 +31,8 @@ class UserEntity {
     required this.avatarMimeType,
     required this.sexualOrientation,
     this.token,
+    required this.isGenderVisible,
+    required this.isSexualityVisible,
   });
 
   get isVerify => null;
@@ -47,6 +51,8 @@ class UserEntity {
         avatar: json["avatar"],
         avatarMimeType: json["avatarMimeType"],
         sexualOrientation: json["sexualOrientation"],
+        isGenderVisible: json["isGenderVisible"],
+        isSexualityVisible: json["isSexualityVisible"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -63,5 +69,7 @@ class UserEntity {
         "avatar": avatar,
         "avatarMimeType": avatarMimeType,
         "sexualOrientation": sexualOrientation,
+        "isGenderVisible": isGenderVisible,
+        "isSexualityVisible": isSexualityVisible,
       };
 }

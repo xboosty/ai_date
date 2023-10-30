@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
@@ -13,6 +14,12 @@ import '../../../../config/config.dart'
         AccountState,
         AppTheme,
         BlockCubit,
+        CouplesCubit,
+        CouplesData,
+        CouplesError,
+        CouplesInitial,
+        CouplesLoading,
+        CouplesState,
         Genders,
         HandlerNotification,
         NtsErrorResponse,
@@ -38,7 +45,7 @@ import '../../../widgets/widgets.dart'
         FilledColorizedButton,
         ProfilePicturePhoto;
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({
     super.key,
     required TabController tabController,
@@ -47,6 +54,19 @@ class ProfilePage extends StatelessWidget {
 
   final TabController _tabController;
   final List<Tab> tabs;
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  final couplesCubit = getIt<CouplesCubit>();
+
+  @override
+  void initState() {
+    super.initState();
+    couplesCubit.fetchCouplesUsers();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,16 +86,29 @@ class ProfilePage extends StatelessWidget {
           const _ProfileToggle(),
           SizedBox(height: size.height * 0.02),
           TabBar(
-            controller: _tabController,
-            tabs: tabs,
+            controller: widget._tabController,
+            tabs: widget.tabs,
           ),
           Expanded(
             child: TabBarView(
               physics: const NeverScrollableScrollPhysics(),
-              controller: _tabController,
-              children: const [
-                _ProfileEditPage(),
-                _UserCard(),
+              controller: widget._tabController,
+              children: [
+                const _ProfileEditPage(),
+                BlocBuilder<CouplesCubit, CouplesState>(
+                  builder: (context, state) => switch (state) {
+                    CouplesInitial() => const _UserCard(
+                        couples: [],
+                      ),
+                    CouplesLoading() => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    CouplesData() => _UserCard(
+                        couples: state.couples,
+                      ),
+                    CouplesError() => Container()
+                  },
+                ),
               ],
             ),
           ),
@@ -367,14 +400,32 @@ class _ProfileEditPage extends StatefulWidget {
 }
 
 class _ProfileEditPageState extends State<_ProfileEditPage> {
-  final _dateCtrl = TextEditingController();
   final nameCtrl = TextEditingController();
   final lastNameCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
+  final dateCtrl = TextEditingController();
   UserEntity? user;
 
-  Genders? genderSelected;
-  Sexuality? sexualitySelected;
+  late Genders genderSelected;
+  late Sexuality sexualitySelected;
+  bool showGenderProfile = false;
+  bool showSexualityProfile = false;
+
+  final List<Genders> _genders = [
+    Genders(id: 1, name: 'Woman'),
+    Genders(id: 0, name: 'Man'),
+    Genders(id: 3, name: 'Non Binary'),
+  ];
+
+  final List<Sexuality> _sexualities = [
+    Sexuality(id: 4, name: 'Prefer not to say'),
+    Sexuality(id: 0, name: 'Hetero'),
+    Sexuality(id: 1, name: 'Bisexual'),
+    Sexuality(id: 2, name: 'Homosexual'),
+    Sexuality(id: 3, name: 'Transexual'),
+  ];
+
+  void _handleSaveChanges() {}
 
   @override
   void initState() {
@@ -385,6 +436,19 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
       nameCtrl.text = user?.name ?? '';
       lastNameCtrl.text = '';
       emailCtrl.text = user?.email ?? '';
+      dateCtrl.text = '';
+      showGenderProfile = user?.isGenderVisible ?? false;
+      showSexualityProfile = user?.isSexualityVisible ?? false;
+      switch (user?.genderId) {
+        case 0:
+          genderSelected = _genders[1];
+          break;
+        case 1:
+          genderSelected = _genders[0];
+          break;
+        default:
+          genderSelected = _genders[2];
+      }
     } catch (e) {
       print('Ocurrio un error $e');
     }
@@ -398,13 +462,47 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
       children: [
         _CardPersonalInfo(
           size: size,
-          dateCtrl: _dateCtrl,
+          dateCtrl: dateCtrl,
           nameCtrl: nameCtrl,
           lastNameCtrl: lastNameCtrl,
           emailCtrl: emailCtrl,
         ),
         _CardGenderInfo(
-          size: size,
+          itemsGender: _genders.map<DropdownMenuItem<Genders>>((Genders item) {
+            return DropdownMenuItem<Genders>(
+              alignment: Alignment.centerLeft,
+              value: item,
+              child: Text(item.name),
+            );
+          }).toList(),
+          itemsSexuality:
+              _sexualities.map<DropdownMenuItem<Sexuality>>((Sexuality item) {
+            return DropdownMenuItem<Sexuality>(
+              alignment: Alignment.centerLeft,
+              value: item,
+              child: Text(item.name),
+            );
+          }).toList(),
+          genderSelected: genderSelected,
+          sexualitySelected: _sexualities.first,
+          showGenderProfile: showGenderProfile,
+          showSexualityProfile: showSexualityProfile,
+          onChangedGender: (Genders? value) {
+            setState(() {
+              genderSelected = value ?? _genders[2];
+            });
+          },
+          onChangedSexuality: (Sexuality? value) {},
+          onShowGender: (value) {
+            setState(() {
+              showGenderProfile = value ?? false;
+            });
+          },
+          onShowSexuality: (value) {
+            setState(() {
+              showSexualityProfile = value ?? false;
+            });
+          },
         ),
         const ListTile(
           leading: Icon(Icons.add_photo_alternate, size: 20),
@@ -476,6 +574,41 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                   Icons.arrow_right_alt,
                   color: Colors.white,
                 ),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) =>
+                        BlocBuilder<AccountCubit, AccountState>(
+                      builder: (context, state) => switch (state.status) {
+                        UserRegisterStatus.initial => CustomAlertDialog(
+                            title: 'Save Changes',
+                            content:
+                                'Are you sure you want to save the changes?',
+                            onPressedCancel: () => Navigator.of(context).pop(),
+                            onPressedOk: () => _handleSaveChanges(),
+                          ),
+                        UserRegisterStatus.loading => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        UserRegisterStatus.failure => CustomAlertDialog(
+                            title: 'Save Changes',
+                            content:
+                                'Are you sure you want to save the changes?',
+                            onPressedCancel: () => Navigator.of(context).pop(),
+                            onPressedOk: () => _handleSaveChanges(),
+                          ),
+                        UserRegisterStatus.success => CustomAlertDialog(
+                            title: 'Save Changes',
+                            content:
+                                'Are you sure you want to save the changes?',
+                            onPressedCancel: () => Navigator.of(context).pop(),
+                            onPressedOk: () => _handleSaveChanges(),
+                          ),
+                      },
+                    ),
+                  );
+                },
               ),
               SizedBox(height: size.height * 0.02),
             ],
@@ -487,35 +620,39 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
 }
 
 class _CardGenderInfo extends StatelessWidget {
-  _CardGenderInfo({
-    required this.size,
+  const _CardGenderInfo({
+    required this.itemsGender,
+    required this.itemsSexuality,
+    required this.genderSelected,
+    required this.sexualitySelected,
+    required this.onChangedGender,
+    required this.onChangedSexuality,
+    required this.onShowGender,
+    required this.onShowSexuality,
+    this.showGenderProfile,
+    this.showSexualityProfile,
   });
 
-  final Size size;
-  final Genders genderSelected = Genders(id: 3, name: 'Non Binary');
-  final Sexuality sexualitySelected =
-      Sexuality(id: 4, name: 'Prefer not to say');
+  final Genders genderSelected;
+  final Sexuality sexualitySelected;
 
-  final List<Genders> _genders = [
-    Genders(id: 1, name: 'Woman'),
-    Genders(id: 0, name: 'Man'),
-    Genders(id: 3, name: 'Non Binary'),
-  ];
-
-  final List<Sexuality> _sexualities = [
-    Sexuality(id: 4, name: 'Prefer not to say'),
-    Sexuality(id: 0, name: 'Hetero'),
-    Sexuality(id: 1, name: 'Bisexual'),
-    Sexuality(id: 2, name: 'Homosexual'),
-    Sexuality(id: 3, name: 'Transexual'),
-  ];
+  final List<DropdownMenuItem<Genders>> itemsGender;
+  final List<DropdownMenuItem<Sexuality>> itemsSexuality;
+  final ValueChanged<Genders?> onChangedGender;
+  final ValueChanged<Sexuality?> onChangedSexuality;
+  final bool? showGenderProfile;
+  final bool? showSexualityProfile;
+  final ValueChanged<bool?> onShowGender;
+  final ValueChanged<bool?> onShowSexuality;
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Center(
       child: Container(
         width: size.width * 0.90,
-        height: size.height * 0.33,
+        height: size.height * 0.38,
         margin: const EdgeInsets.symmetric(vertical: 20.0),
         padding: const EdgeInsets.only(
           top: 20,
@@ -534,33 +671,9 @@ class _CardGenderInfo extends StatelessWidget {
             SizedBox(height: size.height * 0.02),
             CustomDropdownButton<Genders>(
               hintText: const Text('Gender'),
-              items: _genders.map<DropdownMenuItem<Genders>>((Genders item) {
-                return DropdownMenuItem<Genders>(
-                  alignment: Alignment.centerLeft,
-                  value: item,
-                  child: Text(item.name),
-                );
-              }).toList(),
-              dropdownValue: _genders[2],
-              onChanged: (value) {
-                print(value);
-              },
-            ),
-            SizedBox(height: size.height * 0.03),
-            CustomDropdownButton<Sexuality>(
-              hintText: const Text('Sexual Orientation'),
-              items: _sexualities
-                  .map<DropdownMenuItem<Sexuality>>((Sexuality item) {
-                return DropdownMenuItem<Sexuality>(
-                  alignment: Alignment.centerLeft,
-                  value: item,
-                  child: Text(item.name),
-                );
-              }).toList(),
-              dropdownValue: _sexualities.first,
-              onChanged: (value) {
-                print(value);
-              },
+              items: itemsGender,
+              dropdownValue: genderSelected,
+              onChanged: onChangedGender,
             ),
             CheckboxListTile(
               controlAffinity: ListTileControlAffinity.leading,
@@ -574,8 +687,29 @@ class _CardGenderInfo extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              value: false,
-              onChanged: (value) => {},
+              value: showGenderProfile,
+              onChanged: onShowGender,
+            ),
+            CustomDropdownButton<Sexuality>(
+              hintText: const Text('Sexual Orientation'),
+              items: itemsSexuality,
+              dropdownValue: sexualitySelected,
+              onChanged: onChangedSexuality,
+            ),
+            CheckboxListTile(
+              controlAffinity: ListTileControlAffinity.leading,
+              contentPadding: EdgeInsets.zero,
+              title: const Text(
+                'Show my sexuality in my profile',
+                style: TextStyle(
+                  color: Color(0xFF261638),
+                  fontSize: 12,
+                  fontFamily: Strings.fontFamily,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              value: showSexualityProfile,
+              onChanged: onShowSexuality,
             )
           ],
         ),
@@ -587,15 +721,15 @@ class _CardGenderInfo extends StatelessWidget {
 class _CardPersonalInfo extends StatefulWidget {
   const _CardPersonalInfo({
     required this.size,
-    required TextEditingController dateCtrl,
     this.user,
     this.nameCtrl,
     this.lastNameCtrl,
     this.emailCtrl,
-  }) : _dateCtrl = dateCtrl;
+    required this.dateCtrl,
+  });
 
   final Size size;
-  final TextEditingController _dateCtrl;
+  final TextEditingController dateCtrl;
   final TextEditingController? nameCtrl;
   final TextEditingController? lastNameCtrl;
   final TextEditingController? emailCtrl;
@@ -608,7 +742,6 @@ class _CardPersonalInfo extends StatefulWidget {
 class _CardPersonalInfoState extends State<_CardPersonalInfo> {
   final FocusNode _focusNodeFirstName = FocusNode();
   final FocusNode _focusNodeLastName = FocusNode();
-  final FocusNode _focusNodePhone = FocusNode();
   final FocusNode _focusNodeEmail = FocusNode();
 
   @override
@@ -658,7 +791,7 @@ class _CardPersonalInfoState extends State<_CardPersonalInfo> {
             SizedBox(height: widget.size.height * 0.01),
             DatePickerFormField(
               labelText: 'Date of birth',
-              controller: widget._dateCtrl,
+              controller: widget.dateCtrl,
               onDateSelected: (p0) => {},
             ),
           ],
@@ -1343,7 +1476,9 @@ class _AccountSettings extends StatelessWidget {
 }
 
 class _UserCard extends StatefulWidget {
-  const _UserCard();
+  const _UserCard({required this.couples});
+
+  final List<UserEntity> couples;
 
   @override
   State<_UserCard> createState() => _UserCardState();
@@ -1363,14 +1498,6 @@ class _UserCardState extends State<_UserCard> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   SystemUiOverlayStyle.light.copyWith(
-    //     systemNavigationBarIconBrightness: Brightness.light,
-    //     systemNavigationBarColor: Theme.of(context).colorScheme.primaryVariant,
-    //     statusBarIconBrightness: Brightness.light,
-    //     statusBarColor: Colors.red, // Note RED here
-    //   ),
-    // );
 
     return Center(
       child: SizedBox(
@@ -1413,8 +1540,8 @@ class _UserCardState extends State<_UserCard> {
                             controller: scrollController,
                             child: Column(
                               children: [
-                                const _CardSeeProfileDetails(
-                                  user: null,
+                                _CardSeeProfileDetails(
+                                  user: widget.couples[index],
                                 ),
                                 SizedBox(height: size.height * 0.02),
                                 _SmallDescriptionProfile(size: size),
@@ -1589,127 +1716,270 @@ class _UserCardState extends State<_UserCard> {
                   },
                 );
               },
+              child: _CardCouple(
+                controller: controller,
+                user: widget.couples[index],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _CardCouple extends StatelessWidget {
+  const _CardCouple({
+    super.key,
+    required this.controller,
+    required this.user,
+  });
+
+  final AppinioSwiperController controller;
+  final UserEntity user;
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+    return CachedNetworkImage(
+      imageUrl: user.avatar,
+      imageBuilder: (context, imageProvider) => Container(
+        width: size.width * 0.80,
+        height: size.height,
+        alignment: Alignment.center,
+        // color: Colors.blue,
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(1.5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                gradient: AppTheme.linearGradient,
+              ),
               child: Container(
-                width: size.width * 0.80,
-                height: size.height,
-                alignment: Alignment.center,
-                // color: Colors.blue,
-                child: Stack(
-                  alignment: Alignment.bottomCenter,
-                  clipBehavior: Clip.none,
+                width: size.width * 0.78,
+                height: size.height * 0.50,
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: const Color(0xFFEFF0FB),
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(1.5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        gradient: AppTheme.linearGradient,
-                      ),
-                      child: Container(
-                        width: size.width * 0.78,
-                        height: size.height * 0.50,
-                        padding: const EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: const Color(0xFFEFF0FB),
-                          image: const DecorationImage(
-                            image: AssetImage(
-                                'assets/imgs/photo_camera_front.png'),
-                            fit: BoxFit.contain,
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {},
+                          style: IconButton.styleFrom(
+                            backgroundColor: Colors.white,
                           ),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Row(
-                              children: [
-                                IconButton(
-                                  onPressed: () {},
-                                  style: IconButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                  ),
-                                  icon: const Icon(
-                                    Icons.note_add_rounded,
-                                    color: Color(0xFFD9D9D9),
-                                  ),
-                                )
-                              ],
-                            ),
-                            const Spacer(),
-                            const Text(
-                              'Jennifer (24)',
-                              style: TextStyle(
-                                color: Color(0xFF9CA4BF),
-                                fontSize: 22,
-                                fontFamily: Strings.fontFamily,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(height: size.height * 0.02),
-                            const Text(
-                              'Lives in New York',
-                              style: TextStyle(
-                                color: Color(0xFF9CA4BF),
-                                fontSize: 12,
-                                fontFamily: Strings.fontFamily,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(height: size.height * 0.02),
-                            FilledButton(
-                              onPressed: () {},
-                              style: FilledButton.styleFrom(
-                                backgroundColor: Colors.white,
-                              ),
-                              child: const Text(
-                                '95% match',
-                                style: TextStyle(
-                                  color: Color(0xFF9CA4BF),
-                                  fontSize: 12,
-                                  fontFamily: Strings.fontFamily,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
+                          icon: const Icon(
+                            Icons.note_add_rounded,
+                            color: Color(0xFFD9D9D9),
+                          ),
+                        )
+                      ],
+                    ),
+                    const Spacer(),
+                    Text(
+                      '${user.name} (24)',
+                      style: const TextStyle(
+                        color: Color(0xFF9CA4BF),
+                        fontSize: 22,
+                        fontFamily: Strings.fontFamily,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    Positioned(
-                      bottom: -25.0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularOutlineGradientButton(
-                            onTap: () {
-                              controller.swipeLeft();
-                            },
-                            width: 56.0,
-                            height: 56.0,
-                            child: const Icon(
-                              Icons.close,
-                              color: Color.fromARGB(255, 209, 70, 15),
-                              size: 32,
-                            ),
-                          ),
-                          SizedBox(width: size.width * 0.30),
-                          CircularGradientButton(
-                            heroTag: 'Like',
-                            callback: () {
-                              controller.swipeRight();
-                            },
-                            gradient: AppTheme.linearGradientReverse,
-                            child: const Icon(Icons.favorite, size: 32),
-                          ),
-                        ],
+                    SizedBox(height: size.height * 0.02),
+                    const Text(
+                      'Lives in New York',
+                      style: TextStyle(
+                        color: Color(0xFF9CA4BF),
+                        fontSize: 12,
+                        fontFamily: Strings.fontFamily,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.02),
+                    FilledButton(
+                      onPressed: () {},
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.white,
+                      ),
+                      child: const Text(
+                        '95% match',
+                        style: TextStyle(
+                          color: Color(0xFF9CA4BF),
+                          fontSize: 12,
+                          fontFamily: Strings.fontFamily,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     )
                   ],
                 ),
               ),
-            );
-          },
+            ),
+            Positioned(
+              bottom: -25.0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularOutlineGradientButton(
+                    onTap: () {
+                      controller.swipeLeft();
+                    },
+                    width: 56.0,
+                    height: 56.0,
+                    child: const Icon(
+                      Icons.close,
+                      color: Color.fromARGB(255, 209, 70, 15),
+                      size: 32,
+                    ),
+                  ),
+                  SizedBox(width: size.width * 0.30),
+                  CircularGradientButton(
+                    heroTag: 'Like',
+                    callback: () {
+                      controller.swipeRight();
+                    },
+                    gradient: AppTheme.linearGradientReverse,
+                    child: const Icon(Icons.favorite, size: 32),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+      placeholder: (context, url) =>
+          const Center(child: CircularProgressIndicator()),
+      errorWidget: (context, url, error) => Container(
+        width: size.width * 0.80,
+        height: size.height,
+        alignment: Alignment.center,
+        // color: Colors.blue,
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(1.5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                gradient: AppTheme.linearGradient,
+              ),
+              child: Container(
+                width: size.width * 0.78,
+                height: size.height * 0.50,
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: const Color(0xFFEFF0FB),
+                  image: const DecorationImage(
+                    image: AssetImage('assets/imgs/photo_camera_front.png'),
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {},
+                          style: IconButton.styleFrom(
+                            backgroundColor: Colors.white,
+                          ),
+                          icon: const Icon(
+                            Icons.note_add_rounded,
+                            color: Color(0xFFD9D9D9),
+                          ),
+                        )
+                      ],
+                    ),
+                    const Spacer(),
+                    Text(
+                      '${user.name} (24)',
+                      style: const TextStyle(
+                        color: Color(0xFF9CA4BF),
+                        fontSize: 22,
+                        fontFamily: Strings.fontFamily,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.02),
+                    const Text(
+                      'Lives in New York',
+                      style: TextStyle(
+                        color: Color(0xFF9CA4BF),
+                        fontSize: 12,
+                        fontFamily: Strings.fontFamily,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: size.height * 0.02),
+                    FilledButton(
+                      onPressed: () {},
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.white,
+                      ),
+                      child: const Text(
+                        '95% match',
+                        style: TextStyle(
+                          color: Color(0xFF9CA4BF),
+                          fontSize: 12,
+                          fontFamily: Strings.fontFamily,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: -25.0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularOutlineGradientButton(
+                    onTap: () {
+                      controller.swipeLeft();
+                    },
+                    width: 56.0,
+                    height: 56.0,
+                    child: const Icon(
+                      Icons.close,
+                      color: Color.fromARGB(255, 209, 70, 15),
+                      size: 32,
+                    ),
+                  ),
+                  SizedBox(width: size.width * 0.30),
+                  CircularGradientButton(
+                    heroTag: 'Like',
+                    callback: () {
+                      controller.swipeRight();
+                    },
+                    gradient: AppTheme.linearGradientReverse,
+                    child: const Icon(Icons.favorite, size: 32),
+                  ),
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -2203,8 +2473,14 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(28),
           color: Colors.white,
-          image: const DecorationImage(
-              image: AssetImage('assets/imgs/girl1.png'), fit: BoxFit.cover),
+          image: DecorationImage(
+            image: CachedNetworkImageProvider(
+              widget.user?.avatar,
+              errorListener: (p0) =>
+                  const AssetImage('assets/imgs/photo_camera_front.png'),
+            ),
+            fit: BoxFit.cover,
+          ),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2221,9 +2497,9 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
                         color: Colors.white,
                         size: 32,
                       )),
-                  const Text(
-                    'Melissandre (31)',
-                    style: TextStyle(
+                  Text(
+                    '${widget.user?.name}',
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 22,
                       fontFamily: Strings.fontFamily,

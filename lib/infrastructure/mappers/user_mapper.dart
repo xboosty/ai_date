@@ -18,6 +18,8 @@ class UserMapper {
       status: user.status ?? '',
       avatar: user.avatar,
       avatarMimeType: user.avatarMimeType,
+      isGenderVisible: user.isGenderVisible ?? false,
+      isSexualityVisible: user.isSexualityVisible ?? false,
     );
   }
 }

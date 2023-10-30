@@ -8,6 +8,7 @@ export 'constants/strings.dart';
 export 'core/services/services_locator.dart';
 // Helpers
 export 'helpers/handler_notifications.dart';
+export 'helpers/navigations_app.dart';
 // Shared Preferences
 export 'shared/shared_pref.dart';
 // Utils
