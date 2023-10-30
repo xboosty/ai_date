@@ -11,11 +11,13 @@ import 'config/config.dart'
         AppRouter,
         AppTheme,
         BlockCubit,
+        CouplesCubit,
         SharedPref,
         getIt,
         serviceLocatorBlocsInit,
         serviceLocatorNotificationInit,
-        serviceLocatorRepositoryInit;
+        serviceLocatorRepositoryInit,
+        serviceNavigationAppInit;
 
 void main() async {
   // Start Widget
@@ -28,6 +30,7 @@ void main() async {
   serviceLocatorRepositoryInit();
   serviceLocatorBlocsInit();
   serviceLocatorNotificationInit();
+  serviceNavigationAppInit();
 
   // Initializing SharedPreferences
   await SharedPref.pref.initPrefer();
@@ -49,6 +52,9 @@ class BlocsProviders extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => getIt<BlockCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => getIt<CouplesCubit>(),
         ),
       ],
       child: const AIDateApp(),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -67,7 +69,13 @@ class _InterviewChatScreenState extends State<InterviewChatScreen> {
 
   Future<void> playRecording() async {
     try {
-      Source urlSource = DeviceFileSource(audioPath);
+      Source urlSource;
+      if (Platform.isAndroid) {
+        File file = File(audioPath);
+        urlSource = BytesSource(file.readAsBytesSync());
+      } else  {
+        urlSource = DeviceFileSource(audioPath);
+      }
       await audioPlayer.play(urlSource);
     } catch (e) {
       print('Error playing recording: $e');

@@ -61,7 +61,7 @@ class _BloquedListScreenState extends State<BloquedListScreen> {
                   // TODO: Handle this case.
                   BlockedUsersInitial() => Container(),
                   // TODO: Handle this case.
-                  BlockedUsersLoading() => Center(
+                  BlockedUsersLoading() => const Center(
                       child: CircularProgressIndicator(),
                     ),
                   // ListView.builder(
@@ -387,7 +387,7 @@ class _OpacityCardUnblockState extends State<_OpacityCardUnblock> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Text(
+          const Text(
             'You\'ve blocked this user',
             style: TextStyle(
               color: Colors.white,
@@ -396,7 +396,7 @@ class _OpacityCardUnblockState extends State<_OpacityCardUnblock> {
               fontWeight: FontWeight.w700,
             ),
           ),
-          Text(
+          const Text(
             'If you want to see this user\'s details, unblock them first',
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -411,7 +411,7 @@ class _OpacityCardUnblockState extends State<_OpacityCardUnblock> {
             height: 50,
             title: 'Unblock',
             isTrailingIcon: true,
-            icon: Icon(
+            icon: const Icon(
               Icons.published_with_changes_outlined,
               color: Colors.white,
             ),

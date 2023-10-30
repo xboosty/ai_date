@@ -45,7 +45,7 @@ class ForgotPasswordScreen extends StatelessWidget {
               ),
               child: Container(
                 width: size.width * 0.93,
-                height: size.height * 0.83,
+                height: size.height * 0.88,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
                 ),
@@ -115,8 +115,9 @@ class ForgotPasswordScreen extends StatelessWidget {
                         child: Container(
                           width: size.width,
                           padding: EdgeInsets.symmetric(
-                              horizontal: size.width * 0.05,
-                              vertical: size.height / 25),
+                            horizontal: size.width * 0.05,
+                            vertical: 10.0,
+                          ),
                           decoration: const BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.only(
@@ -211,7 +212,7 @@ class _WizardScreenState extends State<_WizardScreen> {
     if (_formKey.currentState!.validate()) {
       // If the form is valid, save the form and perform an action.
       _formKey.currentState!.save();
-
+      FocusScope.of(context).unfocus();
       try {
         await context
             .read<AccountCubit>()
@@ -242,14 +243,8 @@ class _WizardScreenState extends State<_WizardScreen> {
 
   Future<void> _submitVerificationCode({required Size size}) async {
     if (_formKey.currentState!.validate()) {
-      // final verification = {
-      //   "phone": {"code": "", "number": ""},
-      //   "email": "",
-      //   "verificationCode": _verificationCtrl.text
-      // };
-
+      FocusScope.of(context).unfocus();
       try {
-        // await context.read<AccountCubit>().verificationCode(verification);
         _nextPage();
       } catch (e) {
         if (!mounted) return;
@@ -482,6 +477,8 @@ class _WizardScreenState extends State<_WizardScreen> {
                       validator: (value) =>
                           _validateVerificationCode(value ?? ''),
                       onEditingComplete: () => _focusNodeCode.unfocus(),
+                      onSubmitted: (value) =>
+                          _submitVerificationCode(size: size),
                     ),
                     button: BlocBuilder<AccountCubit, AccountState>(
                       builder: (context, state) {
@@ -520,101 +517,96 @@ class _WizardScreenState extends State<_WizardScreen> {
                         'We\'ve dispatched a verification code to your email address. Please enter it here to authenticate and secure your account.',
                   ),
                   SingleChildScrollView(
-                    child: SizedBox(
-                      // height: size.height * 10,
-                      child: StepPage(
-                        icon: Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFE9EAF6),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: const Icon(
-                            Icons.shield_outlined,
-                            color: Colors.purple,
-                            size: 32,
-                          ),
+                    // height: size.height * 10,
+                    child: StepPage(
+                      icon: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE9EAF6),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        content: Column(
-                          children: [
-                            PasswordInput(
-                              focusNode: _focusNodeNewPassword,
-                              obscureText: isObscureTextNewPassword,
-                              labelText: 'New Password',
-                              controller: _passwordNewCtrl,
-                              validator: (value) =>
-                                  _validatePasswords(value ?? ''),
-                              onPressedSuffixIcon: () {
-                                setState(() {
-                                  isObscureTextNewPassword =
-                                      !isObscureTextNewPassword;
-                                });
-                              },
-                              textInputAction: TextInputAction.next,
-                              onFieldSubmitted: (_) {
-                                FocusScope.of(context)
-                                    .requestFocus(_focusNodeRepitPassword);
-                              },
-                            ),
-                            PasswordInput(
-                              focusNode: _focusNodeRepitPassword,
-                              obscureText: isObscureTextRepeatPassword,
-                              labelText: 'Confirm Password',
-                              controller: _passwordConfirmCtrl,
-                              validator: (value) =>
-                                  _validatePasswords(value ?? ''),
-                              onPressedSuffixIcon: () {
-                                setState(() {
-                                  isObscureTextRepeatPassword =
-                                      !isObscureTextRepeatPassword;
-                                });
-                              },
-                              textInputAction: TextInputAction.done,
-                              onFieldSubmitted: (_) =>
-                                  _submitForgotPasswords(size: size),
-                            ),
-                          ],
+                        child: const Icon(
+                          Icons.shield_outlined,
+                          color: Colors.purple,
+                          size: 32,
                         ),
-                        button: BlocBuilder<AccountCubit, AccountState>(
-                          builder: (context, state) {
-                            return switch (state.status) {
-                              UserRegisterStatus.initial =>
-                                FilledColorizedOutlineButton(
-                                  width: 187,
-                                  height: 50,
-                                  title: 'RESET PASSWORD',
-                                  isTrailingIcon: false,
-                                  onTap: () =>
-                                      _submitForgotPasswords(size: size),
-                                ),
-                              UserRegisterStatus.loading =>
-                                const CircularProgressIndicator(),
-                              UserRegisterStatus.failure =>
-                                FilledColorizedOutlineButton(
-                                  width: 187,
-                                  height: 50,
-                                  title: 'RESET PASSWORD',
-                                  isTrailingIcon: false,
-                                  onTap: () =>
-                                      _submitForgotPasswords(size: size),
-                                ),
-                              UserRegisterStatus.success =>
-                                FilledColorizedOutlineButton(
-                                  width: 187,
-                                  height: 50,
-                                  title: 'RESET PASSWORD',
-                                  isTrailingIcon: false,
-                                  onTap: () =>
-                                      _submitForgotPasswords(size: size),
-                                ),
-                            };
-                          },
-                        ),
-                        isHelperText: true,
-                        helperText:
-                            'Your password must be different from previous used password.',
                       ),
+                      content: Column(
+                        children: [
+                          PasswordInput(
+                            focusNode: _focusNodeNewPassword,
+                            obscureText: isObscureTextNewPassword,
+                            labelText: 'New Password',
+                            controller: _passwordNewCtrl,
+                            validator: (value) =>
+                                _validatePasswords(value ?? ''),
+                            onPressedSuffixIcon: () {
+                              setState(() {
+                                isObscureTextNewPassword =
+                                    !isObscureTextNewPassword;
+                              });
+                            },
+                            textInputAction: TextInputAction.next,
+                            onFieldSubmitted: (_) {
+                              FocusScope.of(context)
+                                  .requestFocus(_focusNodeRepitPassword);
+                            },
+                          ),
+                          PasswordInput(
+                            focusNode: _focusNodeRepitPassword,
+                            obscureText: isObscureTextRepeatPassword,
+                            labelText: 'Confirm Password',
+                            controller: _passwordConfirmCtrl,
+                            validator: (value) =>
+                                _validatePasswords(value ?? ''),
+                            onPressedSuffixIcon: () {
+                              setState(() {
+                                isObscureTextRepeatPassword =
+                                    !isObscureTextRepeatPassword;
+                              });
+                            },
+                            textInputAction: TextInputAction.done,
+                            onFieldSubmitted: (_) =>
+                                _submitForgotPasswords(size: size),
+                          ),
+                        ],
+                      ),
+                      button: BlocBuilder<AccountCubit, AccountState>(
+                        builder: (context, state) {
+                          return switch (state.status) {
+                            UserRegisterStatus.initial =>
+                              FilledColorizedOutlineButton(
+                                width: 187,
+                                height: 50,
+                                title: 'RESET PASSWORD',
+                                isTrailingIcon: false,
+                                onTap: () => _submitForgotPasswords(size: size),
+                              ),
+                            UserRegisterStatus.loading =>
+                              const CircularProgressIndicator(),
+                            UserRegisterStatus.failure =>
+                              FilledColorizedOutlineButton(
+                                width: 187,
+                                height: 50,
+                                title: 'RESET PASSWORD',
+                                isTrailingIcon: false,
+                                onTap: () => _submitForgotPasswords(size: size),
+                              ),
+                            UserRegisterStatus.success =>
+                              FilledColorizedOutlineButton(
+                                width: 187,
+                                height: 50,
+                                title: 'RESET PASSWORD',
+                                isTrailingIcon: false,
+                                onTap: () => _submitForgotPasswords(size: size),
+                              ),
+                          };
+                        },
+                      ),
+                      isHelperText: true,
+                      helperText:
+                          'Your password must be different from previous used password.',
                     ),
                   ),
                 ],

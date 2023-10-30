@@ -11,6 +11,10 @@ class ConfigurationInputField extends StatelessWidget {
     this.colorLabel,
     this.suffixIcon,
     this.controller,
+    this.focusNode,
+    this.textInputAction,
+    this.onFieldSubmitted,
+    this.validator,
   });
 
   final String labelText;
@@ -19,11 +23,17 @@ class ConfigurationInputField extends StatelessWidget {
   final Color? colorLabel;
   final Widget? suffixIcon;
   final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onFieldSubmitted;
+  final FormFieldValidator<String>? validator;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      focusNode: focusNode,
       keyboardType: keyboardType,
+      textCapitalization: TextCapitalization.none,
       controller: controller,
       style: const TextStyle(
         color: Color(0xFF261638),
@@ -41,6 +51,9 @@ class ConfigurationInputField extends StatelessWidget {
         ),
         suffixIcon: suffixIcon,
       ),
+      textInputAction: textInputAction,
+      onFieldSubmitted: onFieldSubmitted,
+      validator: validator,
     );
   }
 }

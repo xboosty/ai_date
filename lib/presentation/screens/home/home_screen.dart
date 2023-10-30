@@ -94,11 +94,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   bool showFirstInterviewPage = false;
 
+  void _handleTabSelection() {
+    if (_tabController.indexIsChanging) {
+      if (_tabController.index == 1) {
+        FocusScope.of(context).unfocus();
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _tabController =
         TabController(vsync: this, length: tabs.length, initialIndex: 1);
+    _tabController.addListener(_handleTabSelection);
     showFirstInterviewPage = SharedPref.pref.showFirstInterviewPage;
   }
 

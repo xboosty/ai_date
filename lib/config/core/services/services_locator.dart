@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 // Configs
-import '../../config.dart' show HandlerNotification;
+import '../../config.dart' show HandlerNotification, NavigationsApp;
 // Infrastructure
 import '../../../infrastructure/infrastructure.dart';
 export '../../../infrastructure/infrastructure.dart';
@@ -13,6 +13,7 @@ GetIt getIt = GetIt.instance;
 void serviceLocatorBlocsInit() {
   getIt.registerSingleton(AccountCubit());
   getIt.registerSingleton(BlockCubit());
+  getIt.registerSingleton(CouplesCubit());
 }
 
 void serviceLocatorRepositoryInit() {
@@ -22,8 +23,15 @@ void serviceLocatorRepositoryInit() {
   getIt.registerSingleton(
     NtsBlockRepository(datasource: NtSprintBlockDatasource.ds),
   );
+  getIt.registerSingleton(
+    NtsCouplesRepository(datasource: NtSprintCouplesDatasource.ds),
+  );
 }
 
 void serviceLocatorNotificationInit() {
   getIt.registerSingleton(HandlerNotification());
+}
+
+void serviceNavigationAppInit() {
+  getIt.registerSingleton(NavigationsApp());
 }

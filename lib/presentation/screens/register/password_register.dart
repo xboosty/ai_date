@@ -35,6 +35,7 @@ class _PasswordRegisterState extends State<PasswordRegister> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextFormField(
+            textCapitalization: TextCapitalization.none,
             controller: widget.passwordCtrl,
             focusNode: widget.focusNodePassword,
             decoration: InputDecoration(

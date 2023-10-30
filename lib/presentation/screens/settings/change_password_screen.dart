@@ -190,8 +190,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         },
                         validator: (value) =>
                             _validateCurrentPassword(value ?? ''),
-                        onEditingComplete: () =>
-                            _focusCurrentPassword.unfocus(),
+                        textInputAction: TextInputAction.next,
+                        onFieldSubmitted: (_) {
+                          FocusScope.of(context)
+                              .requestFocus(_focusNewPassword);
+                        },
                       ),
                       PasswordInput(
                         controller: newCtrl,
@@ -210,7 +213,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           });
                         },
                         validator: (value) => _validateNewPassword(value ?? ''),
-                        onEditingComplete: () => _focusNewPassword.unfocus(),
+                        textInputAction: TextInputAction.next,
+                        onFieldSubmitted: (_) {
+                          FocusScope.of(context)
+                              .requestFocus(_focusRepeatPassword);
+                        },
                       ),
                       PasswordInput(
                         controller: repeatCtrl,
@@ -232,6 +239,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         validator: (value) =>
                             _validateRepeatPassword(value ?? ''),
                         onEditingComplete: () => _focusRepeatPassword.unfocus(),
+                        textInputAction: TextInputAction.done,
+                        onFieldSubmitted: (_) {
+                          _submitChangePassword(size: size);
+                        },
                       ),
                       // SizedBox(height: size.height * 0.05),
                       const Padding(

@@ -66,7 +66,7 @@ class SignInBox extends StatelessWidget {
           ),
           child: Container(
             width: size.width * 0.93,
-            height: size.height * 0.83,
+            height: size.height * 0.88,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30),
             ),
@@ -424,7 +424,7 @@ class _SignInFormState extends State<SignInForm> {
       key: _formKey,
       child: Container(
         width: size.width,
-        height: size.height * 0.63,
+        height: size.height * 0.68,
         padding:
             const EdgeInsets.only(top: 25, bottom: 20, left: 15, right: 15),
         decoration: const BoxDecoration(
@@ -434,231 +434,228 @@ class _SignInFormState extends State<SignInForm> {
             topRight: Radius.circular(30),
           ),
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const Text(
-                'Sign in to AI Date',
-                style: TextStyle(
-                  color: Color(0xFF261638),
-                  fontSize: 28,
-                  fontFamily: Strings.fontFamily,
-                  fontWeight: FontWeight.w700,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            const Text(
+              'Sign in to AI Date',
+              style: TextStyle(
+                color: Color(0xFF261638),
+                fontSize: 28,
+                fontFamily: Strings.fontFamily,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            // SizedBox(height: size.height * 0.02),
+            const Text(
+              'Log in using social networks',
+              style: TextStyle(
+                color: Color(0xFF261638),
+                fontSize: 16,
+                fontFamily: Strings.fontFamily,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            // SizedBox(height: size.height * 0.02),
+            OverflowBar(
+              alignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                IconButtonSvg(
+                  urlSvg: 'assets/svgs/facebook_icon.svg',
+                  semanticsLabel: 'Facebook Logo',
+                  heroTag: 'facebookIcon',
+                  backgroundColor: const Color(0xFFE9EAF6),
+                  onPressed: _isLoadingSignIn
+                      ? null
+                      : () {
+                          signInWithFacebook();
+                        },
                 ),
-              ),
-              SizedBox(height: size.height * 0.02),
-              const Text(
-                'Log in using social networks',
-                style: TextStyle(
-                  color: Color(0xFF261638),
-                  fontSize: 16,
-                  fontFamily: Strings.fontFamily,
-                  fontWeight: FontWeight.w600,
+                IconButtonSvg(
+                  urlSvg: 'assets/svgs/apple_icon.svg',
+                  semanticsLabel: 'Apple Logo',
+                  heroTag: 'appleIcon',
+                  backgroundColor: const Color(0xFFE9EAF6),
+                  onPressed: _isLoadingSignIn
+                      ? null
+                      : () {
+                          signInWithApple();
+                        },
                 ),
-              ),
-              SizedBox(height: size.height * 0.02),
-              OverflowBar(
-                alignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  IconButtonSvg(
-                    urlSvg: 'assets/svgs/facebook_icon.svg',
-                    semanticsLabel: 'Facebook Logo',
-                    heroTag: 'facebookIcon',
-                    backgroundColor: const Color(0xFFE9EAF6),
-                    onPressed: _isLoadingSignIn
-                        ? null
-                        : () {
-                            signInWithFacebook();
-                          },
-                  ),
-                  IconButtonSvg(
-                    urlSvg: 'assets/svgs/apple_icon.svg',
-                    semanticsLabel: 'Apple Logo',
-                    heroTag: 'appleIcon',
-                    backgroundColor: const Color(0xFFE9EAF6),
-                    onPressed: _isLoadingSignIn
-                        ? null
-                        : () {
-                            signInWithApple();
-                          },
-                  ),
-                  IconButtonSvg(
-                    urlSvg: 'assets/svgs/google_icon.svg',
-                    semanticsLabel: 'Google Logo',
-                    heroTag: 'googleIcon',
-                    backgroundColor: const Color(0xFFE9EAF6),
-                    onPressed: _isLoadingSignIn
-                        ? null
-                        : () {
-                            signInWithGoogle();
-                          },
-                  ),
-                ],
-              ),
-              SizedBox(height: size.height * 0.02),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 125.50,
-                    decoration: const ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          width: 0.5,
-                          strokeAlign: BorderSide.strokeAlignCenter,
-                          color: Color(0xFF7F87A6),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10,
-                    ),
-                    child: Text(
-                      'or',
-                      style: TextStyle(
-                        color: AppTheme.disabledColor,
-                        fontSize: 12,
-                        fontFamily: Strings.fontFamily,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 125.50,
-                    decoration: const ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          width: 0.5,
-                          strokeAlign: BorderSide.strokeAlignCenter,
-                          color: Color(0xFF7F87A6),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                // height: size.height * 0.22,
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextFormField(
-                      enabled: !_isLoadingSignIn,
-                      controller: _emailCtrl,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        // hintText: 'Email',
-                        labelStyle: TextStyle(
-                          color: Color(0xFF7F87A6),
-                          fontSize: 14,
-                          fontFamily: Strings.fontFamily,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        errorStyle: TextStyle(
-                          color: Color(0xFFC02D4F),
-                          fontSize: 12,
-                          fontFamily: Strings.fontFamily,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      validator: (value) => _validateCredential(value ?? ''),
-                      textInputAction: TextInputAction.next,
-                    ),
-                    // SizedBox(height: size.height * 0.02),
-                    PasswordInput(
-                      enabled: !_isLoadingSignIn,
-                      controller: _passwordCtrl,
-                      obscureText: _obscureText,
-                      onPressedSuffixIcon: () => {
-                        setState(() {
-                          _obscureText = !_obscureText;
-                        }),
-                      },
-                      validator: (value) => _validatePassword(value ?? ''),
-                      labelText: 'Password',
-                      textInputAction: TextInputAction.done,
-                      onFieldSubmitted: (_) {
-                        _startSession(context, size: size);
-                      },
-                    ),
-                  ],
+                IconButtonSvg(
+                  urlSvg: 'assets/svgs/google_icon.svg',
+                  semanticsLabel: 'Google Logo',
+                  heroTag: 'googleIcon',
+                  backgroundColor: const Color(0xFFE9EAF6),
+                  onPressed: _isLoadingSignIn
+                      ? null
+                      : () {
+                          signInWithGoogle();
+                        },
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Checkbox(
-                    value: _isRemember,
-                    onChanged: _isLoadingSignIn
-                        ? null
-                        : (value) {
-                            setState(() {
-                              _isRemember = value ?? false;
-                            });
-                          },
+              ],
+            ),
+            // SizedBox(height: size.height * 0.02),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 125.50,
+                  decoration: const ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                        width: 0.5,
+                        strokeAlign: BorderSide.strokeAlignCenter,
+                        color: Color(0xFF7F87A6),
+                      ),
+                    ),
                   ),
-                  const Text(
-                    'Remember me',
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10,
+                  ),
+                  child: Text(
+                    'or',
                     style: TextStyle(
-                      color: Color(0xFF261638),
+                      color: AppTheme.disabledColor,
                       fontSize: 12,
                       fontFamily: Strings.fontFamily,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Expanded(
-                      child: TextButton(
-                    style: TextButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                ),
+                Container(
+                  width: 125.50,
+                  decoration: const ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                        width: 0.5,
+                        strokeAlign: BorderSide.strokeAlignCenter,
+                        color: Color(0xFF7F87A6),
                       ),
-                      textStyle: const TextStyle(
-                        color: Color(0xFF6C2EBC),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              // height: size.height * 0.22,
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextFormField(
+                    enabled: !_isLoadingSignIn,
+                    controller: _emailCtrl,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                      // hintText: 'Email',
+                      labelStyle: TextStyle(
+                        color: Color(0xFF7F87A6),
+                        fontSize: 14,
+                        fontFamily: Strings.fontFamily,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      errorStyle: TextStyle(
+                        color: Color(0xFFC02D4F),
                         fontSize: 12,
                         fontFamily: Strings.fontFamily,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    onPressed:
-                        _isLoadingSignIn ? null : () => _forgotPassword(),
-                    child: const Text('Forgot Password?'),
-                  ))
+                    validator: (value) => _validateCredential(value ?? ''),
+                    textInputAction: TextInputAction.next,
+                  ),
+                  // SizedBox(height: size.height * 0.02),
+                  PasswordInput(
+                    enabled: !_isLoadingSignIn,
+                    controller: _passwordCtrl,
+                    obscureText: _obscureText,
+                    onPressedSuffixIcon: () => {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      }),
+                    },
+                    validator: (value) => _validatePassword(value ?? ''),
+                    labelText: 'Password',
+                    textInputAction: TextInputAction.done,
+                    onFieldSubmitted: (_) {
+                      _startSession(context, size: size);
+                    },
+                  ),
                 ],
               ),
-              SizedBox(height: size.height * 0.02),
-              BlocBuilder<AccountCubit, AccountState>(
-                builder: (context, state) => switch (state.status) {
-                  UserRegisterStatus.initial => FilledColorizedOutlineButton(
-                      width: 150,
-                      height: 50,
-                      title: 'SIGN IN',
-                      isTrailingIcon: false,
-                      onTap: () => _startSession(context, size: size),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Checkbox(
+                  value: _isRemember,
+                  onChanged: _isLoadingSignIn
+                      ? null
+                      : (value) {
+                          setState(() {
+                            _isRemember = value ?? false;
+                          });
+                        },
+                ),
+                const Text(
+                  'Remember me',
+                  style: TextStyle(
+                    color: Color(0xFF261638),
+                    fontSize: 12,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Expanded(
+                    child: TextButton(
+                  style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  UserRegisterStatus.loading =>
-                    const CircularProgressIndicator(),
-                  UserRegisterStatus.failure => FilledColorizedOutlineButton(
-                      width: 150,
-                      height: 50,
-                      title: 'SIGN IN',
-                      isTrailingIcon: false,
-                      onTap: () => _startSession(context, size: size),
+                    textStyle: const TextStyle(
+                      color: Color(0xFF6C2EBC),
+                      fontSize: 12,
+                      fontFamily: Strings.fontFamily,
+                      fontWeight: FontWeight.w600,
                     ),
-                  UserRegisterStatus.success => FilledColorizedOutlineButton(
-                      width: 150,
-                      height: 50,
-                      title: 'SIGN IN',
-                      isTrailingIcon: false,
-                      onTap: () => _startSession(context, size: size),
-                    ),
-                },
-              ),
-            ],
-          ),
+                  ),
+                  onPressed: _isLoadingSignIn ? null : () => _forgotPassword(),
+                  child: const Text('Forgot Password?'),
+                ))
+              ],
+            ),
+            // SizedBox(height: size.height * 0.02),
+            BlocBuilder<AccountCubit, AccountState>(
+              builder: (context, state) => switch (state.status) {
+                UserRegisterStatus.initial => FilledColorizedOutlineButton(
+                    width: 150,
+                    height: 50,
+                    title: 'SIGN IN',
+                    isTrailingIcon: false,
+                    onTap: () => _startSession(context, size: size),
+                  ),
+                UserRegisterStatus.loading => const CircularProgressIndicator(),
+                UserRegisterStatus.failure => FilledColorizedOutlineButton(
+                    width: 150,
+                    height: 50,
+                    title: 'SIGN IN',
+                    isTrailingIcon: false,
+                    onTap: () => _startSession(context, size: size),
+                  ),
+                UserRegisterStatus.success => FilledColorizedOutlineButton(
+                    width: 150,
+                    height: 50,
+                    title: 'SIGN IN',
+                    isTrailingIcon: false,
+                    onTap: () => _startSession(context, size: size),
+                  ),
+              },
+            ),
+          ],
         ),
       ),
     );

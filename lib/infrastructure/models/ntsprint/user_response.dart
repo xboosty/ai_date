@@ -12,22 +12,25 @@ class UserResponse {
   final dynamic avatar;
   final dynamic avatarMimeType;
   final String sexualOrientation;
+  final bool? isGenderVisible;
+  final bool? isSexualityVisible;
 
-  UserResponse({
-    this.id,
-    this.birthDate,
-    required this.fullName,
-    this.identity,
-    this.genderId,
-    required this.gender,
-    required this.email,
-    this.phone,
-    this.statusId,
-    this.status,
-    this.avatar,
-    this.avatarMimeType,
-    required this.sexualOrientation,
-  });
+  UserResponse(
+      {this.id,
+      this.birthDate,
+      required this.fullName,
+      this.identity,
+      this.genderId,
+      required this.gender,
+      required this.email,
+      this.phone,
+      this.statusId,
+      this.status,
+      this.avatar,
+      this.avatarMimeType,
+      required this.sexualOrientation,
+      this.isGenderVisible,
+      this.isSexualityVisible});
 
   factory UserResponse.fromJson(Map<String, dynamic> json) => UserResponse(
         id: json["id"],
@@ -45,6 +48,8 @@ class UserResponse {
         avatar: json["avatar"],
         avatarMimeType: json["avatarMimeType"],
         sexualOrientation: json["sexualOrientation"],
+        isGenderVisible: json["isGenderVisible"],
+        isSexualityVisible: json["isSexualityVisible"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -61,5 +66,7 @@ class UserResponse {
         "avatar": avatar,
         "avatarMimeType": avatarMimeType,
         "sexualOrientation": sexualOrientation,
+        "isGenderVisible": isGenderVisible,
+        "isSexualityVisible": isSexualityVisible,
       };
 }
