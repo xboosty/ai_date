@@ -6,9 +6,11 @@ class VisibleOnProfile extends StatefulWidget {
   const VisibleOnProfile({
     super.key,
     required this.isVisible,
+    this.onChangedValue,
   });
 
   final bool isVisible;
+  final ValueChanged<bool?>? onChangedValue;
 
   @override
   State<VisibleOnProfile> createState() => _VisibleOnProfileState();
@@ -38,9 +40,10 @@ class _VisibleOnProfileState extends State<VisibleOnProfile> {
         ),
       ),
       value: isVisibleState,
-      onChanged: (bool? value) {
+      onChanged: (value) {
         setState(() {
           isVisibleState = value ?? false;
+          widget.onChangedValue!(value ?? false);
         });
       },
     );

@@ -23,6 +23,7 @@ class EmailInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      textCapitalization: TextCapitalization.none,
       controller: controller,
       focusNode: focusNode,
       decoration: const InputDecoration(
