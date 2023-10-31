@@ -1,10 +1,13 @@
 part of 'interview_cubit.dart';
 
-sealed class InterviewState extends Equatable {
-  const InterviewState();
+enum InterviewStatus { isNew, inProgress, done, error, isLoading }
+
+class InterviewState extends Equatable {
+  const InterviewState({this.interview, required this.status});
+
+  final InterviewEntity? interview;
+  final InterviewStatus status;
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [interview, status];
 }
-
-final class InterviewInitial extends InterviewState {}

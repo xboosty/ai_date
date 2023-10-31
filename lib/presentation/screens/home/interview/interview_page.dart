@@ -1,7 +1,7 @@
-import 'package:ai_date/presentation/screens/screens.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../config/config.dart' show AppTheme, Strings;
+import '../../screens.dart' show InterviewChatScreen;
 
 class InterViewPage extends StatelessWidget {
   const InterViewPage({super.key});

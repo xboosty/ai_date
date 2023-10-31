@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../config/config.dart' show AppTheme, SharedPref, Strings;
-import '../screens.dart' show InterViewPage, IntroInterviewPage, ProfilePage;
+import '../screens.dart'
+    show DiscoverPage, InterViewPage, IntroInterviewPage, ProfilePage;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -134,9 +135,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               const Center(
                 child: Text('Premium'),
               ),
-              const Center(
-                child: Text('Discover'),
-              ),
+              const DiscoverPage(),
               const Center(
                 child: Text('Chat'),
               ),
