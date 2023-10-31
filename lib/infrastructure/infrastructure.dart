@@ -12,5 +12,6 @@ export 'models/ntsprint/nts_error_response.dart';
 export 'models/ntsprint/nts_verification_response.dart';
 export 'models/ntsprint/nts_bloqued_user_response.dart';
 export 'models/ntsprint/nts_couples_response.dart';
+export 'models/ntsprint/nts_social_auth_response.dart';
 // All Mappers
 export 'mappers/user_mapper.dart';

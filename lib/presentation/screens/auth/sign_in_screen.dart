@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ai_date/presentation/screens/register/introduction_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
@@ -125,7 +126,8 @@ class SignInBox extends StatelessWidget {
                                   ),
                                   onPressed: () {
                                     Navigator.of(context).pushNamed(
-                                        IntroductionScreen.routeName);
+                                      IntroductionScreen.routeName,
+                                    );
                                   },
                                   child: const Text(
                                     'SIGN UP',
@@ -368,7 +370,10 @@ class _SignInFormState extends State<SignInForm> {
     }
   }
 
-  Future<UserCredential> signInWithGoogle() async {
+  Future<void> signInWithGoogle() async {
+    setState(() {
+      _isLoadingSignIn = true;
+    });
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     final GoogleSignInAuthentication? googleAuth =
         await googleUser?.authentication;
@@ -378,7 +383,35 @@ class _SignInFormState extends State<SignInForm> {
       idToken: googleAuth?.idToken,
     );
 
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+    final firebaseUserCredential =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+    final idToken = await firebaseUserCredential.user?.getIdTokenResult();
+
+    await context.read<AccountCubit>().signInUserSocial(idToken?.token ?? '');
+    UserEntity? userLoged = context.read<AccountCubit>().state.user;
+    final registerStatus = context.read<AccountCubit>().state.status;
+
+    if (userLoged != null && registerStatus == UserRegisterStatus.success) {
+      String jsonAccount = jsonEncode(userLoged.toJson());
+      SharedPref.pref.account = jsonAccount;
+      if (!mounted) return;
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        HomeScreen.routeName,
+        (route) => false,
+      );
+    } else if (userLoged == null &&
+        registerStatus == UserRegisterStatus.initial) {
+      Navigator.of(context).pushNamed(
+        IntroductionScreen.routeName,
+        arguments: IntroductionScreenArguments(
+          firebaseUserCredential,
+        ),
+      );
+    }
+
+    setState(() {
+      _isLoadingSignIn = false;
+    });
   }
 
   Future<UserCredential> signInWithApple() async {

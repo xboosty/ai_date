@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "615701910692-fveuii4u0u2nbrf5s4rhugojfgd50dcc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.enterprise.ntsprint.ai_date",
+            "certificate_hash": "d5b8ee1e516c5c99d2c4a02e24e16b2a6fc19ce1"
+          }
+        },
+        {
           "client_id": "615701910692-h6nn9jnt6coni8tjv3cf03aogreau2j9.apps.googleusercontent.com",
           "client_type": 3
         }
