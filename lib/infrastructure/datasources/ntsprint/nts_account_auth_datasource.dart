@@ -3,7 +3,12 @@ import 'package:dio/dio.dart';
 import '../../../config/config.dart' show SharedPref;
 import '../../../domain/domain.dart' show AccountDatasource, UserEntity;
 import '../../infrastructure.dart'
-    show NtsErrorResponse, NtsUserResponse, NtsVerificationResponse, UserMapper;
+    show
+        NtsErrorResponse,
+        NtsSocialAuthResponse,
+        NtsUserResponse,
+        NtsVerificationResponse,
+        UserMapper;
 
 class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
   NtsAccountAuthDatasource._();
@@ -105,7 +110,7 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
   }
 
   @override
-  Future<UserEntity> logInSocial(String token) async {
+  Future<UserEntity?> logInSocial(String token) async {
     try {
       final rs = await dio.get(
         '/api/account/firebase',
@@ -121,12 +126,15 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
         String? token = rs.headers.value('x-amzn-Remapped-Authorization');
 
         SharedPref.pref.token = token ?? 'null';
-        final userResponse = NtsUserResponse.fromJson(rs.data);
+        final userResponse = NtsSocialAuthResponse.fromJson(rs.data);
 
-        final UserEntity userResult =
-            UserMapper.userResponseToEntity(userResponse.user);
+        if (userResponse.user != null) {
+          final UserEntity userResult =
+              UserMapper.userResponseToEntity(userResponse.user!);
+          return userResult;
+        }
 
-        return userResult;
+        return null;
       } else {
         throw NtsErrorResponse.fromJson(rs.data);
       }

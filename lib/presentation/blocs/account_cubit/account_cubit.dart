@@ -70,8 +70,14 @@ class AccountCubit extends Cubit<AccountState> {
     emit(const AccountState(status: UserRegisterStatus.loading));
     try {
       final user = await repo.signInUserSocialRepository(token);
-      emit(AccountState(status: UserRegisterStatus.success, user: user));
-      print('SignIn Success');
+      if (user != null) {
+        emit(AccountState(status: UserRegisterStatus.success, user: user));
+        print('SignIn Success');
+      } else {
+        emit(
+            const AccountState(user: null, status: UserRegisterStatus.initial));
+        print('User does not exist');
+      }
     } catch (e) {
       print(e.toString());
       emit(

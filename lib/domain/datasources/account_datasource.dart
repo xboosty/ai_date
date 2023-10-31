@@ -5,7 +5,7 @@ abstract class AccountDatasource<T> {
 
   Future<T> logIn(Map<String, dynamic> credential);
 
-  Future<T> logInSocial(String token);
+  Future<T?> logInSocial(String token);
 
   Future<bool> logOut();
 
