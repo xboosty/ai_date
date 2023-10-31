@@ -1,4 +1,4 @@
-part of 'register_screen.dart';
+part of 'register_screen/register_screen.dart';
 
 class PasswordRegister extends StatefulWidget {
   const PasswordRegister({

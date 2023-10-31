@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ai_date/presentation/screens/register/introduction_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
@@ -402,6 +403,9 @@ class _SignInFormState extends State<SignInForm> {
         registerStatus == UserRegisterStatus.initial) {
       Navigator.of(context).pushNamed(
         IntroductionScreen.routeName,
+        arguments: IntroductionScreenArguments(
+          firebaseUserCredential,
+        ),
       );
     }
 
