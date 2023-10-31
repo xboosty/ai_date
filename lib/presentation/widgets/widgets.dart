@@ -20,6 +20,7 @@ export 'dropdown/custom_dropdown_button.dart';
 export 'cards/profile_pictures_photo.dart';
 export 'cards/card_gradient_picture.dart';
 export 'cards/card_info_profile.dart';
+export 'cards/card_profile.dart';
 export 'avatars/circle_avatar_profile.dart';
 export 'notifications/card_robot_notification.dart';
 export 'notifications/robot_success_notification.dart';
