@@ -14,6 +14,7 @@ void serviceLocatorBlocsInit() {
   getIt.registerSingleton(AccountCubit());
   getIt.registerSingleton(BlockCubit());
   getIt.registerSingleton(CouplesCubit());
+  getIt.registerSingleton(InterviewCubit());
 }
 
 void serviceLocatorRepositoryInit() {
@@ -25,6 +26,9 @@ void serviceLocatorRepositoryInit() {
   );
   getIt.registerSingleton(
     NtsCouplesRepository(datasource: NtSprintCouplesDatasource.ds),
+  );
+  getIt.registerSingleton(
+    AIInterviewRepository(datasource: AIInterviewDatasource.ds),
   );
 }
 

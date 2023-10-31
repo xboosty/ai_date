@@ -1,13 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-
-import 'package:audioplayers/audioplayers.dart';
-import 'package:animate_do/animate_do.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:social_media_recorder/audio_encoder_type.dart';
 import 'package:social_media_recorder/screen/social_media_recorder.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:record/record.dart';
+
 import '../../../config/config.dart' show AppTheme, Strings;
+import '../../widgets/widgets.dart' show BubbleChatAudio;
 
 class InterviewChatScreen extends StatefulWidget {
   const InterviewChatScreen({super.key});
@@ -28,7 +30,6 @@ class _InterviewChatScreenState extends State<InterviewChatScreen> {
   @override
   void initState() {
     super.initState();
-    // audioCtrl = RecorderController();
     audioPlayer = AudioPlayer();
     audioRecord = Record();
   }
@@ -73,7 +74,7 @@ class _InterviewChatScreenState extends State<InterviewChatScreen> {
       if (Platform.isAndroid) {
         File file = File(audioPath);
         urlSource = BytesSource(file.readAsBytesSync());
-      } else  {
+      } else {
         urlSource = DeviceFileSource(audioPath);
       }
       await audioPlayer.play(urlSource);
@@ -106,8 +107,6 @@ class _InterviewChatScreenState extends State<InterviewChatScreen> {
               alignment: Alignment.center,
               children: [
                 SizedBox(
-                  // height: 100,
-                  // width: 50,
                   child: CircularProgressIndicator(
                     backgroundColor: Colors.grey.shade300,
                     value: 0.25,
@@ -132,68 +131,7 @@ class _InterviewChatScreenState extends State<InterviewChatScreen> {
         height: size.height,
         child: Column(
           children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 10.0),
-                      child: FadeIn(
-                        child: const Text(
-                          'Great, let\'s start with some questions about you and what makes you unique. These questions will cover your background, values, and what shapes your world. Please take your time and answer as honestly as possible.',
-                          style: TextStyle(
-                            color: Color(0xFF6C2EBC),
-                            fontSize: 20,
-                            fontFamily: Strings.fontFamily,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: size.height * 0.01),
-                    FadeIn(
-                      child: Chip(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                          side: BorderSide.none,
-                        ),
-                        side: BorderSide.none,
-                        backgroundColor: const Color(0xFFCCC1EA),
-                        label: const Padding(
-                          padding: EdgeInsets.all(5.0),
-                          child: Text(
-                            'Today',
-                            style: TextStyle(
-                              color: Color(0xFF261638),
-                              fontSize: 12,
-                              fontFamily: Strings.fontFamily,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: size.height * 0.01),
-                    _ChatAI(size: size),
-                    _ChatUser(size: size),
-                    if (isRecordingCompleted)
-                      BubbleChatAudio(
-                        onPlay: () async => isRecordingCompleted
-                            ? await playRecording()
-                            : await stopRecording(),
-                        controlIcon: isRecordingCompleted
-                            ? const Icon(
-                                Icons.play_arrow_rounded,
-                              )
-                            : const Icon(
-                                Icons.pause_rounded,
-                              ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
+            const _ChatUser(),
             SafeArea(
               child: Container(
                 height: size.height * 0.08,
@@ -217,26 +155,6 @@ class _InterviewChatScreenState extends State<InterviewChatScreen> {
                     radius: BorderRadius.circular(100),
                     sendRequestFunction: (_, __) async {
                       await startRecording();
-                      // await audioCtrl.record();
-                      // final hasPermission = await audioCtrl.checkPermission();
-                      // if (hasPermission) {
-                      //   print('tiene permiso de micro');
-                      //   setState(() {
-                      //     isRecordingCompleted = true;
-                      //   });
-                      // }
-                      // soundFile represent the sound you recording
-                      // print('Se mando el audio absolute ${soundFile.absolute}');
-                      // print('Se mando el audio path ${soundFile.path}');
-                      // directory = await path.getApplicationDocumentsDirectory();
-                      // // var statusAudio = await Permission.audio.request();
-                      // var statusMicro = await Permission.microphone.request();
-                      // if (statusMicro.isGranted) {
-                      //   setState(() {
-                      //     pathUrlAudio = soundFile.path;
-                      //     urlAudio = '${directory.path}/${soundFile.path}';
-                      //   });
-                      // }
                     },
                     stopRecording: (time) async => await stopRecording(),
                     encode: AudioEncoderType.AAC,
@@ -251,57 +169,13 @@ class _InterviewChatScreenState extends State<InterviewChatScreen> {
   }
 }
 
-// This widget
-class BubbleChatAudio extends StatelessWidget {
-  const BubbleChatAudio({
-    super.key,
-    required this.onPlay,
-    required this.controlIcon,
-  });
-
-  final VoidCallback onPlay;
-  final Icon controlIcon;
+class _ChatUser extends StatelessWidget {
+  const _ChatUser();
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return Container(
-      width: size.width * 0.89,
-      height: size.height * 0.10,
-      decoration: const BoxDecoration(
-        color: Color(0xFFCCC1EA),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-          bottomLeft: Radius.circular(20),
-          bottomRight: Radius.circular(5),
-        ),
-      ),
-      child: Row(
-        children: [
-          FilledButton(
-            onPressed: onPlay,
-            style: FilledButton.styleFrom(
-              shape: const CircleBorder(),
-            ),
-            child: controlIcon,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ChatUser extends StatelessWidget {
-  const _ChatUser({
-    required this.size,
-  });
-
-  final Size size;
-
-  @override
-  Widget build(BuildContext context) {
     return FadeIn(
       child: Column(
         children: [
@@ -364,14 +238,16 @@ class _ChatUser extends StatelessWidget {
 }
 
 class _ChatAI extends StatelessWidget {
-  const _ChatAI({
-    required this.size,
-  });
+  const _ChatAI({this.urlAvatar = '', required this.message});
 
-  final Size size;
+  final String urlAvatar;
+  final String message;
+  // final String duration;
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return FadeIn(
       child: Column(
         children: [
@@ -391,17 +267,18 @@ class _ChatAI extends StatelessWidget {
                       bottomRight: Radius.circular(20),
                     ),
                   ),
-                  child: const Column(
+                  child: Column(
                     children: [
                       ListTile(
                         leading: CircleAvatar(
                           backgroundColor: Colors.red,
-                          backgroundImage:
-                              AssetImage('assets/imgs/ai_avatar.png'),
+                          backgroundImage: urlAvatar != ''
+                              ? CachedNetworkImageProvider(urlAvatar)
+                              : null,
                         ),
                         title: Text(
-                          'Could you share a story from your life that you think shaped who you are today?',
-                          style: TextStyle(
+                          message,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 14,
                             fontFamily: Strings.fontFamily,
@@ -432,6 +309,80 @@ class _ChatAI extends StatelessWidget {
             ),
           )
         ],
+      ),
+    );
+  }
+}
+
+class _ChatView extends StatelessWidget {
+  const _ChatView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 10, horizontal: 10.0),
+              child: FadeIn(
+                child: const Text(
+                  'Great, let\'s start with some questions about you and what makes you unique. These questions will cover your background, values, and what shapes your world. Please take your time and answer as honestly as possible.',
+                  style: TextStyle(
+                    color: Color(0xFF6C2EBC),
+                    fontSize: 20,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: size.height * 0.01),
+            FadeIn(
+              child: Chip(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                  side: BorderSide.none,
+                ),
+                side: BorderSide.none,
+                backgroundColor: const Color(0xFFCCC1EA),
+                label: const Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: Text(
+                    'Today',
+                    style: TextStyle(
+                      color: Color(0xFF261638),
+                      fontSize: 12,
+                      fontFamily: Strings.fontFamily,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: size.height * 0.01),
+            const _ChatAI(
+              message: 'Something mesagge bot',
+            ),
+            const _ChatUser(),
+            // if (isRecordingCompleted)
+            //   BubbleChatAudio(
+            //     onPlay: () async => isRecordingCompleted
+            //         ? await playRecording()
+            //         : await stopRecording(),
+            //     controlIcon: isRecordingCompleted
+            //         ? const Icon(
+            //             Icons.play_arrow_rounded,
+            //           )
+            //         : const Icon(
+            //             Icons.pause_rounded,
+            //           ),
+            //   ),
+          ],
+        ),
       ),
     );
   }

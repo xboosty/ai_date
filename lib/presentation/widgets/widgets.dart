@@ -26,3 +26,4 @@ export 'notifications/robot_success_notification.dart';
 export 'notifications/robot_error_notification.dart';
 export 'notifications/notification_card.dart';
 export 'dialogs/custom_alert_dialog.dart';
+export 'chat/bubble_chat_audio.dart';
