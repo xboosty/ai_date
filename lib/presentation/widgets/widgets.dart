@@ -29,3 +29,4 @@ export 'notifications/notification_card.dart';
 export 'dialogs/custom_alert_dialog.dart';
 export 'dialogs/personal_detail.dart';
 export 'chat/bubble_chat_audio.dart';
+export 'button_bar/users_button_bar.dart';

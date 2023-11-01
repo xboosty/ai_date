@@ -1,3 +1,4 @@
+import 'package:ai_date/presentation/blocs/block_cubit/block_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -7,6 +8,7 @@ import '../../../config/config.dart'
     show
         AppTheme,
         BlockCubit,
+        BlockedUsersLoading,
         HandlerNotification,
         NtsErrorResponse,
         Strings,
@@ -231,7 +233,7 @@ class _CardSeeProfileDetails extends StatefulWidget {
 class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
     with TickerProviderStateMixin {
   late TabController _tabControllerReport;
-  final notifications = getIt<HandlerNotification>();
+
   final List<Tab> tabsReport = <Tab>[
     const Tab(
       icon: Row(
@@ -269,41 +271,6 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
       ],
     )),
   ];
-
-  void _handleBlockUser(BuildContext context, {required Size size}) async {
-    try {
-      Navigator.of(context).pop();
-      Navigator.of(context).pop();
-      await context.read<BlockCubit>().blockedUser(id: widget.user?.id ?? -1);
-      if (!mounted) return;
-      await notifications.ntsSuccessNotification(
-        context,
-        message: 'User successfully blocked',
-        height: size.height * 0.12,
-        width: size.width * 0.90,
-      );
-    } catch (e) {
-      if (!mounted) return;
-      Navigator.of(context).pop();
-      if (e is NtsErrorResponse) {
-        notifications.ntsErrorNotification(
-          context,
-          message: e.message ?? '',
-          height: size.height * 0.12,
-          width: size.width * 0.90,
-        );
-      }
-
-      if (e is DioException) {
-        notifications.ntsErrorNotification(
-          context,
-          message: 'Sorry. Something went wrong. Please try again later',
-          height: size.height * 0.12,
-          width: size.width * 0.90,
-        );
-      }
-    }
-  }
 
   @override
   void initState() {
@@ -367,8 +334,8 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
                     onPressed: () {
                       showModalBottomSheet(
                         context: context,
-                        // showDragHandle: true,
-                        // enableDrag: true,
+                        isDismissible: false,
+                        enableDrag: false,
                         useSafeArea: true,
                         isScrollControlled: false,
                         builder: (BuildContext context) {
@@ -378,7 +345,6 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
                               bottom: false,
                               child: DraggableScrollableSheet(
                                 initialChildSize: 1.0,
-                                // minChildSize: 0.8,
                                 maxChildSize: 1.0,
                                 builder: (BuildContext context,
                                     ScrollController scrollController) {
@@ -401,29 +367,52 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
                                             leading: const CircleAvatarProfile(
                                               image: 'assets/imgs/girl1.png',
                                             ),
-                                            title: const Text(
-                                              'Melissandre (31)',
-                                              style: TextStyle(
+                                            title: Text(
+                                              '${widget.user?.name} (31)',
+                                              style: const TextStyle(
                                                 color: Color(0xFF261638),
                                                 fontSize: 20,
                                                 fontFamily: Strings.fontFamily,
                                                 fontWeight: FontWeight.w600,
                                               ),
                                             ),
-                                            trailing: IconButton(
-                                              onPressed: () =>
-                                                  Navigator.of(context).pop(),
-                                              icon: const Icon(
-                                                Icons.cancel_outlined,
-                                                color: AppTheme.disabledColor,
-                                              ),
+                                            trailing: BlocBuilder<BlockCubit,
+                                                BlockState>(
+                                              builder: (context, state) {
+                                                return IconButton(
+                                                  onPressed: (state
+                                                          is BlockedUsersLoading)
+                                                      ? null
+                                                      : () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                  icon: const Icon(
+                                                    Icons.cancel_outlined,
+                                                    color:
+                                                        AppTheme.disabledColor,
+                                                  ),
+                                                );
+                                              },
                                             ),
                                           ),
                                         ),
                                         const SizedBox(height: 25.0),
-                                        TabBar(
-                                          controller: _tabControllerReport,
-                                          tabs: tabsReport,
+                                        BlocBuilder<BlockCubit, BlockState>(
+                                          builder: (context, state) {
+                                            return TabBar(
+                                              controller: _tabControllerReport,
+                                              tabs: tabsReport,
+                                              onTap: (index) {
+                                                if ((index == 0) &&
+                                                    (state ==
+                                                        BlockedUsersLoading())) {
+                                                  _tabControllerReport.index =
+                                                      1;
+                                                }
+                                              },
+                                            );
+                                          },
                                         ),
                                         Expanded(
                                           child: TabBarView(
@@ -432,116 +421,7 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
                                             controller: _tabControllerReport,
                                             children: [
                                               _ReportUserPage(size: size),
-                                              Container(
-                                                margin:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 20,
-                                                        vertical: 20),
-                                                child: ListView(
-                                                  children: [
-                                                    const Text(
-                                                      'ARE YOU SURE YOU WANT TO BLOCK THIS MELISSANDRE?',
-                                                      style: TextStyle(
-                                                        color:
-                                                            Color(0xFF686E8C),
-                                                        fontSize: 14,
-                                                        fontFamily:
-                                                            Strings.fontFamily,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
-                                                    ),
-                                                    const Text(
-                                                      'Your Blocked list will be on your profile settings',
-                                                      style: TextStyle(
-                                                        color:
-                                                            Color(0xFF9CA4BF),
-                                                        fontSize: 12,
-                                                        fontFamily:
-                                                            Strings.fontFamily,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                        height:
-                                                            size.height * 0.15),
-                                                    ButtonBar(
-                                                      alignment:
-                                                          MainAxisAlignment
-                                                              .spaceAround,
-                                                      children: [
-                                                        SizedBox(
-                                                          width:
-                                                              size.width * 0.40,
-                                                          child: FilledButton(
-                                                            onPressed: () =>
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop(),
-                                                            style: FilledButton
-                                                                .styleFrom(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .symmetric(
-                                                                horizontal: 30,
-                                                                vertical: 10,
-                                                              ),
-                                                            ),
-                                                            child: const Text(
-                                                              'NO',
-                                                              style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 16,
-                                                                fontFamily: Strings
-                                                                    .fontFamily,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width:
-                                                              size.width * 0.40,
-                                                          child: FilledButton(
-                                                            onPressed: () {},
-                                                            // =>
-                                                            //     _handleBlockUser(
-                                                            //   context,
-                                                            //   size: size,
-                                                            // ),
-                                                            style: FilledButton
-                                                                .styleFrom(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .symmetric(
-                                                                horizontal: 30,
-                                                                vertical: 10,
-                                                              ),
-                                                            ),
-                                                            child: const Text(
-                                                              'YES',
-                                                              style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 16,
-                                                                fontFamily: Strings
-                                                                    .fontFamily,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        )
-                                                      ],
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
+                                              _BlockUserPage(user: widget.user)
                                             ],
                                           ),
                                         ),
@@ -1040,6 +920,263 @@ class _TitleReportUser extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _BlockUserPage extends StatefulWidget {
+  _BlockUserPage({super.key, required this.user});
+
+  final UserEntity? user;
+
+  @override
+  State<_BlockUserPage> createState() => _BlockUserPageState();
+}
+
+class _BlockUserPageState extends State<_BlockUserPage> {
+  final notifications = getIt<HandlerNotification>();
+
+  void _handleBlockUser(BuildContext context, {required Size size}) async {
+    try {
+      await context.read<BlockCubit>().blockedUser(id: widget.user?.id ?? -1);
+      if (!mounted) return;
+      await notifications.ntsSuccessNotification(
+        context,
+        message: 'User successfully blocked',
+        height: size.height * 0.12,
+        width: size.width * 0.90,
+      );
+      if (!mounted) return;
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+    } catch (e) {
+      if (!mounted) return;
+      Navigator.of(context).pop();
+      if (e is NtsErrorResponse) {
+        notifications.ntsErrorNotification(
+          context,
+          message: e.message ?? '',
+          height: size.height * 0.12,
+          width: size.width * 0.90,
+        );
+      }
+
+      if (e is DioException) {
+        notifications.ntsErrorNotification(
+          context,
+          message: 'Sorry. Something went wrong. Please try again later',
+          height: size.height * 0.12,
+          width: size.width * 0.90,
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final block = context.watch<BlockCubit>();
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: ListView(
+        children: [
+          Text(
+            'ARE YOU SURE YOU WANT TO BLOCK THIS ${widget.user?.name.toUpperCase()}?',
+            style: const TextStyle(
+              color: Color(0xFF686E8C),
+              fontSize: 14,
+              fontFamily: Strings.fontFamily,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const Text(
+            'Your Blocked list will be on your profile settings',
+            style: TextStyle(
+              color: Color(0xFF9CA4BF),
+              fontSize: 12,
+              fontFamily: Strings.fontFamily,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: size.height * 0.15),
+          ButtonBar(
+            alignment: MainAxisAlignment.spaceAround,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                  width: size.width * 0.40,
+                  child: switch (block.state) {
+                    BlockedUsersLoading() => FilledButton(
+                        onPressed: null,
+                        style: FilledButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 10,
+                          ),
+                        ),
+                        child: const Text(
+                          'NO',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontFamily: Strings.fontFamily,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    // TODO: Handle this case.
+                    BlockedUsersInitial() => FilledButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        style: FilledButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 10,
+                          ),
+                        ),
+                        child: const Text(
+                          'NO',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontFamily: Strings.fontFamily,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    // TODO: Handle this case.
+                    BlockedUsersData() => FilledButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        style: FilledButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 10,
+                          ),
+                        ),
+                        child: const Text(
+                          'NO',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontFamily: Strings.fontFamily,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    // TODO: Handle this case.
+                    BlockedUsersError() => FilledButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        style: FilledButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 10,
+                          ),
+                        ),
+                        child: const Text(
+                          'NO',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontFamily: Strings.fontFamily,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                  }),
+              SizedBox(
+                  width: size.width * 0.40,
+                  child: switch (block.state) {
+                    BlockedUsersData() => FilledButton(
+                        onPressed: () => _handleBlockUser(
+                          context,
+                          size: size,
+                        ),
+                        style: FilledButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 10,
+                          ),
+                        ),
+                        child: const Text(
+                          'YES',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontFamily: Strings.fontFamily,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    // TODO: Handle this case.
+                    BlockedUsersInitial() => FilledButton(
+                        onPressed: () => _handleBlockUser(
+                          context,
+                          size: size,
+                        ),
+                        style: FilledButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 10,
+                          ),
+                        ),
+                        child: const Text(
+                          'YES',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontFamily: Strings.fontFamily,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    // TODO: Handle this case.
+                    BlockedUsersLoading() => FilledButton(
+                        onPressed: () => _handleBlockUser(
+                          context,
+                          size: size,
+                        ),
+                        style: FilledButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 10,
+                          ),
+                        ),
+                        child: const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        ),
+                      ),
+                    // TODO: Handle this case.
+                    BlockedUsersError() => FilledButton(
+                        onPressed: () => _handleBlockUser(
+                          context,
+                          size: size,
+                        ),
+                        style: FilledButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 10,
+                          ),
+                        ),
+                        child: const Text(
+                          'YES',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontFamily: Strings.fontFamily,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                  })
+            ],
+          )
+        ],
       ),
     );
   }

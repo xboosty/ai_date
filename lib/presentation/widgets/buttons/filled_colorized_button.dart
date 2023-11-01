@@ -11,6 +11,7 @@ class FilledColorizedButton extends StatelessWidget {
     required this.isTrailingIcon,
     this.onTap,
     required this.icon,
+    this.gradient = AppTheme.linearGradient,
   });
 
   final double width;
@@ -19,6 +20,7 @@ class FilledColorizedButton extends StatelessWidget {
   final bool isTrailingIcon;
   final Icon icon;
   final GestureTapCallback? onTap;
+  final Gradient? gradient;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class FilledColorizedButton extends StatelessWidget {
         height: height,
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         decoration: ShapeDecoration(
-          gradient: AppTheme.linearGradient,
+          gradient: gradient,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
