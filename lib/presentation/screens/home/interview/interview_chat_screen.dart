@@ -8,8 +8,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:record/record.dart';
 
-import '../../../config/config.dart' show AppTheme, Strings;
-import '../../widgets/widgets.dart' show BubbleChatAudio;
+import '../../../../config/config.dart' show AppTheme, Strings;
+import '../../../widgets/widgets.dart' show BubbleChatAudio;
 
 class InterviewChatScreen extends StatefulWidget {
   const InterviewChatScreen({super.key});

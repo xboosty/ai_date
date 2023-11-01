@@ -58,7 +58,7 @@ class CardProfile extends StatelessWidget {
             Text(
               '${user.name} (24)',
               style: const TextStyle(
-                color: Color(0xFF9CA4BF),
+                color: Colors.white,
                 fontSize: 22,
                 fontFamily: Strings.fontFamily,
                 fontWeight: FontWeight.w600,
@@ -68,7 +68,7 @@ class CardProfile extends StatelessWidget {
             const Text(
               'Lives in New York',
               style: TextStyle(
-                color: Color(0xFF9CA4BF),
+                color: Colors.white,
                 fontSize: 12,
                 fontFamily: Strings.fontFamily,
                 fontWeight: FontWeight.w600,
