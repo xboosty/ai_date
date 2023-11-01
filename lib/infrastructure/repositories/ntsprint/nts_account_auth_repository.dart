@@ -10,6 +10,12 @@ class NtsAccountAuthRepository extends AccountRepository<UserEntity> {
   }
 
   @override
+  Future<UserEntity> registerUserSocialRepository(Map<String, dynamic> user) async {
+    final UserEntity userEntity = await datasource.registerUserSocial(user);
+    return userEntity;
+  }
+
+  @override
   Future<bool> verificationCodeRepository(Map<String, dynamic> verify) async {
     final bool isVerify = await datasource.verificationAccount(verify);
     return isVerify;
