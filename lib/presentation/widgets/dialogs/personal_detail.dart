@@ -1,782 +1,220 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:appinio_swiper/appinio_swiper.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gradient_widgets/gradient_widgets.dart';
 
 import '../../../config/config.dart'
     show
         AppTheme,
         BlockCubit,
-        CouplesCubit,
-        CouplesData,
-        CouplesError,
-        CouplesInitial,
-        CouplesLoading,
-        CouplesState,
         HandlerNotification,
         NtsErrorResponse,
         Strings,
         getIt;
 import '../../../domain/domain.dart' show UserEntity;
-import '../../widgets/widgets.dart'
+import '../widgets.dart'
     show
         ButtonsInfoProfile,
         CardGradientPicture,
         CardInfoProfile,
-        CircleAvatarProfile,
-        CircularOutlineGradientButton;
+        CircleAvatarProfile;
 
-class DiscoverPage extends StatefulWidget {
-  const DiscoverPage({super.key});
+class PersonalDetail extends StatelessWidget {
+  const PersonalDetail({super.key, required this.user, required this.hobbies});
 
-  static const String routeName = '/discover';
-
-  @override
-  State<DiscoverPage> createState() => _DiscoverPageState();
-}
-
-class _DiscoverPageState extends State<DiscoverPage>
-    with TickerProviderStateMixin {
-  late TabController _tabController;
-  List<Widget> tabs = const <Widget>[
-    Tab(
-      height: 80,
-      // text: 'Flights',
-      child: IconButtonTitle(
-        message: 'Suggest',
-        icon: Icon(Icons.settings_suggest),
-      ),
-      // child: IconButtonTitle(),
-    ),
-    Tab(
-      height: 80,
-      // text: 'Flights',
-      child: IconButtonTitle(
-        message: 'Mutual Likes',
-        icon: Icon(Icons.favorite_border_outlined),
-      ),
-      // child: IconButtonTitle(),
-    ),
-    Tab(
-      height: 80,
-      // text: 'Flights',
-      child: IconButtonTitle(
-        message: 'Like me',
-        icon: Icon(Icons.tag),
-      ),
-      // child: IconButtonTitle(),
-    ),
-    Tab(
-      height: 80,
-      // text: 'Flights',
-      child: IconButtonTitle(
-        message: 'Like sent',
-        icon: Icon(Icons.supervisor_account),
-      ),
-      // child: IconButtonTitle(),
-    ),
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController =
-        TabController(vsync: this, length: tabs.length, initialIndex: 0);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
+  final UserEntity user;
+  final List<String> hobbies;
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Discover',
-          style: TextStyle(
-            color: Color(0xFF261638),
-            fontSize: 28,
-            fontFamily: Strings.fontFamily,
-            fontWeight: FontWeight.w700,
+    return DraggableScrollableSheet(
+      initialChildSize: 1.0,
+      minChildSize: 1.0,
+      maxChildSize: 1.0,
+      builder: (BuildContext context, ScrollController scrollController) {
+        return ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(28),
+            topRight: Radius.circular(28),
           ),
-        ),
-        centerTitle: false,
-        actions: [
-          const Icon(Icons.tune, color: Colors.grey),
-          SizedBox(width: size.width * 0.04),
-        ],
-        bottom: TabBar(
-          controller: _tabController,
-          dividerColor: Colors.transparent,
-          tabs: tabs,
-        ),
-      ),
-      body: TabBarView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: _tabController,
-        children: <Widget>[
-          Expanded(
+          child: SingleChildScrollView(
+            controller: scrollController,
             child: Column(
               children: [
-                const _SimilaritySlider(initPercent: 0.0),
-                Container(
-                  width: size.width,
-                  margin: const EdgeInsets.all(8.0),
-                  child: Column(
+                _CardSeeProfileDetails(
+                  user: user,
+                ),
+                SizedBox(height: size.height * 0.02),
+                _SmallDescriptionProfile(size: size),
+                const ButtonsInfoProfile(
+                  titleOne: '31 years old',
+                  titleTwo: '165 cm',
+                  titleThree: 'Virgo',
+                  iconOne: Icons.cake,
+                  iconTwo: Icons.straighten,
+                  iconThree: Icons.calendar_month,
+                ),
+                CardGradientPicture(
+                  image: const DecorationImage(
+                    image: AssetImage('assets/imgs/girl2.png'),
+                    fit: BoxFit.cover,
+                  ),
+                  width: size.width * 0.90,
+                  height: size.height * 0.55,
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 15.0),
+                  child: Text(
+                    'Personal questions & background',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF6C2EBC),
+                      fontSize: 18,
+                      fontFamily: Strings.fontFamily,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const ButtonsInfoProfile(
+                  titleOne: 'Vaccinated',
+                  titleTwo: 'Sometimes',
+                  titleThree: 'No',
+                  iconOne: Icons.vaccines,
+                  iconTwo: Icons.smoking_rooms,
+                  iconThree: Icons.medication,
+                ),
+                _PersonalQuestionInfo(size: size),
+                SizedBox(height: size.height * 0.02),
+                _OthersPicturesProfile(size: size),
+                const Padding(
+                  padding: EdgeInsets.only(top: 15.0),
+                  child: Text(
+                    'Interests & lifestyle',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Color(0xFF6C2EBC),
+                      fontSize: 18,
+                      fontFamily: Strings.fontFamily,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                _HobbiesProfile(size: size, hobbies: hobbies),
+                SizedBox(height: size.height * 0.02),
+                CardInfoProfile(
+                  width: size.width * 0.95,
+                  height: size.height * 0.42,
+                  child: const Column(
                     children: [
-                      BlocBuilder<CouplesCubit, CouplesState>(
-                        builder: (context, state) => switch (state) {
-                          CouplesInitial() => const _UserCard(
-                              couples: [],
-                            ),
-                          CouplesLoading() => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          CouplesData() => _UserCard(
-                              couples: state.couples,
-                            ),
-                          CouplesError() => Container()
-                        },
+                      ListTile(
+                        leading: Icon(
+                          Icons.eco,
+                          color: Color(0xFFD9D9D9),
+                        ),
+                        title: Text(
+                          'Vegetarian',
+                          style: TextStyle(
+                            color: Color(0xFF7F87A6),
+                            fontSize: 14,
+                            fontFamily: Strings.fontFamily,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Divider(),
+                      ListTile(
+                        leading: Icon(
+                          Icons.fitness_center,
+                          color: Color(0xFFD9D9D9),
+                        ),
+                        title: Text(
+                          'Vegetarian',
+                          style: TextStyle(
+                            color: Color(0xFF7F87A6),
+                            fontSize: 14,
+                            fontFamily: Strings.fontFamily,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Divider(),
+                      ListTile(
+                        leading: Icon(
+                          Icons.child_friendly,
+                          color: Color(0xFFD9D9D9),
+                        ),
+                        title: Text(
+                          'Has children',
+                          style: TextStyle(
+                            color: Color(0xFF7F87A6),
+                            fontSize: 14,
+                            fontFamily: Strings.fontFamily,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Divider(),
+                      ListTile(
+                        leading: Icon(
+                          Icons.pets,
+                          color: Color(0xFFD9D9D9),
+                        ),
+                        title: Text(
+                          'Dog',
+                          style: TextStyle(
+                            color: Color(0xFF7F87A6),
+                            fontSize: 14,
+                            fontFamily: Strings.fontFamily,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
-          ),
-          Center(child: Text('Trips')),
-          Center(child: Text('Explore')),
-          Center(child: Text('Explore')),
-        ],
-      ),
-    );
-  }
-}
-
-class _SimilaritySlider extends StatefulWidget {
-  const _SimilaritySlider({
-    super.key,
-    required this.initPercent,
-  });
-
-  final double initPercent;
-
-  @override
-  State<_SimilaritySlider> createState() => _SimilaritySliderState();
-}
-
-class _SimilaritySliderState extends State<_SimilaritySlider> {
-  late double percent;
-
-  @override
-  void initState() {
-    super.initState();
-    percent = widget.initPercent;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
-    return SizedBox(
-      width: size.width,
-      height: size.height * 0.10,
-      child: Column(
-        children: [
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 15.0, vertical: 4.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Similarity Slider',
-                  style: TextStyle(
-                    color: Color(0xFF686E8C),
-                    fontSize: 14,
-                    fontFamily: Strings.fontFamily,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Text(
-                  '${percent.ceil()} %',
-                  style: const TextStyle(
-                    color: Color(0xFF6C2EBC),
-                    fontSize: 12,
-                    fontFamily: Strings.fontFamily,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            width: size.width,
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: CupertinoSlider(
-              value: percent,
-              min: 0,
-              max: 100,
-              onChanged: (value) {
-                setState(() {
-                  percent = value;
-                });
-              },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class IconButtonTitle extends StatelessWidget {
-  const IconButtonTitle({
-    super.key,
-    required this.message,
-    required this.icon,
-  });
-
-  final String message;
-  final Widget icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        IconButton(
-          onPressed: null,
-          style: IconButton.styleFrom(
-            disabledBackgroundColor: const Color(0x3F6C2EBC),
-          ),
-          icon: icon,
-        ),
-        Text(
-          message,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 10,
-            fontFamily: Strings.fontFamily,
-            // fontWeight: FontWeight.w600,
-          ),
-        )
-      ],
-    );
-  }
-}
-
-class _UserCard extends StatefulWidget {
-  const _UserCard({required this.couples});
-
-  final List<UserEntity> couples;
-
-  @override
-  State<_UserCard> createState() => _UserCardState();
-}
-
-class _UserCardState extends State<_UserCard> {
-  final AppinioSwiperController controller = AppinioSwiperController();
-
-  final List<String> _hobbies = [
-    'Sushi',
-    'Books',
-    'Basketball',
-    'Travel',
-    'Movie'
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
-    return SizedBox(
-      height: size.height * 0.58,
-      child: AppinioSwiper(
-        controller: controller,
-        cardsCount: 10,
-        cardsSpacing: 0.0,
-        onSwiping: (AppinioSwiperDirection direction) {
-          print(direction.toString());
-        },
-        cardsBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            onTap: () {
-              showModalBottomSheet(
-                context: context,
-                // showDragHandle: true,
-                // enableDrag: true,
-                useSafeArea: true,
-                isScrollControlled: true,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(28),
-                    topRight: Radius.circular(28),
-                  ),
-                ),
-                builder: (BuildContext context) {
-                  return DraggableScrollableSheet(
-                    initialChildSize: 1.0,
-                    minChildSize: 1.0,
-                    maxChildSize: 1.0,
-                    builder: (BuildContext context,
-                        ScrollController scrollController) {
-                      return ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(28),
-                          topRight: Radius.circular(28),
-                        ),
-                        child: SingleChildScrollView(
-                          controller: scrollController,
-                          child: Column(
-                            children: [
-                              _CardSeeProfileDetails(
-                                user: widget.couples[index],
-                              ),
-                              SizedBox(height: size.height * 0.02),
-                              _SmallDescriptionProfile(size: size),
-                              const ButtonsInfoProfile(
-                                titleOne: '31 years old',
-                                titleTwo: '165 cm',
-                                titleThree: 'Virgo',
-                                iconOne: Icons.cake,
-                                iconTwo: Icons.straighten,
-                                iconThree: Icons.calendar_month,
-                              ),
-                              CardGradientPicture(
-                                image: const DecorationImage(
-                                  image: AssetImage('assets/imgs/girl2.png'),
-                                  fit: BoxFit.cover,
-                                ),
-                                width: size.width * 0.90,
-                                height: size.height * 0.55,
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.only(top: 15.0),
-                                child: Text(
-                                  'Personal questions & background',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Color(0xFF6C2EBC),
-                                    fontSize: 18,
-                                    fontFamily: Strings.fontFamily,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                              const ButtonsInfoProfile(
-                                titleOne: 'Vaccinated',
-                                titleTwo: 'Sometimes',
-                                titleThree: 'No',
-                                iconOne: Icons.vaccines,
-                                iconTwo: Icons.smoking_rooms,
-                                iconThree: Icons.medication,
-                              ),
-                              _PersonalQuestionInfo(size: size),
-                              SizedBox(height: size.height * 0.02),
-                              _OthersPicturesProfile(size: size),
-                              const Padding(
-                                padding: EdgeInsets.only(top: 15.0),
-                                child: Text(
-                                  'Interests & lifestyle',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Color(0xFF6C2EBC),
-                                    fontSize: 18,
-                                    fontFamily: Strings.fontFamily,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                              _HobbiesProfile(size: size, hobbies: _hobbies),
-                              SizedBox(height: size.height * 0.02),
-                              CardInfoProfile(
-                                width: size.width * 0.95,
-                                height: size.height * 0.42,
-                                child: const Column(
-                                  children: [
-                                    ListTile(
-                                      leading: Icon(
-                                        Icons.eco,
-                                        color: Color(0xFFD9D9D9),
-                                      ),
-                                      title: Text(
-                                        'Vegetarian',
-                                        style: TextStyle(
-                                          color: Color(0xFF7F87A6),
-                                          fontSize: 14,
-                                          fontFamily: Strings.fontFamily,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                    Divider(),
-                                    ListTile(
-                                      leading: Icon(
-                                        Icons.fitness_center,
-                                        color: Color(0xFFD9D9D9),
-                                      ),
-                                      title: Text(
-                                        'Vegetarian',
-                                        style: TextStyle(
-                                          color: Color(0xFF7F87A6),
-                                          fontSize: 14,
-                                          fontFamily: Strings.fontFamily,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                    Divider(),
-                                    ListTile(
-                                      leading: Icon(
-                                        Icons.child_friendly,
-                                        color: Color(0xFFD9D9D9),
-                                      ),
-                                      title: Text(
-                                        'Has children',
-                                        style: TextStyle(
-                                          color: Color(0xFF7F87A6),
-                                          fontSize: 14,
-                                          fontFamily: Strings.fontFamily,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                    Divider(),
-                                    ListTile(
-                                      leading: Icon(
-                                        Icons.pets,
-                                        color: Color(0xFFD9D9D9),
-                                      ),
-                                      title: Text(
-                                        'Dog',
-                                        style: TextStyle(
-                                          color: Color(0xFF7F87A6),
-                                          fontSize: 14,
-                                          fontFamily: Strings.fontFamily,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: size.height * 0.02),
-                              CardGradientPicture(
-                                width: size.width * 0.90,
-                                height: size.height * 0.55,
-                                image: const DecorationImage(
-                                  image: AssetImage('assets/imgs/girl7.png'),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              SizedBox(height: size.height * 0.02),
-                              const Text(
-                                'Vision for the future',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Color(0xFF6C2EBC),
-                                  fontSize: 20,
-                                  fontFamily: Strings.fontFamily,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              SizedBox(height: size.height * 0.02),
-                              _OverviewProfileCard(
-                                size: size,
-                                title: 'FINANCIAL HABITS AND GOALS',
-                                description:
-                                    'Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper',
-                              ),
-                              SizedBox(height: size.height * 0.02),
-                              _OverviewProfileCard(
-                                size: size,
-                                title: 'RELATIONSHIP HISTORY AND VIEWS',
-                                description:
-                                    'Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper',
-                              ),
-                              SizedBox(height: size.height * 0.1),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                    controller: DraggableScrollableController(),
-                  );
-                },
-              );
-            },
-            child: _CardCouple(
-              controller: controller,
-              user: widget.couples[index],
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class _CardCouple extends StatelessWidget {
-  const _CardCouple({
-    super.key,
-    required this.controller,
-    required this.user,
-  });
-
-  final AppinioSwiperController controller;
-  final UserEntity user;
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
-    return CachedNetworkImage(
-      imageUrl: user.avatar,
-      imageBuilder: (context, imageProvider) => Container(
-        width: size.width * 0.80,
-        height: size.height,
-        alignment: Alignment.topCenter,
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          clipBehavior: Clip.none,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(1.5),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                gradient: AppTheme.linearGradient,
-              ),
-              child: Container(
-                width: size.width * 0.78,
-                height: size.height * 0.50,
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: const Color(0xFFEFF0FB),
-                  image: DecorationImage(
-                    image: imageProvider,
+                SizedBox(height: size.height * 0.02),
+                CardGradientPicture(
+                  width: size.width * 0.90,
+                  height: size.height * 0.55,
+                  image: const DecorationImage(
+                    image: AssetImage('assets/imgs/girl7.png'),
                     fit: BoxFit.cover,
                   ),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          style: IconButton.styleFrom(
-                            backgroundColor: Colors.white,
-                          ),
-                          icon: const Icon(
-                            Icons.note_add_rounded,
-                            color: Color(0xFFD9D9D9),
-                          ),
-                        )
-                      ],
-                    ),
-                    const Spacer(),
-                    Text(
-                      '${user.name} (24)',
-                      style: const TextStyle(
-                        color: Color(0xFF9CA4BF),
-                        fontSize: 22,
-                        fontFamily: Strings.fontFamily,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: size.height * 0.02),
-                    const Text(
-                      'Lives in New York',
-                      style: TextStyle(
-                        color: Color(0xFF9CA4BF),
-                        fontSize: 12,
-                        fontFamily: Strings.fontFamily,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: size.height * 0.02),
-                    FilledButton(
-                      onPressed: () {},
-                      style: FilledButton.styleFrom(
-                        backgroundColor: Colors.white,
-                      ),
-                      child: const Text(
-                        '95% match',
-                        style: TextStyle(
-                          color: Color(0xFF9CA4BF),
-                          fontSize: 12,
-                          fontFamily: Strings.fontFamily,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    )
-                  ],
+                SizedBox(height: size.height * 0.02),
+                const Text(
+                  'Vision for the future',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFF6C2EBC),
+                    fontSize: 20,
+                    fontFamily: Strings.fontFamily,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
+                SizedBox(height: size.height * 0.02),
+                _OverviewProfileCard(
+                  size: size,
+                  title: 'FINANCIAL HABITS AND GOALS',
+                  description:
+                      'Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper',
+                ),
+                SizedBox(height: size.height * 0.02),
+                _OverviewProfileCard(
+                  size: size,
+                  title: 'RELATIONSHIP HISTORY AND VIEWS',
+                  description:
+                      'Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper Lorem ipsum dolor sit amet consectetur. Aliquet ullamcorper',
+                ),
+                SizedBox(height: size.height * 0.1),
+              ],
             ),
-            Positioned(
-              bottom: -25.0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularOutlineGradientButton(
-                    onTap: () {
-                      controller.swipeLeft();
-                    },
-                    width: 56.0,
-                    height: 56.0,
-                    child: const Icon(
-                      Icons.close,
-                      color: Color.fromARGB(255, 209, 70, 15),
-                      size: 32,
-                    ),
-                  ),
-                  SizedBox(width: size.width * 0.30),
-                  CircularGradientButton(
-                    heroTag: 'Like',
-                    callback: () {
-                      controller.swipeRight();
-                    },
-                    gradient: AppTheme.linearGradientReverse,
-                    child: const Icon(Icons.favorite, size: 32),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-      placeholder: (context, url) =>
-          const Center(child: CircularProgressIndicator()),
-      errorWidget: (context, url, error) => Container(
-        width: size.width * 0.80,
-        height: size.height,
-        alignment: Alignment.center,
-        // color: Colors.blue,
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          clipBehavior: Clip.none,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(1.5),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                gradient: AppTheme.linearGradient,
-              ),
-              child: Container(
-                width: size.width * 0.78,
-                height: size.height * 0.50,
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: const Color(0xFFEFF0FB),
-                  image: const DecorationImage(
-                    image: AssetImage('assets/imgs/photo_camera_front.png'),
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          style: IconButton.styleFrom(
-                            backgroundColor: Colors.white,
-                          ),
-                          icon: const Icon(
-                            Icons.note_add_rounded,
-                            color: Color(0xFFD9D9D9),
-                          ),
-                        )
-                      ],
-                    ),
-                    const Spacer(),
-                    Text(
-                      '${user.name} (24)',
-                      style: const TextStyle(
-                        color: Color(0xFF9CA4BF),
-                        fontSize: 22,
-                        fontFamily: Strings.fontFamily,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: size.height * 0.02),
-                    const Text(
-                      'Lives in New York',
-                      style: TextStyle(
-                        color: Color(0xFF9CA4BF),
-                        fontSize: 12,
-                        fontFamily: Strings.fontFamily,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: size.height * 0.02),
-                    FilledButton(
-                      onPressed: () {},
-                      style: FilledButton.styleFrom(
-                        backgroundColor: Colors.white,
-                      ),
-                      child: const Text(
-                        '95% match',
-                        style: TextStyle(
-                          color: Color(0xFF9CA4BF),
-                          fontSize: 12,
-                          fontFamily: Strings.fontFamily,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: -25.0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularOutlineGradientButton(
-                    onTap: () {
-                      controller.swipeLeft();
-                    },
-                    width: 56.0,
-                    height: 56.0,
-                    child: const Icon(
-                      Icons.close,
-                      color: Color.fromARGB(255, 209, 70, 15),
-                      size: 32,
-                    ),
-                  ),
-                  SizedBox(width: size.width * 0.30),
-                  CircularGradientButton(
-                    heroTag: 'Like',
-                    callback: () {
-                      controller.swipeRight();
-                    },
-                    gradient: AppTheme.linearGradientReverse,
-                    child: const Icon(Icons.favorite, size: 32),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
+          ),
+        );
+      },
+      controller: DraggableScrollableController(),
     );
   }
 }

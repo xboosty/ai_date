@@ -12,5 +12,5 @@ export 'home/home_screen.dart';
 export 'home/profile/profile_page.dart';
 export 'home/interview/interview_page.dart';
 export 'home/interview/intro_interview_page.dart';
-export 'interview/interview_chat_screen.dart';
-export 'discover/discover_page.dart';
+export 'home/interview/interview_chat_screen.dart';
+export 'home/discover/discover_page.dart';
