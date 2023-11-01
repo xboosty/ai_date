@@ -1,6 +1,11 @@
 class UserState {
   final String name;
-  bool isConnected;
+  final bool isConnected;
+  bool isSelected;
 
-  UserState(this.name, this.isConnected);
+  UserState({
+    required this.name,
+    required this.isConnected,
+    this.isSelected = false,
+  });
 }

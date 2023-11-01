@@ -143,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
               const DiscoverPage(),
               // const ChatEmptyPage(),
-              const ChatNewPage(),
+              ChatNewPage(),
             ],
           ),
         ),

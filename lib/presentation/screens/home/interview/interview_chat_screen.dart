@@ -131,7 +131,7 @@ class _InterviewChatScreenState extends State<InterviewChatScreen> {
         height: size.height,
         child: Column(
           children: [
-            const _ChatUser(),
+            const _ChatView(),
             SafeArea(
               child: Container(
                 height: size.height * 0.08,
@@ -270,12 +270,12 @@ class _ChatAI extends StatelessWidget {
                   child: Column(
                     children: [
                       ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.red,
-                          backgroundImage: urlAvatar != ''
-                              ? CachedNetworkImageProvider(urlAvatar)
-                              : null,
-                        ),
+                        // leading: CircleAvatar(
+                        //   backgroundColor: Colors.red,
+                        //   backgroundImage: urlAvatar != ''
+                        //       ? CachedNetworkImageProvider(urlAvatar)
+                        //       : null,
+                        // ),
                         title: Text(
                           message,
                           style: const TextStyle(

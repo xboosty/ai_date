@@ -175,7 +175,7 @@ class _UnbloquedProfileState extends State<_UnbloquedProfile> {
                   child: Column(
                     children: [
                       const Text(
-                        'Bloqued user',
+                        'Unbloqued user',
                         style: TextStyle(
                           color: Color(0xFF261638),
                           fontSize: 20,
