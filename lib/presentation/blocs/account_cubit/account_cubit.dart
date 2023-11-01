@@ -28,6 +28,22 @@ class AccountCubit extends Cubit<AccountState> {
     }
   }
 
+  Future<void> registerUserSocial(Map<String, dynamic> userRegister) async {
+    emit(const AccountState(status: UserRegisterStatus.loading));
+    try {
+      final user = await repo.registerUserSocialRepository(userRegister);
+      emit(AccountState(status: UserRegisterStatus.success, user: user));
+    } catch (e) {
+      emit(
+        AccountState(
+          status: UserRegisterStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
+      rethrow;
+    }
+  }
+
   Future<void> verificationCode(Map<String, dynamic> verification) async {
     emit(const AccountState(status: UserRegisterStatus.loading));
     try {

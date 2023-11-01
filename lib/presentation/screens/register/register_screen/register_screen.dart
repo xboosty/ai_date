@@ -109,7 +109,11 @@ class _RegisterViewState extends State<RegisterView> {
       // If the form is valid, save the form and perform an action.
       _formKey.currentState!.save();
       // Here, you can use the _phoneNumber variable for further processing.
-      await _submitRegisterUser(context, size: size);
+      if (widget.firebaseUserCredential == null) {
+        await _submitRegisterUser(context, size: size);
+      } else {
+        await _submitRegisterUserSocial(context, size: size);
+      }
     }
   }
 
@@ -149,6 +153,48 @@ class _RegisterViewState extends State<RegisterView> {
     };
     try {
       await context.read<AccountCubit>().registerUser(user);
+      _navigations.nextPage(pageviewController: pageviewController);
+    } catch (e) {
+      if (!mounted) return;
+      if (e is NtsErrorResponse) {
+        await _notifications.ntsErrorNotification(
+          context,
+          message: e.message ?? '',
+          height: size.height * 0.12,
+          width: size.width * 0.90,
+        );
+      }
+
+      if (!mounted) return;
+      if (e is DioException) {
+        await _notifications.ntsErrorNotification(
+          context,
+          message: 'Sorry. Something went wrong. Please try again later',
+          height: size.height * 0.12,
+          width: size.width * 0.90,
+        );
+      }
+    }
+  }
+
+  Future<void> _submitRegisterUserSocial(BuildContext context,
+      {required Size size}) async {
+    final idToken =
+        await widget.firebaseUserCredential?.user?.getIdTokenResult();
+
+    final user = {
+      "tokenId": idToken?.token ?? '',
+      "fullName": _fullNameCtrl.text,
+      "birthday": "2023-10-07T05:16:16.305Z",
+      "gender": _genderSelected?.id ?? -1,
+      "sexualOrientation": _sexualitySelected?.id ?? -1,
+      "phone": {"code": codeNumber, "number": phoneNumberUser},
+      "isGenderVisible": isGenderVisibleProfile,
+      "isSexualityVisible": isSexualityVisibleProfile,
+    };
+
+    try {
+      await context.read<AccountCubit>().registerUserSocial(user);
       _navigations.nextPage(pageviewController: pageviewController);
     } catch (e) {
       if (!mounted) return;
@@ -215,36 +261,64 @@ class _RegisterViewState extends State<RegisterView> {
 
   Future<void> _formRegisterSubmit(BuildContext context,
       {required double page, required Size size}) async {
-    switch (page) {
-      case 0:
-        _submitUsername();
-        break;
-      case 1:
-        _submitEmail();
-        break;
-      case 2:
-        _submitPassword();
-        break;
-      case 3:
-        _navigations.nextPage(pageviewController: pageviewController);
-        break;
-      case 4:
-        _navigations.nextPage(pageviewController: pageviewController);
-        break;
-      case 5:
-        widget.firebaseUserCredential == null
-            ? _navigations.nextPage(pageviewController: pageviewController)
-            : () {};
-        break;
-      case 6:
-        await _submitPhoneNumber(size: size);
-        break;
-      case 7:
-        if (!mounted) return;
-        await _submitVerificationCode(context, size: size);
-        break;
-      default:
-        break;
+    if (widget.firebaseUserCredential == null) {
+      switch (page) {
+        case 0:
+          _submitUsername();
+          break;
+        case 1:
+          _submitEmail();
+          break;
+        case 2:
+          _submitPassword();
+          break;
+        case 3:
+          _navigations.nextPage(pageviewController: pageviewController);
+          break;
+        case 4:
+          _navigations.nextPage(pageviewController: pageviewController);
+          break;
+        case 5:
+          widget.firebaseUserCredential == null
+              ? _navigations.nextPage(pageviewController: pageviewController)
+              : () {};
+          break;
+        case 6:
+          await _submitPhoneNumber(size: size);
+          break;
+        case 7:
+          if (!mounted) return;
+          await _submitVerificationCode(context, size: size);
+          break;
+        default:
+          break;
+      }
+    } else {
+      switch (page) {
+        case 0:
+          _submitUsername();
+          break;
+        case 1:
+          _navigations.nextPage(pageviewController: pageviewController);
+          break;
+        case 2:
+          _navigations.nextPage(pageviewController: pageviewController);
+          break;
+        case 3:
+          widget.firebaseUserCredential == null
+              ? _navigations.nextPage(pageviewController: pageviewController)
+              : () {};
+          break;
+        case 4:
+          await _submitPhoneNumber(size: size);
+          break;
+        case 5:
+          if (!mounted) return;
+          await _submitVerificationCode(context, size: size);
+          break;
+        default:
+          break;
+      }
     }
   }
 
@@ -1066,6 +1140,13 @@ class _RegisterViewState extends State<RegisterView> {
             _buildPageGender(size),
             _buildPageSexuality(size),
             _buildPageLocation(size),
+            _buildPagePhoneNumber(size),
+            CodeVerificationStep(
+              pageviewController: pageviewController,
+              focusNodeVerification: _focusNodeVerification,
+              verificationCtrl: _verificationCtrl,
+              onPressed: () => _submitRegisterUserSocial(context, size: size),
+            ),
           ];
     return Scaffold(
       body: Container(
