@@ -385,6 +385,31 @@ class _SignInFormState extends State<SignInForm> {
 
     final firebaseUserCredential =
         await FirebaseAuth.instance.signInWithCredential(credential);
+
+    signInSocial(firebaseUserCredential);
+  }
+
+  Future<void> signInWithApple() async {
+    final appleProvider = AppleAuthProvider();
+    final firebaseUserCredential =
+        await FirebaseAuth.instance.signInWithProvider(appleProvider);
+
+    signInSocial(firebaseUserCredential);
+  }
+
+  Future<void> signInWithFacebook() async {
+    final LoginResult loginResult = await FacebookAuth.instance.login();
+
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(loginResult.accessToken?.token ?? '');
+
+    final firebaseUserCredential = await FirebaseAuth.instance
+        .signInWithCredential(facebookAuthCredential);
+
+    signInSocial(firebaseUserCredential);
+  }
+
+  Future<void> signInSocial(UserCredential firebaseUserCredential) async {
     final idToken = await firebaseUserCredential.user?.getIdTokenResult();
 
     await context.read<AccountCubit>().signInUserSocial(idToken?.token ?? '');
@@ -412,20 +437,6 @@ class _SignInFormState extends State<SignInForm> {
     setState(() {
       _isLoadingSignIn = false;
     });
-  }
-
-  Future<UserCredential> signInWithApple() async {
-    final appleProvider = AppleAuthProvider();
-    return await FirebaseAuth.instance.signInWithProvider(appleProvider);
-  }
-
-  Future<UserCredential> signInWithFacebook() async {
-    final LoginResult loginResult = await FacebookAuth.instance.login();
-
-    final OAuthCredential facebookAuthCredential =
-        FacebookAuthProvider.credential(loginResult.accessToken?.token ?? '');
-
-    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   }
 
   @override
