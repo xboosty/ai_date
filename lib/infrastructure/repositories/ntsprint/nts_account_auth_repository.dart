@@ -23,6 +23,13 @@ class NtsAccountAuthRepository extends AccountRepository<UserEntity> {
   }
 
   @override
+  Future<UserEntity?> signInUserSocialRepository(
+      String token) async {
+    final UserEntity? user = await datasource.logInSocial(token);
+    return user;
+  }
+
+  @override
   Future<bool> logOutRepository() async {
     final bool isLogOut = await datasource.logOut();
     return isLogOut;

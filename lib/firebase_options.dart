@@ -63,6 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '615701910692',
     projectId: 'aidate-test',
     storageBucket: 'aidate-test.appspot.com',
+    androidClientId: '615701910692-fveuii4u0u2nbrf5s4rhugojfgd50dcc.apps.googleusercontent.com',
     iosClientId: '615701910692-8hhlp0r1d71mrg7485sfa48m6etfqs7l.apps.googleusercontent.com',
     iosBundleId: 'com.enterprise.ntsprint.aiDate',
   );

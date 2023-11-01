@@ -1,8 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../config/config.dart' show AppTheme, Strings;
 import '../../widgets/widgets.dart' show FilledColorizedButton, OutlineText;
-import '../screens.dart' show RegisterScreen;
+import '../screens.dart' show RegisterScreen, RegisterScreenArguments;
+
+class IntroductionScreenArguments {
+  final UserCredential? firebaseUserCredential;
+
+  IntroductionScreenArguments(this.firebaseUserCredential);
+}
 
 class IntroductionScreen extends StatelessWidget {
   const IntroductionScreen({super.key});
@@ -12,7 +19,8 @@ class IntroductionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
+    final args = ModalRoute.of(context)!.settings.arguments
+        as IntroductionScreenArguments?;
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -88,7 +96,14 @@ class IntroductionScreen extends StatelessWidget {
                     title: 'LET\'S START',
                     isTrailingIcon: true,
                     onTap: () {
-                      Navigator.of(context).pushNamed(RegisterScreen.routeName);
+                      Navigator.of(context).pushNamed(
+                        RegisterScreen.routeName,
+                        arguments: args != null
+                            ? RegisterScreenArguments(
+                                args.firebaseUserCredential,
+                              )
+                            : null,
+                      );
                     },
                     icon: const Icon(
                       Icons.arrow_right_alt,

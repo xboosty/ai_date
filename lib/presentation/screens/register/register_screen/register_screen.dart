@@ -1,10 +1,13 @@
+import 'package:ai_date/presentation/screens/register/register_screen/constants/constants.dart';
+import 'package:ai_date/presentation/screens/register/register_screen/utils/validators.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:location/location.dart';
 
-import '../../../config/config.dart'
+import '../../../../config/config.dart'
     show
         AccountCubit,
         AccountState,
@@ -17,28 +20,52 @@ import '../../../config/config.dart'
         Strings,
         UserRegisterStatus,
         getIt;
-import '../../widgets/widgets.dart'
+import '../../../widgets/widgets.dart'
     show
-        CircularProgressIndicatorButton,
-        CodeVerificationInput,
         EmailInput,
         FilledColorizedButton,
         FilledColorizedOutlineButton,
         VisibleOnProfile;
-import '../screens.dart' show SignInScreen;
+import '../../screens.dart' show SignInScreen;
+import 'steps/code_verification_step.dart';
+import 'widgets/button_circular_progress.dart';
 
-part 'password_register.dart';
+part '../password_register.dart';
 
-class RegisterScreen extends StatefulWidget {
+class RegisterScreenArguments {
+  final UserCredential? firebaseUserCredential;
+
+  RegisterScreenArguments(this.firebaseUserCredential);
+}
+
+class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
 
   static const String routeName = '/register_screen';
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  Widget build(BuildContext context) {
+    final args =
+        ModalRoute.of(context)!.settings.arguments as RegisterScreenArguments?;
+    return RegisterView(
+      firebaseUserCredential: args?.firebaseUserCredential,
+    );
+  }
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class RegisterView extends StatefulWidget {
+  const RegisterView({
+    super.key,
+    this.firebaseUserCredential,
+  });
+
+  final UserCredential? firebaseUserCredential;
+
+  @override
+  State<RegisterView> createState() => _RegisterViewState();
+}
+
+class _RegisterViewState extends State<RegisterView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final PageController pageviewController = PageController();
   final _notifications = getIt<HandlerNotification>();
@@ -64,129 +91,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late Genders? _genderSelected;
   late Sexuality? _sexualitySelected;
 
-  final List<Genders> _genders = [
-    Genders(id: 1, name: 'Woman'),
-    Genders(id: 0, name: 'Man'),
-    Genders(id: 3, name: 'Non Binary'),
-  ];
-
-  final List<Sexuality> _sexualities = [
-    Sexuality(id: 4, name: 'Prefer not to say'),
-    Sexuality(id: 0, name: 'Hetero'),
-    Sexuality(id: 1, name: 'Bisexual'),
-    Sexuality(id: 2, name: 'Homosexual'),
-    Sexuality(id: 3, name: 'Transexual'),
-  ];
-
   final PhoneNumber _initialNumber = PhoneNumber(isoCode: 'US');
-
-  final List<String> _countriesISO = [
-    'US', // Estados Unidos
-    'IN', // India
-    'CN', // China
-    'ID', // Indonesia
-    'PK', // Pakistán
-    'BR', // Brasil
-    'NG', // Nigeria
-    'BD', // Bangladesh
-    'RU', // Rusia
-    'MX', // México
-    'JP', // Japón
-    'ET', // Etiopía
-    'PH', // Filipinas
-    'EG', // Egipto
-    'VN', // Vietnam
-    'CD', // República Democrática del Congo
-    'TR', // Turquía
-    'IR', // Irán
-    'DE', // Alemania
-    'TH', // Tailandia
-    'GB', // Reino Unido
-    'FR', // Francia
-    'TZ', // Tanzania
-    'IT', // Italia
-    'ZA', // Sudáfrica
-    'MM', // Myanmar (Birmania)
-    'KR', // Corea del Sur
-    'CO', // Colombia
-    'ES', // España
-    'UG', // Uganda
-    'AR', // Argentina
-    'UA', // Ucrania
-    'AL', // Albania
-    'KE', // Kenia
-    'SD', // Sudán
-    'PL', // Polonia
-    'CA', // Canadá
-    'MA', // Marruecos
-    'UZ', // Uzbekistán
-    'MY', // Malasia
-    'PE', // Perú
-    'BE', // Bélgica
-    'CU', // Cuba
-  ];
-
-  // Validations
-  String? _validateUsername(String value) {
-    // Define your validation logic here.
-    if (value.isEmpty) {
-      return 'Name is required';
-    }
-    if (value.length < 4) {
-      return 'Name must be at least 4 characters long';
-    }
-    // if (!RegExp(r'^[a-zA-Z0-9_-]+$').hasMatch(value)) {
-    //   return 'Enter a valid name Ex: jennifer95';
-    // }
-    if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
-      return 'Enter a valid name without spaces Ex: Jennifer';
-    }
-    return null; // Return null if the input is valid.
-  }
-
-  String? _validatePhoneNumber(String value) {
-    // Define your phone number validation logic here.
-    if (value.isEmpty) {
-      return 'Phone number is required';
-    }
-    // You can use regular expressions or other methods to validate phone numbers.
-    // Here, we're checking if the input consists of 10 digits.
-    if (!RegExp(r'^\d+(?:[-\s]?\d+)*$').hasMatch(value)) {
-      return 'Invalid phone number.';
-    }
-    return null; // Return null if the input is valid.
-  }
-
-  String? _validateEmail(String value) {
-    // Define your email validation logic here.
-    if (value.isEmpty) {
-      return 'Email is required';
-    }
-    // Use a regular expression to validate the email format.
-    if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
-        .hasMatch(value)) {
-      return 'Invalid email address';
-    }
-    return null; // Return null if the input is valid.
-  }
-
-  String? _validatePassword(String value) {
-    // Define your password validation logic here.
-    if (value.isEmpty) {
-      return 'Password is required';
-    }
-    // Check if the password length is at least 8 characters.
-    if (value.length < 8) {
-      return 'Password must be at least 8 characters long';
-    }
-    // Use regular expressions to enforce additional rules.
-    if (!RegExp(
-            r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%^&*()_+{}\[\]:;<>,.?~\\-]).{8,}$')
-        .hasMatch(value)) {
-      return 'Please insert a valid password';
-    }
-    return null; // Return null if the input is valid.
-  }
 
   // For Register User
   void _submitUsername() {
@@ -206,26 +111,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       // Here, you can use the _phoneNumber variable for further processing.
       await _submitRegisterUser(context, size: size);
     }
-    // else {
-    //   _notifications.ntsErrorNotification(
-    //     context,
-    //     message: 'The phone number must be at least 15 digits.',
-    //     height: size.height * 0.12,
-    //     width: size.width * 0.90,
-    //   );
-    //   // ElegantNotification.error(
-    //   //   notificationPosition: NotificationPosition.bottomCenter,
-    //   //   animation: AnimationType.fromBottom,
-    //   //   background: Colors.red.shade100,
-    //   //   showProgressIndicator: true,
-    //   //   description: const Text(
-    //   //     "",
-    //   //     style: TextStyle(
-    //   //       color: Colors.black,
-    //   //     ),
-    //   //   ),
-    //   // ).show(context);
-    // }
   }
 
   void _submitEmail() {
@@ -347,7 +232,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _navigations.nextPage(pageviewController: pageviewController);
         break;
       case 5:
-        _navigations.nextPage(pageviewController: pageviewController);
+        widget.firebaseUserCredential == null
+            ? _navigations.nextPage(pageviewController: pageviewController)
+            : () {};
         break;
       case 6:
         await _submitPhoneNumber(size: size);
@@ -464,22 +351,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         fontWeight: FontWeight.w600,
                       ),
                       keyboardType: TextInputType.name,
-                      validator: (value) => _validateUsername(value ?? ''),
-
+                      validator: (value) =>
+                          RegisterValidators.validateUsername(value ?? ''),
                       textInputAction: TextInputAction.done,
                       onFieldSubmitted: (_) {
                         _submitUsername();
                       },
-                      // onTap: () {
-                      //   setState(() {
-                      //     isShowFloatButton = false;
-                      //   });
-                      // },
-                      // onEditingComplete: () {
-                      //   setState(() {
-                      //     isShowFloatButton = true;
-                      //   });
-                      // },
                     ),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 20.0),
@@ -579,7 +456,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           child: InternationalPhoneNumberInput(
                             focusNode: _focusNodePhone,
                             initialValue: _initialNumber,
-                            countries: _countriesISO,
+                            countries: RegisterConstants.countriesISO,
                             countrySelectorScrollControlled: false,
                             autoValidateMode: AutovalidateMode.disabled,
                             maxLength: 15,
@@ -588,7 +465,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               phoneNumberUser = number.parseNumber();
                             },
                             validator: (value) =>
-                                _validatePhoneNumber(value ?? ''),
+                                RegisterValidators.validatePhoneNumber(
+                                    value ?? ''),
                             onFieldSubmitted: (_) =>
                                 _submitPhoneNumber(size: size),
                           ),
@@ -607,18 +485,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                       ),
                     ),
-                    // const Padding(
-                    //   padding: EdgeInsets.only(top: 20.0),
-                    //   child: Text(
-                    //     'AI Date will send you a text with a verification code. Message and date rates may apply.',
-                    //     style: TextStyle(
-                    //       color: Color(0xFF9CA4BF),
-                    //       fontSize: 12,
-                    //       fontFamily: Strings.fontFamily,
-                    //       fontWeight: FontWeight.w500,
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
@@ -701,7 +567,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     EmailInput(
                       controller: _emailUserCtrl,
                       focusNode: _focusNodeEmail,
-                      validator: (value) => _validateEmail(value ?? ''),
+                      validator: (value) =>
+                          RegisterValidators.validateEmail(value ?? ''),
                       textInputAction: TextInputAction.done,
                       onFieldSubmitted: (_) => _submitEmail(),
                     ),
@@ -783,7 +650,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               PasswordRegister(
                 passwordCtrl: _passwordCtrl,
                 focusNodePassword: _focusNodePassword,
-                validator: (value) => _validatePassword(value ?? ''),
+                validator: (value) =>
+                    RegisterValidators.validatePassword(value ?? ''),
                 textInputAction: TextInputAction.done,
                 onFieldSubmitted: (_) => _submitPassword(),
               ),
@@ -860,13 +728,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
               height: size.height * 0.32,
               padding: EdgeInsets.symmetric(horizontal: size.width / 20),
               child: ListView.builder(
-                itemCount: _genders.length,
+                itemCount: RegisterConstants.genders.length,
                 itemBuilder: (context, index) => Column(
                   children: [
                     RadioListTile<Genders>(
                       controlAffinity: ListTileControlAffinity.trailing,
                       title: Text(
-                        _genders[index].name,
+                        RegisterConstants.genders[index].name,
                         style: const TextStyle(
                           color: Color(0xFF686E8C),
                           fontSize: 14,
@@ -874,7 +742,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      value: _genders[index],
+                      value: RegisterConstants.genders[index],
                       groupValue: _genderSelected,
                       onChanged: (Genders? value) {
                         setState(() {
@@ -882,46 +750,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         });
                       },
                     ),
-                    index != _genders.length - 1
+                    index != RegisterConstants.genders.length - 1
                         ? const Divider()
                         : Container(),
                   ],
                 ),
               ),
-              // Column(
-              //   crossAxisAlignment: CrossAxisAlignment.start,
-              //   children:
-              //   _genders
-              //       .map(
-              //         (gender) => Column(
-              //           children: [
-              //             RadioListTile<Genders>(
-              //               controlAffinity: ListTileControlAffinity.trailing,
-              //               title: Text(
-              //                 gender.name,
-              //                 style: const TextStyle(
-              //                   color: Color(0xFF686E8C),
-              //                   fontSize: 14,
-              //                   fontFamily: Strings.fontFamily,
-              //                   fontWeight: FontWeight.w600,
-              //                 ),
-              //               ),
-              //               value: gender,
-              //               groupValue: _genderSelected,
-              //               onChanged: (Genders? value) {
-              //                 setState(() {
-              //                   _genderSelected = value;
-              //                 });
-              //               },
-              //             ),
-              //             gender.id != _genders.length - 3
-              //                 ? const Divider()
-              //                 : Container(),
-              //           ],
-              //         ),
-              //       )
-              //       .toList(),
-              // ),
             ),
             VisibleOnProfile(
               isVisible: isGenderVisibleProfile,
@@ -1002,13 +836,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
               height: size.height * 0.38,
               padding: EdgeInsets.symmetric(horizontal: size.width / 20),
               child: ListView.builder(
-                itemCount: _sexualities.length,
+                itemCount: RegisterConstants.sexualities.length,
                 itemBuilder: (context, index) => Column(
                   children: [
                     RadioListTile<Sexuality>(
                       controlAffinity: ListTileControlAffinity.trailing,
                       title: Text(
-                        _sexualities[index].name,
+                        RegisterConstants.sexualities[index].name,
                         style: const TextStyle(
                           color: Color(0xFF686E8C),
                           fontSize: 14,
@@ -1016,7 +850,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      value: _sexualities[index],
+                      value: RegisterConstants.sexualities[index],
                       groupValue: _sexualitySelected,
                       onChanged: (Sexuality? value) {
                         setState(() {
@@ -1024,7 +858,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         });
                       },
                     ),
-                    index != _sexualities.length - 1
+                    index != RegisterConstants.sexualities.length - 1
                         ? const Divider()
                         : Container(),
                   ],
@@ -1074,8 +908,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             color: AppTheme.disabledColor,
                             // size: 32,
                           ),
-                          onPressed: () => _navigations.backPage(context,
-                              pageviewController: pageviewController),
+                          onPressed: () => _navigations.backPage(
+                            context,
+                            pageviewController: pageviewController,
+                          ),
                         ),
                         IconButton(
                           icon: const Icon(
@@ -1129,10 +965,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   isTrailingIcon: false,
                   onTap: () => _navigations.nextPage(
                       pageviewController: pageviewController),
-                  // {
-                  //   _formRegisterSubmit(context,
-                  //       page: pageviewController.page ?? 0.0, size: size);
-                  // }
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 20.0),
@@ -1185,9 +1017,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void initState() {
+    _fullNameCtrl.text = widget.firebaseUserCredential?.user?.displayName ?? '';
+    _genderSelected = RegisterConstants.genders.first;
+    _sexualitySelected = RegisterConstants.sexualities.first;
     super.initState();
-    _genderSelected = _genders.first;
-    _sexualitySelected = _sexualities.first;
   }
 
   @override
@@ -1211,7 +1044,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
+    final steps = widget.firebaseUserCredential == null
+        ? [
+            _buildPageUsername(size),
+            _buildPageEmail(size),
+            _buildPagePassword(size),
+            _buildPageGender(size),
+            _buildPageSexuality(size),
+            _buildPageLocation(size),
+            _buildPagePhoneNumber(size),
+            CodeVerificationStep(
+              pageviewController: pageviewController,
+              focusNodeVerification: _focusNodeVerification,
+              verificationCtrl: _verificationCtrl,
+              onPressed: () => _submitRegisterUser(context, size: size),
+            ),
+          ]
+        : [
+            _buildPageUsername(size),
+            _buildPageGender(size),
+            _buildPageSexuality(size),
+            _buildPageLocation(size),
+          ];
     return Scaffold(
       body: Container(
         color: Theme.of(context).scaffoldBackgroundColor,
@@ -1220,258 +1075,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: PageView(
             physics: const NeverScrollableScrollPhysics(),
             controller: pageviewController,
-            children: [
-              _buildPageUsername(size),
-              _buildPageEmail(size),
-              _buildPagePassword(size),
-              _buildPageGender(size),
-              _buildPageSexuality(size),
-              _buildPageLocation(size),
-              _buildPagePhoneNumber(size),
-              _PageCodeVerification(
-                pageviewController: pageviewController,
-                focusNodeVerification: _focusNodeVerification,
-                verificationCtrl: _verificationCtrl,
-                onPressed: () => _submitRegisterUser(context, size: size),
-              ),
-            ],
+            children: steps,
           ),
         ),
       ),
-      floatingActionButton:
-          BlocBuilder<AccountCubit, AccountState>(builder: (context, state) {
-        if ((_focusNodeName.hasFocus) ||
-            (_focusNodePhone.hasFocus) ||
-            (_focusNodeEmail.hasFocus) ||
-            (_focusNodePassword.hasFocus) ||
-            (_focusNodeVerification.hasFocus)) {
-          isShowFloatButton = false;
-        } else {
-          isShowFloatButton = true;
-        }
+      floatingActionButton: BlocBuilder<AccountCubit, AccountState>(
+        builder: (context, state) {
+          if ((_focusNodeName.hasFocus) ||
+              (_focusNodePhone.hasFocus) ||
+              (_focusNodeEmail.hasFocus) ||
+              (_focusNodePassword.hasFocus) ||
+              (_focusNodeVerification.hasFocus)) {
+            isShowFloatButton = false;
+          } else {
+            isShowFloatButton = true;
+          }
 
-        return switch (state.status) {
-          UserRegisterStatus.loading => Container(
-              width: 60,
-              height: 60,
-              margin: const EdgeInsets.all(10.0),
-              child: const CircularProgressIndicator(),
-            ),
-          UserRegisterStatus.initial => (isShowFloatButton)
-              ? ButtonCircularProgress(
-                  pageviewController: pageviewController,
-                  onNextPage: (page) =>
-                      _formRegisterSubmit(context, page: page, size: size),
+          return state.status == UserRegisterStatus.loading
+              ? Container(
+                  width: 60,
+                  height: 60,
+                  margin: const EdgeInsets.all(10.0),
+                  child: const CircularProgressIndicator(),
                 )
-              : Container(),
-          UserRegisterStatus.success => (isShowFloatButton)
-              ? ButtonCircularProgress(
-                  pageviewController: pageviewController,
-                  onNextPage: (page) =>
-                      _formRegisterSubmit(context, page: page, size: size),
-                )
-              : Container(),
-          UserRegisterStatus.failure => (isShowFloatButton)
-              ? ButtonCircularProgress(
-                  pageviewController: pageviewController,
-                  onNextPage: (page) =>
-                      _formRegisterSubmit(context, page: page, size: size),
-                )
-              : Container(),
-        };
-      }),
-    );
-  }
-}
-
-class ButtonCircularProgress extends StatefulWidget {
-  const ButtonCircularProgress({
-    super.key,
-    required this.pageviewController,
-    this.onNextPage,
-  });
-
-  final PageController pageviewController;
-  final ValueChanged<double>? onNextPage;
-
-  @override
-  State<ButtonCircularProgress> createState() => _ButtonCircularProgressState();
-}
-
-class _ButtonCircularProgressState extends State<ButtonCircularProgress> {
-  double percent = 0.125;
-  double currentPage = 0;
-
-  void _onPressButtonPage() {
-    FocusScope.of(context).unfocus();
-    widget.onNextPage!(widget.pageviewController.page ?? -1);
-
-    setState(() {
-      if (widget.pageviewController.page != currentPage) {
-        percent = percent + 0.125;
-        currentPage = widget.pageviewController.page ?? -1;
-      }
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return CircularProgressIndicatorButton(
-      onPressed: () => _onPressButtonPage(),
-      percent: percent,
-      backgroundColor: const Color.fromARGB(255, 204, 66, 24),
-      // percent < 1
-      //     ? AppTheme.disabledColor
-      //     : const Color.fromARGB(255, 204, 66, 24),
-      // Relleno de color en los bordes basado en la página actual
-    );
-  }
-}
-
-class _PageCodeVerification extends StatefulWidget {
-  const _PageCodeVerification({
-    required this.pageviewController,
-    required this.focusNodeVerification,
-    required this.verificationCtrl,
-    required this.onPressed,
-  });
-
-  final PageController pageviewController;
-  final FocusNode focusNodeVerification;
-  final TextEditingController verificationCtrl;
-  final VoidCallback onPressed;
-
-  @override
-  State<_PageCodeVerification> createState() => _PageCodeVerificationState();
-}
-
-class _PageCodeVerificationState extends State<_PageCodeVerification> {
-  final _navigations = getIt<NavigationsApp>();
-
-  String? _validateVerificationCode(String value) {
-    if (value.isEmpty) {
-      return 'Verification code is required';
-    }
-
-    if (value.length < 6) {
-      return 'Password must be at least 6 characters long';
-    }
-
-    return null;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: SizedBox(
-        width: double.infinity,
-        height: size.height,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                width: size.width,
-                height: size.height * 0.36,
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Image.asset(
-                        'assets/imgs/vector_code.png',
-                      ),
-                    ),
-                    Center(child: Image.asset('assets/imgs/code_img.png')),
-                    SafeArea(
-                      child: Container(
-                        margin: const EdgeInsets.only(top: 5.0),
-                        // padding: const EdgeInsets.symmetric(vertical: 30.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                              icon: const Icon(
-                                Icons.arrow_back_rounded,
-                                color: AppTheme.disabledColor,
-                                // size: 32,
-                              ),
-                              onPressed: () => _navigations.backPage(context,
-                                  pageviewController:
-                                      widget.pageviewController),
-                            ),
-                            IconButton(
-                              icon: const Icon(
-                                Icons.cancel_outlined,
-                                color: AppTheme.disabledColor,
-                                // size: 32,
-                              ),
-                              onPressed: () => _navigations.exitSetup(context),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: size.height / 40),
-                child: const Text(
-                  'Enter your code',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Color(0xFF261638),
-                    fontSize: 28,
-                    fontFamily: Strings.fontFamily,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: size.width / 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CodeVerificationInput(
-                      focusNode: widget.focusNodeVerification,
-                      controller: widget.verificationCtrl,
-                      validator: (value) =>
-                          _validateVerificationCode(value ?? ''),
-                      onEditingComplete: () =>
-                          widget.focusNodeVerification.unfocus(),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20.0),
-                      child: TextButton(
-                        onPressed: widget.onPressed,
-                        style: TextButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: const Text(
-                          'Resend code',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontFamily: Strings.fontFamily,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+              : (isShowFloatButton)
+                  ? ButtonCircularProgress(
+                      pageviewController: pageviewController,
+                      pagesLength: steps.length,
+                      onNextPage: (page) =>
+                          _formRegisterSubmit(context, page: page, size: size),
+                    )
+                  : Container();
+        },
       ),
     );
   }
