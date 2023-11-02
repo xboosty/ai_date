@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+
 abstract class AccountDatasource<T> {
   Future<T> registerUser(Map<String, dynamic> user);
 
@@ -17,5 +19,5 @@ abstract class AccountDatasource<T> {
 
   Future<bool> recoveryPassword(Map<String, dynamic> recoveryCredentilal);
 
-  Future<T> updateAccount(Map<String, dynamic> userUpdate);
+  Future<T> updateAccount(FormData userUpdate);
 }

@@ -2,9 +2,9 @@ import '../../../../../config/config.dart' show Genders, Sexuality;
 
 class RegisterConstants {
   static const List<Genders> genders = [
-    Genders(id: 1, name: 'Woman'),
-    Genders(id: 0, name: 'Man'),
-    Genders(id: 3, name: 'Non Binary'),
+    Genders(id: 1, name: 'Female'),
+    Genders(id: 0, name: 'Male'),
+    Genders(id: 2, name: 'Non Binary'),
   ];
 
   static const List<Sexuality> sexualities = [

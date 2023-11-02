@@ -12,9 +12,9 @@ GetIt getIt = GetIt.instance;
 
 void serviceLocatorBlocsInit() {
   getIt.registerSingleton(AccountCubit());
-  getIt.registerSingleton(BlockCubit());
-  getIt.registerSingleton(CouplesCubit());
   getIt.registerSingleton(InterviewCubit());
+  getIt.registerSingleton(CouplesCubit());
+  getIt.registerSingleton(BlockCubit());
 }
 
 void serviceLocatorRepositoryInit() {

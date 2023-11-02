@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import '../../../domain/domain.dart' show CouplesDatasource, UserEntity;
 import '../../../config/config.dart'
-    show NtsCouplesUserResponse, NtsErrorResponse, UserMapper;
+    show NtsCouplesUserResponse, NtsErrorResponse, SharedPref, UserMapper;
 
 class NtSprintCouplesDatasource extends CouplesDatasource<UserEntity> {
   NtSprintCouplesDatasource._();
@@ -22,6 +22,7 @@ class NtSprintCouplesDatasource extends CouplesDatasource<UserEntity> {
         '/api/account/users-list',
         options: Options(
           headers: {
+            'Authorization': SharedPref.pref.token,
             'Content-Type': 'application/json',
             'User-Agent':
                 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.60',

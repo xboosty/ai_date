@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+
 import '../datasources/account_datasource.dart';
 
 abstract class AccountRepository<T> {
@@ -22,5 +24,5 @@ abstract class AccountRepository<T> {
 
   Future<bool> recoveryPassword(Map<String, dynamic> recoveryCredentilal);
 
-  Future<T> updateAccountRepository(Map<String, dynamic> userUpdate);
+  Future<T> updateAccountRepository(FormData userUpdate);
 }
