@@ -16,4 +16,6 @@ abstract class AccountDatasource<T> {
   Future<bool> forgotPasswordAccount({required String email});
 
   Future<bool> recoveryPassword(Map<String, dynamic> recoveryCredentilal);
+
+  Future<T> updateAccount(Map<String, dynamic> userUpdate);
 }
