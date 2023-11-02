@@ -42,7 +42,9 @@ class SuggestionPage extends StatelessWidget {
     return Column(
       children: [
         const _SimilaritySlider(initPercent: 0.0),
-        _CouplesProfile(size: size),
+        Expanded(
+          child: _CouplesProfile(size: size),
+        ),
       ],
     );
   }
