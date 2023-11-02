@@ -10,7 +10,8 @@ class NtsAccountAuthRepository extends AccountRepository<UserEntity> {
   }
 
   @override
-  Future<UserEntity> registerUserSocialRepository(Map<String, dynamic> user) async {
+  Future<UserEntity> registerUserSocialRepository(
+      Map<String, dynamic> user) async {
     final UserEntity userEntity = await datasource.registerUserSocial(user);
     return userEntity;
   }
@@ -29,8 +30,7 @@ class NtsAccountAuthRepository extends AccountRepository<UserEntity> {
   }
 
   @override
-  Future<UserEntity?> signInUserSocialRepository(
-      String token) async {
+  Future<UserEntity?> signInUserSocialRepository(String token) async {
     final UserEntity? user = await datasource.logInSocial(token);
     return user;
   }
@@ -61,5 +61,12 @@ class NtsAccountAuthRepository extends AccountRepository<UserEntity> {
     final bool isRecoveryPassword =
         await datasource.recoveryPassword(recoveryCredentilal);
     return isRecoveryPassword;
+  }
+
+  @override
+  Future<UserEntity> updateAccountRepository(
+      Map<String, dynamic> userUpdate) async {
+    final UserEntity userEntity = await datasource.registerUser(userUpdate);
+    return userEntity;
   }
 }

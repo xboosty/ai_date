@@ -181,4 +181,20 @@ class AccountCubit extends Cubit<AccountState> {
       rethrow;
     }
   }
+
+  Future<void> editAccount(Map<String, dynamic> userUpdate) async {
+    emit(const AccountState(status: UserRegisterStatus.loading));
+    try {
+      final user = await repo.updateAccountRepository(userUpdate);
+      emit(AccountState(status: UserRegisterStatus.success, user: user));
+    } catch (e) {
+      emit(
+        AccountState(
+          status: UserRegisterStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
+      rethrow;
+    }
+  }
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +45,7 @@ import '../../../widgets/widgets.dart'
         CustomDropdownButton,
         DatePickerFormField,
         FilledColorizedButton,
+        PickerImage,
         ProfilePicturePhoto;
 
 class ProfilePage extends StatefulWidget {
@@ -94,9 +96,9 @@ class _ProfilePageState extends State<ProfilePage> {
             child: TabBarView(
               physics: const NeverScrollableScrollPhysics(),
               controller: widget._tabController,
-              children: [
-                const _ProfileEditPage(),
-                const _ProfilePreviewPage(),
+              children: const [
+                _ProfileEditPage(),
+                _ProfilePreviewPage(),
               ],
             ),
           ),
@@ -392,6 +394,12 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
   final lastNameCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
   final dateCtrl = TextEditingController();
+  File? imageUrlSelectedOne;
+  File? imageUrlSelectedTwo;
+  File? imageUrlSelectedThree;
+  File? imageUrlSelectedFour;
+  File? imageUrlSelectedFive;
+  File? imageUrlSelectedSix;
   UserEntity? user;
 
   late Genders genderSelected;
@@ -527,15 +535,46 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                   ProfilePicturePhoto(
                     width: size.width * 0.50,
                     height: size.height * 0.31,
+                    imageQuality: 100,
+                    maxHeight: 720,
+                    maxWidth: 480,
+                    initialImageUrl: imageUrlSelectedOne,
+                    imageUrl: (File? value) {
+                      setState(() {
+                        imageUrlSelectedOne = value;
+                      });
+                    },
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ProfilePicturePhoto(
-                          width: size.width * 0.25, height: size.height * 0.15),
+                        width: size.width * 0.25,
+                        height: size.height * 0.15,
+                        imageQuality: 100,
+                        maxHeight: 480,
+                        maxWidth: 480,
+                        initialImageUrl: imageUrlSelectedTwo,
+                        imageUrl: (File? value) {
+                          setState(() {
+                            imageUrlSelectedTwo = value;
+                          });
+                        },
+                      ),
                       const SizedBox(height: 5.0),
                       ProfilePicturePhoto(
-                          width: size.width * 0.25, height: size.height * 0.15),
+                        width: size.width * 0.25,
+                        height: size.height * 0.15,
+                        imageQuality: 100,
+                        maxHeight: 480,
+                        maxWidth: 480,
+                        initialImageUrl: imageUrlSelectedThree,
+                        imageUrl: (File? value) {
+                          setState(() {
+                            imageUrlSelectedThree = value;
+                          });
+                        },
+                      ),
                     ],
                   )
                 ],
@@ -545,11 +584,44 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ProfilePicturePhoto(
-                      width: size.width * 0.25, height: size.height * 0.15),
+                    width: size.width * 0.25,
+                    height: size.height * 0.15,
+                    imageQuality: 100,
+                    maxHeight: 480,
+                    maxWidth: 480,
+                    initialImageUrl: imageUrlSelectedFour,
+                    imageUrl: (File? value) {
+                      setState(() {
+                        imageUrlSelectedFour = value;
+                      });
+                    },
+                  ),
                   ProfilePicturePhoto(
-                      width: size.width * 0.25, height: size.height * 0.15),
+                    width: size.width * 0.25,
+                    height: size.height * 0.15,
+                    imageQuality: 100,
+                    maxHeight: 480,
+                    maxWidth: 480,
+                    initialImageUrl: imageUrlSelectedFive,
+                    imageUrl: (File? value) {
+                      setState(() {
+                        imageUrlSelectedFive = value;
+                      });
+                    },
+                  ),
                   ProfilePicturePhoto(
-                      width: size.width * 0.25, height: size.height * 0.15),
+                    width: size.width * 0.25,
+                    height: size.height * 0.15,
+                    imageQuality: 100,
+                    maxHeight: 480,
+                    maxWidth: 480,
+                    initialImageUrl: imageUrlSelectedSix,
+                    imageUrl: (File? value) {
+                      setState(() {
+                        imageUrlSelectedSix = value;
+                      });
+                    },
+                  ),
                 ],
               ),
               SizedBox(height: size.height * 0.02),

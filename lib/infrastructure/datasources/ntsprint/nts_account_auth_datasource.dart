@@ -63,10 +63,6 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
     } catch (e) {
       rethrow;
     }
-
-    // Make Request
-
-    // Parsed Response
   }
 
   @override
@@ -318,6 +314,43 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
         final bool isSendCode =
             rs.data["result"] == true ? rs.data["result"] : false;
         return isSendCode;
+      } else {
+        // Devuelve un error
+        throw NtsErrorResponse.fromJson(rs.data);
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<UserEntity> updateAccount(Map<String, dynamic> userUpdate) async {
+    try {
+      final rs = await dio.post(
+        '/api/account/edit-profile',
+        data: userUpdate,
+        options: Options(
+          headers: _headers,
+          followRedirects: false,
+          // will not throw errors
+          validateStatus: (status) => true,
+          // headers: headers,
+        ),
+      );
+
+      if (rs.data["statusCode"] == 200) {
+        // Save Token in
+        String? token = rs.headers.value('x-amzn-Remapped-Authorization');
+
+        SharedPref.pref.token = token ?? 'null';
+        final userResponse = NtsUserResponse.fromJson(rs.data);
+
+        // Parsed to model response to entity
+        final UserEntity userResult =
+            UserMapper.userResponseToEntity(userResponse.user);
+
+        return userResult;
+        // Devuelve la entidad
       } else {
         // Devuelve un error
         throw NtsErrorResponse.fromJson(rs.data);

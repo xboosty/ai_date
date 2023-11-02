@@ -21,4 +21,6 @@ abstract class AccountRepository<T> {
   Future<bool> forgotPasswordRepository({required String email});
 
   Future<bool> recoveryPassword(Map<String, dynamic> recoveryCredentilal);
+
+  Future<T> updateAccountRepository(Map<String, dynamic> userUpdate);
 }
