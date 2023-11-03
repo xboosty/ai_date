@@ -14,23 +14,26 @@ class UserResponse {
   final String sexualOrientation;
   final bool? isGenderVisible;
   final bool? isSexualityVisible;
+  final List<String?> pictures;
 
-  UserResponse(
-      {this.id,
-      this.birthDate,
-      required this.fullName,
-      this.identity,
-      this.genderId,
-      required this.gender,
-      required this.email,
-      this.phone,
-      this.statusId,
-      this.status,
-      this.avatar,
-      this.avatarMimeType,
-      required this.sexualOrientation,
-      this.isGenderVisible,
-      this.isSexualityVisible});
+  UserResponse({
+    this.id,
+    this.birthDate,
+    required this.fullName,
+    this.identity,
+    this.genderId,
+    required this.gender,
+    required this.email,
+    this.phone,
+    this.statusId,
+    this.status,
+    this.avatar,
+    this.avatarMimeType,
+    required this.sexualOrientation,
+    this.isGenderVisible,
+    this.isSexualityVisible,
+    required this.pictures,
+  });
 
   factory UserResponse.fromJson(Map<String, dynamic> json) => UserResponse(
         id: json["id"],
@@ -50,6 +53,7 @@ class UserResponse {
         sexualOrientation: json["sexualOrientation"],
         isGenderVisible: json["isGenderVisible"],
         isSexualityVisible: json["isSexualityVisible"],
+        pictures: List<String>.from(json["pictures"].map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
@@ -68,5 +72,6 @@ class UserResponse {
         "sexualOrientation": sexualOrientation,
         "isGenderVisible": isGenderVisible,
         "isSexualityVisible": isSexualityVisible,
+        "pictures": List<dynamic>.from(pictures.map((x) => x)),
       };
 }

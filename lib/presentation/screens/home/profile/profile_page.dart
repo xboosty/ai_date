@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 import '../../../../config/config.dart'
@@ -432,14 +433,14 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
         await convertFileListToMultipartFileList(pictures);
 
     final formData = FormData.fromMap({
-      'BirthDate': dateCtrl.text,
-      'FullName': nameCtrl.text,
-      'GenderId': genderSelected.id,
-      'Gender': genderSelected.name,
-      'SexualOrientation': sexualitySelected.name,
-      'IsGenderVisible': showGenderProfile,
-      'IsSexualityVisible': showSexualityProfile,
-      'files': itemsImg
+      "BirthDate": DateFormat.yMd().parse(dateCtrl.text).toIso8601String(),
+      "FullName": nameCtrl.text,
+      "GenderId": genderSelected.id,
+      "Gender": genderSelected.name,
+      "SexualOrientation": sexualitySelected.name,
+      "IsGenderVisible": showGenderProfile,
+      "IsSexualityVisible": showSexualityProfile,
+      "files": itemsImg
     });
     try {
       if (!mounted) return;
@@ -486,7 +487,9 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
       nameCtrl.text = user?.name ?? '';
       lastNameCtrl.text = '';
       emailCtrl.text = user?.email ?? '';
-      dateCtrl.text = '';
+      dateCtrl.text =
+          DateFormat.yMd().format(user?.birthDate ?? DateTime.now());
+      // '${user?.birthDate.year}-${user?.birthDate.month}-${user?.birthDate.day}';
       showGenderProfile = user?.isGenderVisible ?? false;
       showSexualityProfile = user?.isSexualityVisible ?? false;
       switch (user?.genderId) {
@@ -516,6 +519,7 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
           children: [
             _CardPersonalInfo(
               size: size,
+              initialDate: user?.birthDate ?? DateTime.now(),
               dateCtrl: dateCtrl,
               nameCtrl: nameCtrl,
               lastNameCtrl: lastNameCtrl,
@@ -567,31 +571,31 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                 });
               },
             ),
-            // const ListTile(
-            //   leading: Icon(Icons.add_photo_alternate, size: 20),
-            //   contentPadding: EdgeInsets.symmetric(vertical: 5.0),
-            //   title: Text(
-            //     'PROFILE PICTURES',
-            //     style: TextStyle(
-            //       color: Color(0xFF261638),
-            //       fontSize: 14,
-            //       fontFamily: Strings.fontFamily,
-            //       fontWeight: FontWeight.w600,
-            //     ),
-            //   ),
-            // ),
-            // const Padding(
-            //   padding: EdgeInsets.only(bottom: 10.0),
-            //   child: Text(
-            //     'Users who have uploaded 2 or more pictures have a higher likelihood of finding matches.',
-            //     style: TextStyle(
-            //       color: Color(0xFF9CA4BF),
-            //       fontSize: 12,
-            //       fontFamily: Strings.fontFamily,
-            //       fontWeight: FontWeight.w500,
-            //     ),
-            //   ),
-            // ),
+            const ListTile(
+              leading: Icon(Icons.add_photo_alternate, size: 20),
+              contentPadding: EdgeInsets.symmetric(vertical: 5.0),
+              title: Text(
+                'PROFILE PICTURES',
+                style: TextStyle(
+                  color: Color(0xFF261638),
+                  fontSize: 14,
+                  fontFamily: Strings.fontFamily,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 10.0),
+              child: Text(
+                'Users who have uploaded 2 or more pictures have a higher likelihood of finding matches.',
+                style: TextStyle(
+                  color: Color(0xFF9CA4BF),
+                  fontSize: 12,
+                  fontFamily: Strings.fontFamily,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(5.0),
               child: Column(
@@ -605,6 +609,7 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                         imageQuality: 100,
                         maxHeight: 720,
                         maxWidth: 480,
+                        urlImgNetwork: null,
                         initialImageUrl: imageUrlSelectedOne,
                         imageUrl: (File? value) {
                           setState(() {
@@ -621,6 +626,7 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                             imageQuality: 100,
                             maxHeight: 480,
                             maxWidth: 480,
+                            urlImgNetwork: null,
                             initialImageUrl: imageUrlSelectedTwo,
                             imageUrl: (File? value) {
                               setState(() {
@@ -635,6 +641,7 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                             imageQuality: 100,
                             maxHeight: 480,
                             maxWidth: 480,
+                            urlImgNetwork: null,
                             initialImageUrl: imageUrlSelectedThree,
                             imageUrl: (File? value) {
                               setState(() {
@@ -656,6 +663,7 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                         imageQuality: 100,
                         maxHeight: 480,
                         maxWidth: 480,
+                        urlImgNetwork: null,
                         initialImageUrl: imageUrlSelectedFour,
                         imageUrl: (File? value) {
                           setState(() {
@@ -669,6 +677,7 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                         imageQuality: 100,
                         maxHeight: 480,
                         maxWidth: 480,
+                        urlImgNetwork: null,
                         initialImageUrl: imageUrlSelectedFive,
                         imageUrl: (File? value) {
                           setState(() {
@@ -682,6 +691,7 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                         imageQuality: 100,
                         maxHeight: 480,
                         maxWidth: 480,
+                        urlImgNetwork: null,
                         initialImageUrl: imageUrlSelectedSix,
                         imageUrl: (File? value) {
                           setState(() {
@@ -861,6 +871,7 @@ class _CardPersonalInfo extends StatefulWidget {
     required this.dateCtrl,
     required this.onDateSelected,
     this.validator,
+    required this.initialDate,
   });
 
   final Size size;
@@ -871,6 +882,7 @@ class _CardPersonalInfo extends StatefulWidget {
   final Function(DateTime date) onDateSelected;
   final UserEntity? user;
   final FormFieldValidator<String>? validator;
+  final DateTime initialDate;
 
   @override
   State<_CardPersonalInfo> createState() => _CardPersonalInfoState();
@@ -927,6 +939,7 @@ class _CardPersonalInfoState extends State<_CardPersonalInfo> {
             ),
             SizedBox(height: widget.size.height * 0.01),
             DatePickerFormField(
+              initialDate: widget.initialDate,
               labelText: 'Date of birth',
               controller: widget.dateCtrl,
               onDateSelected: widget.onDateSelected,

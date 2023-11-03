@@ -20,6 +20,7 @@ class UserMapper {
       avatarMimeType: user.avatarMimeType,
       isGenderVisible: user.isGenderVisible ?? false,
       isSexualityVisible: user.isSexualityVisible ?? false,
+      pictures: user.pictures,
     );
   }
 }
