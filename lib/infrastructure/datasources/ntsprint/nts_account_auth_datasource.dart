@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 
 import '../../../config/config.dart' show SharedPref;
@@ -324,13 +327,18 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
   }
 
   @override
-  Future<UserEntity> updateAccount(Map<String, dynamic> userUpdate) async {
+  Future<UserEntity> updateAccount(FormData userUpdate) async {
     try {
       final rs = await dio.post(
         '/api/account/edit-profile',
         data: userUpdate,
         options: Options(
-          headers: _headers,
+          headers: {
+            'Authorization': SharedPref.pref.token,
+            'Content-Type': 'application/json',
+            'User-Agent':
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.60',
+          },
           followRedirects: false,
           // will not throw errors
           validateStatus: (status) => true,
@@ -339,15 +347,15 @@ class NtsAccountAuthDatasource extends AccountDatasource<UserEntity> {
       );
 
       if (rs.data["statusCode"] == 200) {
-        // Save Token in
-        String? token = rs.headers.value('x-amzn-Remapped-Authorization');
-
-        SharedPref.pref.token = token ?? 'null';
         final userResponse = NtsUserResponse.fromJson(rs.data);
 
         // Parsed to model response to entity
         final UserEntity userResult =
             UserMapper.userResponseToEntity(userResponse.user);
+
+        // Overriding userlogged in Shared Preferences
+        String jsonAccount = jsonEncode(userResult.toJson());
+        SharedPref.pref.account = jsonAccount;
 
         return userResult;
         // Devuelve la entidad

@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../config/config.dart' show NtsBlockRepository, getIt;
+import '../../../config/config.dart'
+    show CouplesCubit, NtsBlockRepository, getIt;
 import '../../../domain/domain.dart' show UserEntity;
 
 part 'block_state.dart';
@@ -10,6 +11,7 @@ class BlockCubit extends Cubit<BlockState> {
   BlockCubit() : super(BlockedUsersInitial());
 
   final repo = getIt<NtsBlockRepository>();
+  final couplesCubit = getIt<CouplesCubit>();
 
   Future<void> fetchBlockedUsers() async {
     await getUsersBloqued();
@@ -37,8 +39,9 @@ class BlockCubit extends Cubit<BlockState> {
     emit(BlockedUsersLoading());
     try {
       await repo.bloquedUserByIdRepository(id: id);
-      await fetchBlockedUsers();
-      print('Se bloqueo perfecto');
+      // await fetchBlockedUsers();
+      await couplesCubit.fetchCouplesUsers();
+      emit(BlockedUsersInitial());
     } catch (e) {
       print(e.toString());
       emit(
@@ -56,6 +59,7 @@ class BlockCubit extends Cubit<BlockState> {
     try {
       await repo.unbloquedUserByIdRepository(id: id);
       await fetchBlockedUsers();
+      await couplesCubit.fetchCouplesUsers();
       print('Se desbloqueo perfecto');
     } catch (e) {
       print(e.toString());

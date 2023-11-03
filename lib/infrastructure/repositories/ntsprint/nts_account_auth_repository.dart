@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+
 import '../../../domain/domain.dart' show AccountRepository, UserEntity;
 
 class NtsAccountAuthRepository extends AccountRepository<UserEntity> {
@@ -64,9 +68,8 @@ class NtsAccountAuthRepository extends AccountRepository<UserEntity> {
   }
 
   @override
-  Future<UserEntity> updateAccountRepository(
-      Map<String, dynamic> userUpdate) async {
-    final UserEntity userEntity = await datasource.registerUser(userUpdate);
+  Future<UserEntity> updateAccountRepository(FormData userUpdate) async {
+    final UserEntity userEntity = await datasource.updateAccount(userUpdate);
     return userEntity;
   }
 }

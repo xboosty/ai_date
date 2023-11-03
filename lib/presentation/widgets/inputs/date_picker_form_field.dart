@@ -5,12 +5,14 @@ class DatePickerFormField extends StatelessWidget {
   final String labelText;
   final TextEditingController controller;
   final Function(DateTime) onDateSelected;
+  final FormFieldValidator<String>? validator;
 
   const DatePickerFormField({
     super.key,
     required this.labelText,
     required this.controller,
     required this.onDateSelected,
+    this.validator,
   });
 
   @override
@@ -42,6 +44,7 @@ class DatePickerFormField extends StatelessWidget {
       ),
       controller: controller,
       keyboardType: TextInputType.datetime,
+      validator: validator,
       onTap: () {
         showDatePicker(
           context: context,

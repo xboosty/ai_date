@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../config/config.dart' show NtsAccountAuthRepository, getIt;
@@ -182,7 +185,7 @@ class AccountCubit extends Cubit<AccountState> {
     }
   }
 
-  Future<void> editAccount(Map<String, dynamic> userUpdate) async {
+  Future<void> editAccount(FormData userUpdate) async {
     emit(const AccountState(status: UserRegisterStatus.loading));
     try {
       final user = await repo.updateAccountRepository(userUpdate);
