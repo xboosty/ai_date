@@ -33,6 +33,7 @@ import '../../../widgets/widgets.dart'
         CustomDropdownButton,
         DatePickerFormField,
         FilledColorizedButton,
+        PlaceholderCard,
         ProfilePicturePhoto;
 
 class ProfilePage extends StatefulWidget {
@@ -1620,11 +1621,10 @@ class _ProfilePreviewPage extends StatefulWidget {
 }
 
 class _ProfilePreviewPageState extends State<_ProfilePreviewPage> {
-  late UserEntity user;
+  UserEntity? user;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     try {
       Map<String, dynamic> userMap = jsonDecode(SharedPref.pref.account);
@@ -1638,44 +1638,29 @@ class _ProfilePreviewPageState extends State<_ProfilePreviewPage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return CachedNetworkImage(
-      imageUrl: user.avatar,
-      imageBuilder: (context, imageProvider) => Container(
-        width: size.width * 0.80,
-        height: size.height,
-        alignment: Alignment.center,
-        child: CardProfile(
-          user: user,
-          imageProvider: imageProvider,
-        ),
-      ),
-      placeholder: (context, url) =>
-          const Center(child: CircularProgressIndicator()),
-      errorWidget: (context, url, error) => Container(
-        width: size.width * 0.80,
-        height: size.height,
-        alignment: Alignment.center,
-        child: Container(
-          padding: const EdgeInsets.all(1.5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            gradient: AppTheme.linearGradient,
-          ),
-          child: Container(
-            width: size.width * 0.78,
-            height: size.height * 0.50,
-            padding: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: const Color(0xFFEFF0FB),
-              image: const DecorationImage(
-                image: AssetImage('assets/imgs/photo_camera_front.png'),
-                fit: BoxFit.contain,
-              ),
-            ),
+    if (user?.avatar != null) {
+      return CachedNetworkImage(
+        imageUrl: user?.avatar ?? '',
+        imageBuilder: (context, imageProvider) => Container(
+          width: size.width * 0.80,
+          height: size.height,
+          alignment: Alignment.center,
+          child: CardProfile(
+            user: user!,
+            imageProvider: imageProvider,
           ),
         ),
-      ),
-    );
+        placeholder: (context, url) => const PlaceholderCard(
+          assetImage: 'assets/imgs/loading.gif',
+        ),
+        errorWidget: (context, url, error) => const PlaceholderCard(
+          assetImage: 'assets/imgs/no-image.jpg',
+        ),
+      );
+    } else {
+      return const PlaceholderCard(
+        assetImage: 'assets/imgs/no-image.jpg',
+      );
+    }
   }
 }
