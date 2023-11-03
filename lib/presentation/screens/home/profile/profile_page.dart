@@ -609,9 +609,7 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                         imageQuality: 100,
                         maxHeight: 720,
                         maxWidth: 480,
-                        urlImgNetwork: (user?.pictures.isNotEmpty ?? false)
-                            ? user?.pictures[0]
-                            : null,
+                        urlImgNetwork: null,
                         initialImageUrl: imageUrlSelectedOne,
                         imageUrl: (File? value) {
                           setState(() {
@@ -628,9 +626,7 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                             imageQuality: 100,
                             maxHeight: 480,
                             maxWidth: 480,
-                            urlImgNetwork: (user?.pictures.isNotEmpty ?? false)
-                                ? user?.pictures[1]
-                                : null,
+                            urlImgNetwork: null,
                             initialImageUrl: imageUrlSelectedTwo,
                             imageUrl: (File? value) {
                               setState(() {
@@ -645,9 +641,7 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                             imageQuality: 100,
                             maxHeight: 480,
                             maxWidth: 480,
-                            urlImgNetwork: (user?.pictures.isNotEmpty ?? false)
-                                ? user?.pictures[2]
-                                : null,
+                            urlImgNetwork: null,
                             initialImageUrl: imageUrlSelectedThree,
                             imageUrl: (File? value) {
                               setState(() {
@@ -669,9 +663,7 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                         imageQuality: 100,
                         maxHeight: 480,
                         maxWidth: 480,
-                        urlImgNetwork: (user?.pictures.isNotEmpty ?? false)
-                            ? user?.pictures[3]
-                            : null,
+                        urlImgNetwork: null,
                         initialImageUrl: imageUrlSelectedFour,
                         imageUrl: (File? value) {
                           setState(() {
@@ -685,9 +677,7 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                         imageQuality: 100,
                         maxHeight: 480,
                         maxWidth: 480,
-                        urlImgNetwork: (user?.pictures.isNotEmpty ?? false)
-                            ? user?.pictures[4]
-                            : null,
+                        urlImgNetwork: null,
                         initialImageUrl: imageUrlSelectedFive,
                         imageUrl: (File? value) {
                           setState(() {
@@ -701,9 +691,7 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                         imageQuality: 100,
                         maxHeight: 480,
                         maxWidth: 480,
-                        urlImgNetwork: (user?.pictures.isNotEmpty ?? false)
-                            ? user?.pictures[5]
-                            : null,
+                        urlImgNetwork: null,
                         initialImageUrl: imageUrlSelectedSix,
                         imageUrl: (File? value) {
                           setState(() {
