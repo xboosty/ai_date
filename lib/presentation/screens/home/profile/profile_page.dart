@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 import '../../../../config/config.dart'
@@ -432,14 +433,14 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
         await convertFileListToMultipartFileList(pictures);
 
     final formData = FormData.fromMap({
-      'BirthDate': dateCtrl.text,
-      'FullName': nameCtrl.text,
-      'GenderId': genderSelected.id,
-      'Gender': genderSelected.name,
-      'SexualOrientation': sexualitySelected.name,
-      'IsGenderVisible': showGenderProfile,
-      'IsSexualityVisible': showSexualityProfile,
-      'files': itemsImg
+      "BirthDate": DateFormat.yMd().parse(dateCtrl.text).toIso8601String(),
+      "FullName": nameCtrl.text,
+      "GenderId": genderSelected.id,
+      "Gender": genderSelected.name,
+      "SexualOrientation": sexualitySelected.name,
+      "IsGenderVisible": showGenderProfile,
+      "IsSexualityVisible": showSexualityProfile,
+      "files": itemsImg
     });
     try {
       if (!mounted) return;
@@ -487,7 +488,8 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
       lastNameCtrl.text = '';
       emailCtrl.text = user?.email ?? '';
       dateCtrl.text =
-          '${user?.birthDate.day}/${user?.birthDate.month}/${user?.birthDate.year}';
+          DateFormat.yMd().format(user?.birthDate ?? DateTime.now());
+      // '${user?.birthDate.year}-${user?.birthDate.month}-${user?.birthDate.day}';
       showGenderProfile = user?.isGenderVisible ?? false;
       showSexualityProfile = user?.isSexualityVisible ?? false;
       switch (user?.genderId) {
