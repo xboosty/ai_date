@@ -15,6 +15,7 @@ class UserEntity {
   final String? token;
   final bool isGenderVisible;
   final bool isSexualityVisible;
+  final List<String?> pictures;
 
   UserEntity({
     this.id,
@@ -33,6 +34,7 @@ class UserEntity {
     this.token,
     required this.isGenderVisible,
     required this.isSexualityVisible,
+    required this.pictures,
   });
 
   get isVerify => null;
@@ -53,6 +55,7 @@ class UserEntity {
         sexualOrientation: json["sexualOrientation"],
         isGenderVisible: json["isGenderVisible"],
         isSexualityVisible: json["isSexualityVisible"],
+        pictures: List<String>.from(json["pictures"].map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
@@ -71,5 +74,6 @@ class UserEntity {
         "sexualOrientation": sexualOrientation,
         "isGenderVisible": isGenderVisible,
         "isSexualityVisible": isSexualityVisible,
+        "pictures": List<dynamic>.from(pictures.map((x) => x)),
       };
 }

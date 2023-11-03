@@ -486,7 +486,8 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
       nameCtrl.text = user?.name ?? '';
       lastNameCtrl.text = '';
       emailCtrl.text = user?.email ?? '';
-      dateCtrl.text = '';
+      dateCtrl.text =
+          '${user?.birthDate.day}/${user?.birthDate.month}/${user?.birthDate.year}';
       showGenderProfile = user?.isGenderVisible ?? false;
       showSexualityProfile = user?.isSexualityVisible ?? false;
       switch (user?.genderId) {
@@ -516,6 +517,7 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
           children: [
             _CardPersonalInfo(
               size: size,
+              initialDate: user?.birthDate ?? DateTime.now(),
               dateCtrl: dateCtrl,
               nameCtrl: nameCtrl,
               lastNameCtrl: lastNameCtrl,
@@ -567,31 +569,31 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                 });
               },
             ),
-            // const ListTile(
-            //   leading: Icon(Icons.add_photo_alternate, size: 20),
-            //   contentPadding: EdgeInsets.symmetric(vertical: 5.0),
-            //   title: Text(
-            //     'PROFILE PICTURES',
-            //     style: TextStyle(
-            //       color: Color(0xFF261638),
-            //       fontSize: 14,
-            //       fontFamily: Strings.fontFamily,
-            //       fontWeight: FontWeight.w600,
-            //     ),
-            //   ),
-            // ),
-            // const Padding(
-            //   padding: EdgeInsets.only(bottom: 10.0),
-            //   child: Text(
-            //     'Users who have uploaded 2 or more pictures have a higher likelihood of finding matches.',
-            //     style: TextStyle(
-            //       color: Color(0xFF9CA4BF),
-            //       fontSize: 12,
-            //       fontFamily: Strings.fontFamily,
-            //       fontWeight: FontWeight.w500,
-            //     ),
-            //   ),
-            // ),
+            const ListTile(
+              leading: Icon(Icons.add_photo_alternate, size: 20),
+              contentPadding: EdgeInsets.symmetric(vertical: 5.0),
+              title: Text(
+                'PROFILE PICTURES',
+                style: TextStyle(
+                  color: Color(0xFF261638),
+                  fontSize: 14,
+                  fontFamily: Strings.fontFamily,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 10.0),
+              child: Text(
+                'Users who have uploaded 2 or more pictures have a higher likelihood of finding matches.',
+                style: TextStyle(
+                  color: Color(0xFF9CA4BF),
+                  fontSize: 12,
+                  fontFamily: Strings.fontFamily,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(5.0),
               child: Column(
@@ -605,6 +607,9 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                         imageQuality: 100,
                         maxHeight: 720,
                         maxWidth: 480,
+                        urlImgNetwork: (user?.pictures.isNotEmpty ?? false)
+                            ? user?.pictures[0]
+                            : null,
                         initialImageUrl: imageUrlSelectedOne,
                         imageUrl: (File? value) {
                           setState(() {
@@ -621,6 +626,9 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                             imageQuality: 100,
                             maxHeight: 480,
                             maxWidth: 480,
+                            urlImgNetwork: (user?.pictures.isNotEmpty ?? false)
+                                ? user?.pictures[1]
+                                : null,
                             initialImageUrl: imageUrlSelectedTwo,
                             imageUrl: (File? value) {
                               setState(() {
@@ -635,6 +643,9 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                             imageQuality: 100,
                             maxHeight: 480,
                             maxWidth: 480,
+                            urlImgNetwork: (user?.pictures.isNotEmpty ?? false)
+                                ? user?.pictures[2]
+                                : null,
                             initialImageUrl: imageUrlSelectedThree,
                             imageUrl: (File? value) {
                               setState(() {
@@ -656,6 +667,9 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                         imageQuality: 100,
                         maxHeight: 480,
                         maxWidth: 480,
+                        urlImgNetwork: (user?.pictures.isNotEmpty ?? false)
+                            ? user?.pictures[3]
+                            : null,
                         initialImageUrl: imageUrlSelectedFour,
                         imageUrl: (File? value) {
                           setState(() {
@@ -669,6 +683,9 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                         imageQuality: 100,
                         maxHeight: 480,
                         maxWidth: 480,
+                        urlImgNetwork: (user?.pictures.isNotEmpty ?? false)
+                            ? user?.pictures[4]
+                            : null,
                         initialImageUrl: imageUrlSelectedFive,
                         imageUrl: (File? value) {
                           setState(() {
@@ -682,6 +699,9 @@ class _ProfileEditPageState extends State<_ProfileEditPage> {
                         imageQuality: 100,
                         maxHeight: 480,
                         maxWidth: 480,
+                        urlImgNetwork: (user?.pictures.isNotEmpty ?? false)
+                            ? user?.pictures[5]
+                            : null,
                         initialImageUrl: imageUrlSelectedSix,
                         imageUrl: (File? value) {
                           setState(() {
@@ -861,6 +881,7 @@ class _CardPersonalInfo extends StatefulWidget {
     required this.dateCtrl,
     required this.onDateSelected,
     this.validator,
+    required this.initialDate,
   });
 
   final Size size;
@@ -871,6 +892,7 @@ class _CardPersonalInfo extends StatefulWidget {
   final Function(DateTime date) onDateSelected;
   final UserEntity? user;
   final FormFieldValidator<String>? validator;
+  final DateTime initialDate;
 
   @override
   State<_CardPersonalInfo> createState() => _CardPersonalInfoState();
@@ -927,6 +949,7 @@ class _CardPersonalInfoState extends State<_CardPersonalInfo> {
             ),
             SizedBox(height: widget.size.height * 0.01),
             DatePickerFormField(
+              initialDate: widget.initialDate,
               labelText: 'Date of birth',
               controller: widget.dateCtrl,
               onDateSelected: widget.onDateSelected,

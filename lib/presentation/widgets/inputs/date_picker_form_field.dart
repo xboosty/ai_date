@@ -6,6 +6,7 @@ class DatePickerFormField extends StatelessWidget {
   final TextEditingController controller;
   final Function(DateTime) onDateSelected;
   final FormFieldValidator<String>? validator;
+  final DateTime initialDate;
 
   const DatePickerFormField({
     super.key,
@@ -13,6 +14,7 @@ class DatePickerFormField extends StatelessWidget {
     required this.controller,
     required this.onDateSelected,
     this.validator,
+    required this.initialDate,
   });
 
   @override
@@ -30,7 +32,7 @@ class DatePickerFormField extends StatelessWidget {
           onPressed: () {
             showDatePicker(
               context: context,
-              initialDate: DateTime.now(),
+              initialDate: initialDate,
               firstDate: DateTime(1900),
               lastDate: DateTime(2100),
             ).then((date) {

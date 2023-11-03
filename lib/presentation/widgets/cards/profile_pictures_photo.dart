@@ -14,10 +14,12 @@ class ProfilePicturePhoto extends StatefulWidget {
     required this.imageQuality,
     required this.maxHeight,
     required this.maxWidth,
+    this.urlImgNetwork,
   });
 
   final double width;
   final double height;
+  final String? urlImgNetwork;
   final File? initialImageUrl;
   final ValueChanged<File?> imageUrl;
   final int imageQuality;
@@ -49,7 +51,6 @@ class _ProfilePicturePhotoState extends State<ProfilePicturePhoto> {
       setState(() {
         imageFile = File(file.path);
         widget.imageUrl(imageFile);
-        // initialImg = null;
       });
     }
   }
@@ -74,7 +75,11 @@ class _ProfilePicturePhotoState extends State<ProfilePicturePhoto> {
                     'assets/imgs/no-image.jpg',
                   ),
                 )
-              : null,
+              : widget.urlImgNetwork != null
+                  ? DecorationImage(
+                      image: NetworkImage(widget.urlImgNetwork ?? ''),
+                    )
+                  : null,
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(5),
