@@ -11,7 +11,7 @@ import '../../../config/config.dart'
         Strings,
         UserRegisterStatus,
         getIt;
-import '../../widgets/widgets.dart' show PasswordInput;
+import '../../common/widgets/widgets.dart' show PasswordInput;
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../../config/config.dart' show Strings;
 
-import 'like_sent_page.dart';
-import 'likeme_page.dart';
-import 'mutual_likes_page.dart';
-import 'suggestion_page.dart';
+import 'like_sent/like_sent_page.dart';
+import 'likeme/likeme_page.dart';
+import 'mutual_likes/mutual_likes_page.dart';
+import 'suggestion/suggestion_page.dart';
 
 class DiscoverPage extends StatefulWidget {
   const DiscoverPage({super.key});

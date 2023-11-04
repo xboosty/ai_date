@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../config/config.dart' show AppTheme, Strings;
-import '../../../widgets/button_bar/provider/user_chat_provider.dart';
-import '../../../widgets/button_bar/provider/user_state.dart';
-import '../../../widgets/widgets.dart' show UsersButtonBar;
+import '../../../common/widgets/button_bar/provider/user_chat_provider.dart';
+import '../../../common/widgets/button_bar/provider/user_state.dart';
+import '../../../common/widgets/widgets.dart' show UsersButtonBar;
 import 'chat_search_page.dart';
 
 class ChatNewPage extends StatelessWidget {

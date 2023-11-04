@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import '../../../domain/domain.dart' show BlockDatasource, UserEntity;
+export '../../../domain/domain.dart' show UserEntity;
 import '../../../config/config.dart'
     show NtsBlockedUserResponse, NtsErrorResponse, SharedPref, UserMapper;
 

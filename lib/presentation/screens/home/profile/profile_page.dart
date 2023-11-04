@@ -26,7 +26,7 @@ import '../../../../config/helpers/convert_file_multipartfile.dart';
 import '../../../../domain/domain.dart' show UserEntity;
 import '../../screens.dart'
     show BloquedListScreen, ChangePasswordScreen, SignInScreen;
-import '../../../widgets/widgets.dart'
+import '../../../common/widgets/widgets.dart'
     show
         CardProfile,
         ConfigurationInputField,

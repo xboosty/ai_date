@@ -19,7 +19,7 @@ import '../../../config/config.dart'
         UserRegisterStatus,
         getIt;
 import '../../../domain/entities/user_entity.dart';
-import '../../widgets/widgets.dart'
+import '../../common/widgets/widgets.dart'
     show
         FilledColorizedOutlineButton,
         IconButtonSvg,

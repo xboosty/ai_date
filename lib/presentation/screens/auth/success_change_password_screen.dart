@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../config/config.dart' show Strings;
-import '../../widgets/widgets.dart' show FilledColorizedButton;
+import '../../common/widgets/widgets.dart' show FilledColorizedButton;
 import 'sign_in_screen.dart';
 
 class SuccessChangePasswordScreen extends StatelessWidget {
