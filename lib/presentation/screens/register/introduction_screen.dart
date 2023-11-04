@@ -2,7 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../config/config.dart' show AppTheme, Strings;
-import '../../widgets/widgets.dart' show FilledColorizedButton, OutlineText;
+import '../../common/widgets/widgets.dart'
+    show FilledColorizedButton, OutlineText;
 import '../screens.dart' show RegisterScreen, RegisterScreenArguments;
 
 class IntroductionScreenArguments {

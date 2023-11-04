@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../config/config.dart' show SharedPref, Strings;
-import '../../../widgets/widgets.dart' show FilledColorizedButton, OutlineText;
+import '../../../common/widgets/widgets.dart'
+    show FilledColorizedButton, OutlineText;
 import 'interview_page.dart';
 
 class IntroInterviewPage extends StatefulWidget {

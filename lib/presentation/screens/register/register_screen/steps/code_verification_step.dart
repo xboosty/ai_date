@@ -1,5 +1,5 @@
 import 'package:ai_date/config/config.dart';
-import 'package:ai_date/presentation/widgets/widgets.dart';
+import 'package:ai_date/presentation/common/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class CodeVerificationStep extends StatefulWidget {
@@ -17,8 +17,7 @@ class CodeVerificationStep extends StatefulWidget {
   final VoidCallback onPressed;
 
   @override
-  State<CodeVerificationStep> createState() =>
-      _CodeVerificationStepState();
+  State<CodeVerificationStep> createState() => _CodeVerificationStepState();
 }
 
 class _CodeVerificationStepState extends State<CodeVerificationStep> {

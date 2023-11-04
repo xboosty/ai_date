@@ -18,6 +18,15 @@ class AppTheme {
     colors: [firstColorBlur, secondColorBlur],
   );
 
+  static Gradient shadowGradient(
+      {required Alignment begin, required Alignment end}) {
+    return LinearGradient(
+      colors: [Colors.black.withOpacity(0.4), Colors.transparent],
+      begin: begin,
+      end: end,
+    );
+  }
+
   static const linearGradientReverse = LinearGradient(
     begin: Alignment(0.94, 0.34),
     end: Alignment(-0.94, -0.34),

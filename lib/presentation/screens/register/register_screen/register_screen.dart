@@ -20,7 +20,7 @@ import '../../../../config/config.dart'
         Strings,
         UserRegisterStatus,
         getIt;
-import '../../../widgets/widgets.dart'
+import '../../../common/widgets/widgets.dart'
     show
         EmailInput,
         FilledColorizedButton,

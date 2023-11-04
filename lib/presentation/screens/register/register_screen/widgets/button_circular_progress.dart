@@ -1,4 +1,4 @@
-import 'package:ai_date/presentation/widgets/widgets.dart';
+import 'package:ai_date/presentation/common/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class ButtonCircularProgress extends StatefulWidget {

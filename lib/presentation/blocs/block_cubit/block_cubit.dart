@@ -2,8 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../config/config.dart'
-    show CouplesCubit, NtsBlockRepository, getIt;
-import '../../../domain/domain.dart' show UserEntity;
+    show CouplesCubit, NtsBlockRepository, UserEntity, getIt;
 
 part 'block_state.dart';
 
