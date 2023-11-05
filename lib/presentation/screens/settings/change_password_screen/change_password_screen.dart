@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../config/config.dart'
+import '../../../../config/config.dart'
     show
         AccountCubit,
         AccountState,
@@ -11,7 +11,7 @@ import '../../../config/config.dart'
         Strings,
         UserRegisterStatus,
         getIt;
-import '../../common/widgets/widgets.dart' show PasswordInput;
+import '../../../common/widgets/widgets.dart' show PasswordInput;
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
