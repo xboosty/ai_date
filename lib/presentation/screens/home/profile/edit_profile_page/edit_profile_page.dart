@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:mime/mime.dart';
 
 import '../../../../../config/config.dart'
     show
@@ -45,6 +46,15 @@ class ProfileEditPageState extends State<ProfileEditPage> {
   File? imageUrlSelectedFour;
   File? imageUrlSelectedFive;
   File? imageUrlSelectedSix;
+
+  // Secondary Image Network
+  String? imageNetworkUrlOne;
+  String? imageNetworkUrlTwo;
+  String? imageNetworkUrlThree;
+  String? imageNetworkUrlFour;
+  String? imageNetworkUrlFive;
+  String? imageNetworkUrlSix;
+
   UserEntity? user;
 
   late Genders genderSelected;
@@ -157,6 +167,12 @@ class ProfileEditPageState extends State<ProfileEditPage> {
           genderSelected = _genders[2];
       }
       sexualitySelected = _sexualities[1];
+      // imageNetworkUrlOne = lookupMimeType(user?.pictures[0] ?? '');
+      // imageNetworkUrlTwo = base64Decode(user?.pictures[1] ?? '').toString();
+      // imageNetworkUrlThree = base64Decode(user?.pictures[2] ?? '').toString();
+      // imageNetworkUrlFour = base64.decode(user?.pictures[3] ?? '').toString();
+      // imageNetworkUrlFive = base64.decode(user?.pictures[4] ?? '').toString();
+      // imageNetworkUrlSix = base64.decode(user?.pictures[5] ?? '').toString();
     } catch (e) {
       print('Ocurrio un error $e');
     }
@@ -280,7 +296,7 @@ class ProfileEditPageState extends State<ProfileEditPage> {
                             imageQuality: 100,
                             maxHeight: 480,
                             maxWidth: 480,
-                            urlImgNetwork: null,
+                            urlImgNetwork: imageNetworkUrlTwo,
                             initialImageUrl: imageUrlSelectedTwo,
                             imageUrl: (File? value) {
                               setState(() {
@@ -295,7 +311,7 @@ class ProfileEditPageState extends State<ProfileEditPage> {
                             imageQuality: 100,
                             maxHeight: 480,
                             maxWidth: 480,
-                            urlImgNetwork: null,
+                            urlImgNetwork: imageNetworkUrlThree,
                             initialImageUrl: imageUrlSelectedThree,
                             imageUrl: (File? value) {
                               setState(() {
@@ -317,7 +333,7 @@ class ProfileEditPageState extends State<ProfileEditPage> {
                         imageQuality: 100,
                         maxHeight: 480,
                         maxWidth: 480,
-                        urlImgNetwork: null,
+                        urlImgNetwork: imageNetworkUrlFour,
                         initialImageUrl: imageUrlSelectedFour,
                         imageUrl: (File? value) {
                           setState(() {
@@ -331,7 +347,7 @@ class ProfileEditPageState extends State<ProfileEditPage> {
                         imageQuality: 100,
                         maxHeight: 480,
                         maxWidth: 480,
-                        urlImgNetwork: null,
+                        urlImgNetwork: imageNetworkUrlFive,
                         initialImageUrl: imageUrlSelectedFive,
                         imageUrl: (File? value) {
                           setState(() {
@@ -345,7 +361,7 @@ class ProfileEditPageState extends State<ProfileEditPage> {
                         imageQuality: 100,
                         maxHeight: 480,
                         maxWidth: 480,
-                        urlImgNetwork: null,
+                        urlImgNetwork: imageNetworkUrlSix,
                         initialImageUrl: imageUrlSelectedSix,
                         imageUrl: (File? value) {
                           setState(() {
