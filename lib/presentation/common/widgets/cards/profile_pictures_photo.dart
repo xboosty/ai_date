@@ -77,7 +77,9 @@ class _ProfilePicturePhotoState extends State<ProfilePicturePhoto> {
                 )
               : widget.urlImgNetwork != null
                   ? DecorationImage(
-                      image: NetworkImage(widget.urlImgNetwork ?? ''),
+                      image: NetworkImage(
+                        widget.urlImgNetwork ?? '',
+                      ),
                     )
                   : null,
         ),
