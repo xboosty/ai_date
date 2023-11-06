@@ -534,6 +534,9 @@ class _RegisterViewState extends State<RegisterView> {
                             countrySelectorScrollControlled: false,
                             autoValidateMode: AutovalidateMode.disabled,
                             maxLength: 15,
+                            inputDecoration: const InputDecoration(
+                              errorMaxLines: 2,
+                            ),
                             onInputChanged: (PhoneNumber number) {
                               codeNumber = number.dialCode ?? '-1';
                               phoneNumberUser = number.parseNumber();
