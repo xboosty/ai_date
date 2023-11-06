@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:ai_date/presentation/screens/register/introduction_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -371,42 +372,57 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   Future<void> signInWithGoogle() async {
-    setState(() {
-      _isLoadingSignIn = true;
-    });
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
 
-    final firebaseUserCredential =
-        await FirebaseAuth.instance.signInWithCredential(credential);
+      final firebaseUserCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
 
-    signInSocial(firebaseUserCredential);
+      await signInSocial(firebaseUserCredential);
+    } catch (ex) {
+      if (kDebugMode) {
+        print(ex);
+      }
+    }
   }
 
   Future<void> signInWithApple() async {
-    final appleProvider = AppleAuthProvider();
-    final firebaseUserCredential =
-        await FirebaseAuth.instance.signInWithProvider(appleProvider);
+    try {
+      final appleProvider = AppleAuthProvider();
+      final firebaseUserCredential =
+          await FirebaseAuth.instance.signInWithProvider(appleProvider);
 
-    signInSocial(firebaseUserCredential);
+      await signInSocial(firebaseUserCredential);
+    } catch (ex) {
+      if (kDebugMode) {
+        print(ex);
+      }
+    }
   }
 
   Future<void> signInWithFacebook() async {
-    final LoginResult loginResult = await FacebookAuth.instance.login();
+    try {
+      final LoginResult loginResult = await FacebookAuth.instance.login();
 
-    final OAuthCredential facebookAuthCredential =
-        FacebookAuthProvider.credential(loginResult.accessToken?.token ?? '');
+      final OAuthCredential facebookAuthCredential =
+          FacebookAuthProvider.credential(loginResult.accessToken?.token ?? '');
 
-    final firebaseUserCredential = await FirebaseAuth.instance
-        .signInWithCredential(facebookAuthCredential);
+      final firebaseUserCredential = await FirebaseAuth.instance
+          .signInWithCredential(facebookAuthCredential);
 
-    signInSocial(firebaseUserCredential);
+      await signInSocial(firebaseUserCredential);
+    } catch (ex) {
+      if (kDebugMode) {
+        print(ex);
+      }
+    }
   }
 
   Future<void> signInSocial(UserCredential firebaseUserCredential) async {
@@ -502,8 +518,14 @@ class _SignInFormState extends State<SignInForm> {
                   backgroundColor: const Color(0xFFE9EAF6),
                   onPressed: _isLoadingSignIn
                       ? null
-                      : () {
-                          signInWithFacebook();
+                      : () async {
+                          setState(() {
+                            _isLoadingSignIn = true;
+                          });
+                          await signInWithFacebook();
+                          setState(() {
+                            _isLoadingSignIn = false;
+                          });
                         },
                 ),
                 IconButtonSvg(
@@ -513,8 +535,14 @@ class _SignInFormState extends State<SignInForm> {
                   backgroundColor: const Color(0xFFE9EAF6),
                   onPressed: _isLoadingSignIn
                       ? null
-                      : () {
-                          signInWithApple();
+                      : () async {
+                          setState(() {
+                            _isLoadingSignIn = true;
+                          });
+                          await signInWithApple();
+                          setState(() {
+                            _isLoadingSignIn = false;
+                          });
                         },
                 ),
                 IconButtonSvg(
@@ -524,8 +552,14 @@ class _SignInFormState extends State<SignInForm> {
                   backgroundColor: const Color(0xFFE9EAF6),
                   onPressed: _isLoadingSignIn
                       ? null
-                      : () {
-                          signInWithGoogle();
+                      : () async {
+                          setState(() {
+                            _isLoadingSignIn = true;
+                          });
+                          await signInWithGoogle();
+                          setState(() {
+                            _isLoadingSignIn = false;
+                          });
                         },
                 ),
               ],
@@ -663,31 +697,20 @@ class _SignInFormState extends State<SignInForm> {
                 ))
               ],
             ),
-            // SizedBox(height: size.height * 0.02),
             BlocBuilder<AccountCubit, AccountState>(
-              builder: (context, state) => switch (state.status) {
-                UserRegisterStatus.initial => FilledColorizedOutlineButton(
+              builder: (context, state) {
+                if (state.status == UserRegisterStatus.loading ||
+                    _isLoadingSignIn) {
+                  return const CircularProgressIndicator();
+                } else {
+                  return FilledColorizedOutlineButton(
                     width: 150,
                     height: 50,
                     title: 'SIGN IN',
                     isTrailingIcon: false,
                     onTap: () => _startSession(context, size: size),
-                  ),
-                UserRegisterStatus.loading => const CircularProgressIndicator(),
-                UserRegisterStatus.failure => FilledColorizedOutlineButton(
-                    width: 150,
-                    height: 50,
-                    title: 'SIGN IN',
-                    isTrailingIcon: false,
-                    onTap: () => _startSession(context, size: size),
-                  ),
-                UserRegisterStatus.success => FilledColorizedOutlineButton(
-                    width: 150,
-                    height: 50,
-                    title: 'SIGN IN',
-                    isTrailingIcon: false,
-                    onTap: () => _startSession(context, size: size),
-                  ),
+                  );
+                }
               },
             ),
           ],
