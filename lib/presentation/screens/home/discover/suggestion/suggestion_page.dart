@@ -199,6 +199,7 @@ class _UserCardState extends State<_UserCard> {
                   return PersonalDetail(
                     user: widget.couples[index],
                     hobbies: _hobbies,
+                    bloquedButtonAvailable: true,
                   );
                 },
               );

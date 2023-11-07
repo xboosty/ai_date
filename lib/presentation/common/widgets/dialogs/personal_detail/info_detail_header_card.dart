@@ -14,11 +14,13 @@ class InfoDetailHeaderCard extends StatelessWidget {
     required this.user,
     required this.tabControllerReport,
     required this.tabsReport,
+    required this.bloquedButtonAvailable,
   });
 
   final UserEntity? user;
   final TabController tabControllerReport;
   final List<Widget> tabsReport;
+  final bool bloquedButtonAvailable;
 
   @override
   Widget build(BuildContext context) {
@@ -50,115 +52,126 @@ class InfoDetailHeaderCard extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                IconButton(
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isDismissible: false,
-                      enableDrag: false,
-                      useSafeArea: true,
-                      isScrollControlled: false,
-                      builder: (BuildContext context) {
-                        return Container(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          child: SafeArea(
-                            bottom: false,
-                            child: DraggableScrollableSheet(
-                              initialChildSize: 1.0,
-                              maxChildSize: 1.0,
-                              builder: (BuildContext context,
-                                  ScrollController scrollController) {
-                                return SizedBox(
-                                  height: size.height * 0.80,
-                                  width: size.width * 0.95,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(height: 20.0),
-                                      SizedBox(
-                                        height: size.height * 0.05,
-                                        width: size.width,
-                                        child: ListTile(
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                            horizontal: 15,
-                                          ),
-                                          leading: const CircleAvatarProfile(
-                                            image: 'assets/imgs/girl1.png',
-                                          ),
-                                          title: Text(
-                                            '${user?.name} (31)',
-                                            style: const TextStyle(
-                                              color: Color(0xFF261638),
-                                              fontSize: 20,
-                                              fontFamily: Strings.fontFamily,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                          trailing: BlocBuilder<BlockCubit,
-                                              BlockState>(
-                                            builder: (context, state) {
-                                              return IconButton(
-                                                onPressed: (state
-                                                        is BlockedUsersLoading)
-                                                    ? null
-                                                    : () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                icon: const Icon(
-                                                  Icons.cancel_outlined,
-                                                  color: AppTheme.disabledColor,
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 25.0),
-                                      BlocBuilder<BlockCubit, BlockState>(
-                                        builder: (context, state) {
-                                          return TabBar(
-                                            controller: tabControllerReport,
-                                            tabs: tabsReport,
-                                            onTap: (index) {
-                                              if ((index == 0) &&
-                                                  (state ==
-                                                      BlockedUsersLoading())) {
-                                                tabControllerReport.index = 1;
-                                              }
-                                            },
-                                          );
-                                        },
-                                      ),
-                                      Expanded(
-                                        child: TabBarView(
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          controller: tabControllerReport,
+                bloquedButtonAvailable
+                    ? IconButton(
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            isDismissible: false,
+                            enableDrag: false,
+                            useSafeArea: true,
+                            isScrollControlled: false,
+                            builder: (BuildContext context) {
+                              return Container(
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                child: SafeArea(
+                                  bottom: false,
+                                  child: DraggableScrollableSheet(
+                                    initialChildSize: 1.0,
+                                    maxChildSize: 1.0,
+                                    builder: (BuildContext context,
+                                        ScrollController scrollController) {
+                                      return SizedBox(
+                                        height: size.height * 0.80,
+                                        width: size.width * 0.95,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
                                           children: [
-                                            ReportUserSheet(size: size),
-                                            BlockUserSheet(user: user)
+                                            const SizedBox(height: 20.0),
+                                            SizedBox(
+                                              height: size.height * 0.05,
+                                              width: size.width,
+                                              child: ListTile(
+                                                contentPadding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 15,
+                                                ),
+                                                leading:
+                                                    const CircleAvatarProfile(
+                                                  image:
+                                                      'assets/imgs/girl1.png',
+                                                ),
+                                                title: Text(
+                                                  '${user?.name} (31)',
+                                                  style: const TextStyle(
+                                                    color: Color(0xFF261638),
+                                                    fontSize: 20,
+                                                    fontFamily:
+                                                        Strings.fontFamily,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                trailing: BlocBuilder<
+                                                    BlockCubit, BlockState>(
+                                                  builder: (context, state) {
+                                                    return IconButton(
+                                                      onPressed: (state
+                                                              is BlockedUsersLoading)
+                                                          ? null
+                                                          : () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                      icon: const Icon(
+                                                        Icons.cancel_outlined,
+                                                        color: AppTheme
+                                                            .disabledColor,
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 25.0),
+                                            BlocBuilder<BlockCubit, BlockState>(
+                                              builder: (context, state) {
+                                                return TabBar(
+                                                  controller:
+                                                      tabControllerReport,
+                                                  tabs: tabsReport,
+                                                  onTap: (index) {
+                                                    if ((index == 0) &&
+                                                        (state ==
+                                                            BlockedUsersLoading())) {
+                                                      tabControllerReport
+                                                          .index = 1;
+                                                    }
+                                                  },
+                                                );
+                                              },
+                                            ),
+                                            Expanded(
+                                              child: TabBarView(
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                controller: tabControllerReport,
+                                                children: [
+                                                  ReportUserSheet(size: size),
+                                                  BlockUserSheet(user: user)
+                                                ],
+                                              ),
+                                            ),
                                           ],
                                         ),
-                                      ),
-                                    ],
+                                      );
+                                    },
+                                    controller: DraggableScrollableController(),
                                   ),
-                                );
-                              },
-                              controller: DraggableScrollableController(),
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.no_accounts_outlined,
-                    color: Colors.white,
-                    size: 32,
-                  ),
-                )
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.no_accounts_outlined,
+                          color: Colors.white,
+                          size: 32,
+                        ),
+                      )
+                    : Container(width: size.width * 0.14)
               ],
             ),
           ),
