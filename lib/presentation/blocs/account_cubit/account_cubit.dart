@@ -1,8 +1,7 @@
-import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import '../../../config/config.dart' show NtsAccountAuthRepository, getIt;
 import '../../../domain/domain.dart' show UserEntity;
@@ -18,8 +17,11 @@ class AccountCubit extends Cubit<AccountState> {
   Future<void> registerUser(Map<String, dynamic> userRegister) async {
     emit(const AccountState(status: UserRegisterStatus.loading));
     try {
-      final user = await repo.registerUserRepository(userRegister);
-      emit(AccountState(status: UserRegisterStatus.success, user: user));
+      final hasConnected = await InternetConnectionChecker().hasConnection;
+      if (hasConnected) {
+        final user = await repo.registerUserRepository(userRegister);
+        emit(AccountState(status: UserRegisterStatus.success, user: user));
+      }
     } catch (e) {
       emit(
         AccountState(
@@ -72,6 +74,7 @@ class AccountCubit extends Cubit<AccountState> {
       final user = await repo.signInUserRepository(credentials);
       emit(AccountState(status: UserRegisterStatus.success, user: user));
       print('SignIn Success');
+      emit(const AccountState(status: UserRegisterStatus.initial));
     } catch (e) {
       print(e.toString());
       emit(
@@ -190,6 +193,7 @@ class AccountCubit extends Cubit<AccountState> {
     try {
       final user = await repo.updateAccountRepository(userUpdate);
       emit(AccountState(status: UserRegisterStatus.success, user: user));
+      emit(const AccountState(status: UserRegisterStatus.initial));
     } catch (e) {
       emit(
         AccountState(
