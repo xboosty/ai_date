@@ -21,15 +21,7 @@ class SharedPref {
       preferences?.getStringList('credentials') ?? [];
   String get token => preferences?.getString('token') ?? 'null';
   String get account => preferences?.getString('account') ?? '{}';
-
-  // bool get allowNotifications => preferences?.getBool('notification') ?? false;
-  // String get database => preferences?.getString('database') ?? '';
-  // String get userDB => preferences?.getString('userDB') ?? '';
-  // String get passwordDB => preferences?.getString('passwordDB') ?? '';
-
-  // getters for user and rol
-  // String get user => preferences?.getString('user') ?? '';
-  // String get rol => preferences?.getString('rol') ?? '';
+  String get tokenAI => preferences?.getString('tokenAI') ?? '';
 
   // Setters
   set showApp(bool flag) => preferences?.setBool('showApp', flag);
@@ -43,16 +35,6 @@ class SharedPref {
   set token(String newToken) => preferences?.setString('token', newToken);
   set account(String newAccount) =>
       preferences?.setString('account', newAccount);
-  // set allowNotifications(bool flag) =>
-  //     preferences?.setBool('notification', flag);
-
-  // set database(String newDatabase) =>
-  //     preferences?.setString('database', newDatabase);
-  // set userDB(String newUserDB) => preferences?.setString('userDB', newUserDB);
-  // set passwordDB(String newPasswordDB) =>
-  //     preferences?.setString('passwordDB', newPasswordDB);
-
-  // // setters for user and rol
-  // set user(String newUser) => preferences?.setString('user', newUser);
-  // set rol(String newRol) => preferences?.setString('rol', newRol);
+  set tokenAI(String newTokenAI) =>
+      preferences?.setString('tokenAI', newTokenAI);
 }

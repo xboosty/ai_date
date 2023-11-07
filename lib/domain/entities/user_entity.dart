@@ -1,3 +1,5 @@
+import 'security_token_entity.dart';
+
 class UserEntity {
   final int? id;
   final DateTime birthDate;
@@ -13,6 +15,7 @@ class UserEntity {
   final dynamic avatarMimeType;
   final String sexualOrientation;
   final String? token;
+  final SecurityTokenEntity? tokenAI;
   final bool isGenderVisible;
   final bool isSexualityVisible;
   final List<String?> pictures;
@@ -32,6 +35,7 @@ class UserEntity {
     required this.avatarMimeType,
     required this.sexualOrientation,
     this.token,
+    this.tokenAI,
     required this.isGenderVisible,
     required this.isSexualityVisible,
     required this.pictures,

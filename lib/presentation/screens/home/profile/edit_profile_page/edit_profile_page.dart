@@ -110,18 +110,17 @@ class ProfileEditPageState extends State<ProfileEditPage> {
       if (!mounted) return;
       await context.read<AccountCubit>().editAccount(formData);
       if (!mounted) return;
-      Navigator.of(context).pop();
-      if (!mounted) return;
-      _notifications.ntsSuccessNotification(
+      await _notifications.ntsSuccessNotification(
         context,
         message: 'Profile updated successfully',
         height: size.height * 0.12,
         width: size.width * 0.90,
       );
-    } catch (e) {
       if (!mounted) return;
       Navigator.of(context).pop();
+    } catch (e) {
       if (e is NtsErrorResponse) {
+        if (!mounted) return;
         await _notifications.ntsErrorNotification(
           context,
           message: e.message ?? '',
@@ -399,8 +398,9 @@ class ProfileEditPageState extends State<ProfileEditPage> {
                             content:
                                 'Are you sure you want to save the changes?',
                             onPressedCancel: () => Navigator.of(context).pop(),
-                            onPressedOk: () => _handleSaveChanges(size: size),
-                          ),
+                            onPressedOk: () {
+                              _handleSaveChanges(size: size);
+                            }),
                         UserRegisterStatus.loading => const Center(
                             child: CircularProgressIndicator(),
                           ),
@@ -409,15 +409,13 @@ class ProfileEditPageState extends State<ProfileEditPage> {
                             content:
                                 'Are you sure you want to save the changes?',
                             onPressedCancel: () => Navigator.of(context).pop(),
-                            onPressedOk: () => _handleSaveChanges(size: size),
+                            onPressedOk: () {
+                              _handleSaveChanges(size: size);
+                            }),
+                        UserRegisterStatus.loading => const Center(
+                            child: CircularProgressIndicator(),
                           ),
-                        UserRegisterStatus.success => CustomAlertDialog(
-                            title: 'Save Changes',
-                            content:
-                                'Are you sure you want to save the changes?',
-                            onPressedCancel: () => Navigator.of(context).pop(),
-                            onPressedOk: () => _handleSaveChanges(size: size),
-                          ),
+                        UserRegisterStatus.success => Container(),
                       },
                     ),
                   );
