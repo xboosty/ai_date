@@ -1,33 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dio/dio.dart';
 
-import '../../../../../config/config.dart'
-    show
-        AppTheme,
-        BlockCubit,
-        BlockState,
-        BlockedUsersLoading,
-        HandlerNotification,
-        NtsErrorResponse,
-        Strings,
-        getIt;
+import '../../../../../config/config.dart' show AppTheme, Strings;
 import '../../../../../domain/domain.dart' show UserEntity;
 import '../../widgets.dart'
     show
         ButtonsInfoProfile,
         CardGradientPicture,
         CardInfoProfile,
-        CircleAvatarProfile,
         ShadowCardDetail;
 import 'info_detail_header_card.dart';
 
 class PersonalDetail extends StatelessWidget {
-  const PersonalDetail({super.key, required this.user, required this.hobbies});
+  const PersonalDetail({
+    super.key,
+    required this.user,
+    required this.hobbies,
+    required this.bloquedButtonAvailable,
+  });
 
-  final UserEntity user;
+  final UserEntity? user;
   final List<String> hobbies;
+  final bool bloquedButtonAvailable;
+
+  List<String> _getPictures(List<String?> arrayPictures) {
+    List<String> newList = [];
+
+    if (arrayPictures.length > 2 && arrayPictures[2] != null) {
+      newList.add(arrayPictures[2]!);
+    } else {
+      newList.add("");
+    }
+
+    if (arrayPictures.length > 3 && arrayPictures[3] != null) {
+      newList.add(arrayPictures[3]!);
+    } else {
+      newList.add("");
+    }
+
+    return newList;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +61,7 @@ class PersonalDetail extends StatelessWidget {
               children: [
                 _CardSeeProfileDetails(
                   user: user,
+                  bloquedButtonAvailable: bloquedButtonAvailable,
                 ),
                 SizedBox(height: size.height * 0.02),
                 _SmallDescriptionProfile(size: size),
@@ -61,12 +74,11 @@ class PersonalDetail extends StatelessWidget {
                   iconThree: Icons.calendar_month,
                 ),
                 CardGradientPicture(
-                  image: const DecorationImage(
-                    image: AssetImage('assets/imgs/girl2.png'),
-                    fit: BoxFit.cover,
-                  ),
                   width: size.width * 0.90,
                   height: size.height * 0.55,
+                  picture: ((user?.pictures.length ?? 1) > 1)
+                      ? (user?.pictures[1] ?? '')
+                      : '',
                 ),
                 const Padding(
                   padding: EdgeInsets.only(top: 15.0),
@@ -91,7 +103,8 @@ class PersonalDetail extends StatelessWidget {
                 ),
                 _PersonalQuestionInfo(size: size),
                 SizedBox(height: size.height * 0.02),
-                _OthersPicturesProfile(size: size),
+                _OthersPicturesProfile(
+                    size: size, pictures: _getPictures(user?.pictures ?? [])),
                 const Padding(
                   padding: EdgeInsets.only(top: 15.0),
                   child: Text(
@@ -182,10 +195,7 @@ class PersonalDetail extends StatelessWidget {
                 CardGradientPicture(
                   width: size.width * 0.90,
                   height: size.height * 0.55,
-                  image: const DecorationImage(
-                    image: AssetImage('assets/imgs/girl7.png'),
-                    fit: BoxFit.cover,
-                  ),
+                  picture: user?.pictures.last ?? '',
                 ),
                 SizedBox(height: size.height * 0.02),
                 const Text(
@@ -224,9 +234,11 @@ class PersonalDetail extends StatelessWidget {
 }
 
 class _CardSeeProfileDetails extends StatefulWidget {
-  const _CardSeeProfileDetails({this.user});
+  const _CardSeeProfileDetails(
+      {this.user, required this.bloquedButtonAvailable});
 
   final UserEntity? user;
+  final bool bloquedButtonAvailable;
 
   @override
   State<_CardSeeProfileDetails> createState() => _CardSeeProfileDetailsState();
@@ -290,13 +302,14 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
       margin: EdgeInsets.zero,
       elevation: 8.0,
       child: CachedNetworkImage(
-        imageUrl: widget.user?.avatar,
+        imageUrl: widget.user?.avatar ?? '',
         imageBuilder: (context, imageProvider) {
           return ImageProfile(
             tabControllerReport: _tabControllerReport,
             tabsReport: tabsReport,
             image: imageProvider,
             user: widget.user,
+            bloquedButtonAvailable: widget.bloquedButtonAvailable,
           );
         },
         errorWidget: (context, url, error) => ImageProfile(
@@ -304,12 +317,14 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
           tabsReport: tabsReport,
           image: const AssetImage('assets/imgs/no-image.jpg'),
           user: widget.user,
+          bloquedButtonAvailable: widget.bloquedButtonAvailable,
         ),
         placeholder: (context, url) => ImageProfile(
           tabControllerReport: _tabControllerReport,
           tabsReport: tabsReport,
           image: const AssetImage('assets/imgs/no-image.jpg'),
           user: widget.user,
+          bloquedButtonAvailable: widget.bloquedButtonAvailable,
         ),
       ),
     );
@@ -506,9 +521,11 @@ class _HobbiesProfile extends StatelessWidget {
 class _OthersPicturesProfile extends StatelessWidget {
   const _OthersPicturesProfile({
     required this.size,
+    required this.pictures,
   });
 
   final Size size;
+  final List<String?> pictures;
 
   @override
   Widget build(BuildContext context) {
@@ -516,18 +533,12 @@ class _OthersPicturesProfile extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         CardGradientPicture(
-          image: const DecorationImage(
-            image: AssetImage('assets/imgs/girl8.png'),
-            fit: BoxFit.cover,
-          ),
+          picture: pictures.first ?? '',
           width: size.width * 0.45,
           height: size.height * 0.35,
         ),
         CardGradientPicture(
-          image: const DecorationImage(
-            image: AssetImage('assets/imgs/girl9.png'),
-            fit: BoxFit.cover,
-          ),
+          picture: pictures.last ?? '',
           width: size.width * 0.45,
           height: size.height * 0.35,
         ),
@@ -699,12 +710,14 @@ class ImageProfile extends StatelessWidget {
     required this.tabControllerReport,
     required this.tabsReport,
     required this.image,
+    required this.bloquedButtonAvailable,
   });
 
   final UserEntity? user;
   final TabController tabControllerReport;
   final List<Widget> tabsReport;
   final ImageProvider<Object> image;
+  final bool bloquedButtonAvailable;
 
   @override
   Widget build(BuildContext context) {
@@ -729,6 +742,7 @@ class ImageProfile extends StatelessWidget {
             user: user,
             tabControllerReport: tabControllerReport,
             tabsReport: tabsReport,
+            bloquedButtonAvailable: bloquedButtonAvailable,
           ),
         ],
       ),

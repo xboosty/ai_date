@@ -74,7 +74,7 @@ class AccountCubit extends Cubit<AccountState> {
       final user = await repo.signInUserRepository(credentials);
       emit(AccountState(status: UserRegisterStatus.success, user: user));
       print('SignIn Success');
-      emit(const AccountState(status: UserRegisterStatus.initial));
+      emit(AccountState(status: UserRegisterStatus.initial, user: user));
     } catch (e) {
       print(e.toString());
       emit(
@@ -95,6 +95,7 @@ class AccountCubit extends Cubit<AccountState> {
       if (user != null) {
         emit(AccountState(status: UserRegisterStatus.success, user: user));
         print('SignIn Success');
+        emit(AccountState(status: UserRegisterStatus.initial, user: user));
       } else {
         emit(
             const AccountState(user: null, status: UserRegisterStatus.initial));
@@ -193,7 +194,7 @@ class AccountCubit extends Cubit<AccountState> {
     try {
       final user = await repo.updateAccountRepository(userUpdate);
       emit(AccountState(status: UserRegisterStatus.success, user: user));
-      emit(const AccountState(status: UserRegisterStatus.initial));
+      emit(AccountState(status: UserRegisterStatus.initial, user: user));
     } catch (e) {
       emit(
         AccountState(

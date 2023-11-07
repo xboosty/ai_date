@@ -110,6 +110,7 @@ class _UserCardLikeMeState extends State<_UserCardLikeMe> {
                   return PersonalDetail(
                     user: widget.couples[index],
                     hobbies: _hobbies,
+                    bloquedButtonAvailable: true,
                   );
                 },
               );
