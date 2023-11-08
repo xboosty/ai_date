@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:mime/mime.dart';
 
 import '../../../../../config/config.dart'
     show
@@ -124,7 +123,7 @@ class ProfileEditPageState extends State<ProfileEditPage> {
         await _notifications.ntsErrorNotification(
           context,
           message: e.message ?? '',
-          height: size.height * 0.12,
+          height: size.height * 0.15,
           width: size.width * 0.90,
         );
       }
