@@ -195,7 +195,9 @@ class PersonalDetail extends StatelessWidget {
                 CardGradientPicture(
                   width: size.width * 0.90,
                   height: size.height * 0.55,
-                  picture: user?.pictures.last ?? '',
+                  picture: (user?.pictures.isNotEmpty ?? false)
+                      ? user?.pictures.last ?? ''
+                      : '',
                 ),
                 SizedBox(height: size.height * 0.02),
                 const Text(
