@@ -81,7 +81,6 @@ class _CouplesProfile extends StatelessWidget {
 
 class _SimilaritySlider extends StatefulWidget {
   const _SimilaritySlider({
-    super.key,
     required this.initPercent,
   });
 
