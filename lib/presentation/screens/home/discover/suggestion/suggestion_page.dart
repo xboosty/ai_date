@@ -59,10 +59,17 @@ class _CouplesProfile extends StatelessWidget {
                 CouplesLoading() => const Center(
                     child: CircularProgressIndicator(),
                   ),
-                CouplesData() => _UserCard(
-                    couples: state.couples,
+                CouplesData() => state.couples.isNotEmpty
+                    ? _UserCard(
+                        couples: state.couples,
+                      )
+                    : const Center(
+                        child: Text('There are no couples available'),
+                      ),
+                CouplesError() => const Center(
+                    child: Text(
+                        'Oops!! An error occurred while loading the images'),
                   ),
-                CouplesError() => Container()
               },
             ),
           ],

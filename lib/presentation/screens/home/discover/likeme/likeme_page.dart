@@ -45,10 +45,17 @@ class LikeMePage extends StatelessWidget {
                 CouplesLoading() => const Center(
                     child: CircularProgressIndicator(),
                   ),
-                CouplesData() => _UserCardLikeMe(
-                    couples: state.couples,
+                CouplesData() => state.couples.isNotEmpty
+                    ? _UserCardLikeMe(
+                        couples: state.couples,
+                      )
+                    : const Center(
+                        child: Text('There are no couples available'),
+                      ),
+                CouplesError() => const Center(
+                    child: Text(
+                        'Oops!! An error occurred while loading the images'),
                   ),
-                CouplesError() => Container()
               },
             ),
           ],
