@@ -100,6 +100,7 @@ class ProfileEditPageState extends State<ProfileEditPage> {
       "FullName": nameCtrl.text,
       "GenderId": genderSelected.id,
       "Gender": genderSelected.name,
+      "SexualOrientationId": sexualitySelected.id,
       "SexualOrientation": sexualitySelected.name,
       "IsGenderVisible": showGenderProfile,
       "IsSexualityVisible": showSexualityProfile,
