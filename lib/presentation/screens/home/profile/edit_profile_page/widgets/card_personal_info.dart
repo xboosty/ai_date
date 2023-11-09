@@ -66,8 +66,10 @@ class CardPersonalInfoState extends State<CardPersonalInfo> {
               labelText: 'Name',
               colorLabel: const Color(0xFF6C2EBC),
               textInputAction: TextInputAction.done,
-              validator: (value) =>
-                  RegisterValidators.validateUsername(value ?? ''),
+              validator: (value) => RegisterValidators.validateUsername(
+                value ?? '',
+                messageInvalid: 'Please enter a valid name',
+              ),
               errorMaxLines: 2,
             ),
             ConfigurationInputField(
@@ -84,6 +86,8 @@ class CardPersonalInfoState extends State<CardPersonalInfo> {
               labelText: 'Email',
               colorLabel: const Color(0xFF6C2EBC),
               keyboardType: TextInputType.emailAddress,
+              validator: (value) =>
+                  RegisterValidators.validateEmail(value ?? ''),
             ),
             SizedBox(height: widget.size.height * 0.01),
             DatePickerFormField(

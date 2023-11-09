@@ -2,7 +2,8 @@ class RegisterValidators {
   RegisterValidators._();
 
   // Validations
-  static String? validateUsername(String value) {
+  static String? validateUsername(String value,
+      {required String messageInvalid}) {
     // Define your validation logic here.
     if (value.isEmpty) {
       return 'Name is required';
@@ -14,7 +15,7 @@ class RegisterValidators {
     //   return 'Enter a valid name Ex: jennifer95';
     // }
     if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
-      return 'Enter a valid name without spaces Ex: Jennifer';
+      return messageInvalid;
     }
     return null; // Return null if the input is valid.
   }

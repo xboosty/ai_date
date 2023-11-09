@@ -47,8 +47,8 @@ class DatePickerFormField extends StatelessWidget {
             showDatePicker(
               context: context,
               initialDate: initialDate,
-              firstDate: DateTime(1900),
-              lastDate: DateTime(2100),
+              firstDate: DateTime(1900, 1),
+              lastDate: DateTime.now().subtract(const Duration(days: 365 * 18)),
             ).then((date) {
               if (date != null) {
                 onDateSelected(date);
