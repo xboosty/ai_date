@@ -336,7 +336,7 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
   }
 }
 
-class _SmallDescriptionProfile extends StatelessWidget {
+class _SmallDescriptionProfile extends StatefulWidget {
   const _SmallDescriptionProfile({
     required this.size,
     required this.user,
@@ -344,6 +344,45 @@ class _SmallDescriptionProfile extends StatelessWidget {
 
   final Size size;
   final UserEntity? user;
+
+  @override
+  State<_SmallDescriptionProfile> createState() =>
+      _SmallDescriptionProfileState();
+}
+
+class _SmallDescriptionProfileState extends State<_SmallDescriptionProfile> {
+  String gender = '';
+  String sexuality = '';
+  @override
+  void initState() {
+    super.initState();
+    switch (widget.user?.genderId) {
+      case 0:
+        gender = 'Male';
+        break;
+      case 1:
+        gender = 'Female';
+        break;
+      default:
+        gender = 'Non Binary';
+    }
+    switch (widget.user?.sexualityId) {
+      case 0:
+        sexuality = 'Hetero';
+        break;
+      case 1:
+        sexuality = 'Bisexual';
+        break;
+      case 2:
+        sexuality = 'Homosexual';
+        break;
+      case 3:
+        sexuality = 'Transexual';
+        break;
+      default:
+        sexuality = 'Prefer not to say';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -354,8 +393,8 @@ class _SmallDescriptionProfile extends StatelessWidget {
       elevation: 5.0,
       margin: EdgeInsets.zero,
       child: Container(
-        width: size.width * 0.95,
-        height: size.height * 0.28,
+        width: widget.size.width * 0.95,
+        height: widget.size.height * 0.28,
         padding: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -369,7 +408,7 @@ class _SmallDescriptionProfile extends StatelessWidget {
                 color: AppTheme.disabledColor,
               ),
               title: Text(
-                '${user?.gender ?? ''} / ${user?.sexualOrientation ?? ''}',
+                '$gender / $sexuality',
                 style: const TextStyle(
                   color: Color(0xFF7F87A6),
                   fontSize: 14,

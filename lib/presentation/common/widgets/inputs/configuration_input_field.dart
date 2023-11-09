@@ -15,6 +15,7 @@ class ConfigurationInputField extends StatelessWidget {
     this.textInputAction,
     this.onFieldSubmitted,
     this.validator,
+    this.errorMaxLines,
   });
 
   final String labelText;
@@ -27,6 +28,7 @@ class ConfigurationInputField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final ValueChanged<String>? onFieldSubmitted;
   final FormFieldValidator<String>? validator;
+  final int? errorMaxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +52,7 @@ class ConfigurationInputField extends StatelessWidget {
           fontWeight: FontWeight.w600,
         ),
         suffixIcon: suffixIcon,
+        errorMaxLines: errorMaxLines,
       ),
       textInputAction: textInputAction,
       onFieldSubmitted: onFieldSubmitted,

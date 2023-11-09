@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../../../config/config.dart' show UserEntity;
 import '../../../../../common/widgets/widgets.dart'
     show ConfigurationInputField, DatePickerFormField;
+import '../../../../register/register_screen/utils/validators.dart';
 
 class CardPersonalInfo extends StatefulWidget {
   const CardPersonalInfo({
@@ -42,7 +43,7 @@ class CardPersonalInfoState extends State<CardPersonalInfo> {
     return Center(
       child: Container(
         width: widget.size.width * 0.90,
-        height: widget.size.height * 0.42,
+        height: widget.size.height * 0.45,
         margin: const EdgeInsets.symmetric(vertical: 20.0),
         padding: const EdgeInsets.only(
           top: 20,
@@ -65,6 +66,9 @@ class CardPersonalInfoState extends State<CardPersonalInfo> {
               labelText: 'Name',
               colorLabel: const Color(0xFF6C2EBC),
               textInputAction: TextInputAction.done,
+              validator: (value) =>
+                  RegisterValidators.validateUsername(value ?? ''),
+              errorMaxLines: 2,
             ),
             ConfigurationInputField(
               controller: widget.lastNameCtrl,
