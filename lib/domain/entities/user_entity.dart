@@ -14,6 +14,7 @@ class UserEntity {
   final dynamic avatar;
   final dynamic avatarMimeType;
   final String sexualOrientation;
+  final int sexualityId;
   final String? token;
   final SecurityTokenEntity? tokenAI;
   final bool isGenderVisible;
@@ -34,6 +35,7 @@ class UserEntity {
     required this.avatar,
     required this.avatarMimeType,
     required this.sexualOrientation,
+    required this.sexualityId,
     this.token,
     this.tokenAI,
     required this.isGenderVisible,
@@ -57,6 +59,7 @@ class UserEntity {
         avatar: json["avatar"],
         avatarMimeType: json["avatarMimeType"],
         sexualOrientation: json["sexualOrientation"],
+        sexualityId: json["sexualityId"],
         isGenderVisible: json["isGenderVisible"],
         isSexualityVisible: json["isSexualityVisible"],
         pictures: List<String>.from(json["pictures"].map((x) => x)),
@@ -76,6 +79,7 @@ class UserEntity {
         "avatar": avatar,
         "avatarMimeType": avatarMimeType,
         "sexualOrientation": sexualOrientation,
+        "sexualityId": sexualityId,
         "isGenderVisible": isGenderVisible,
         "isSexualityVisible": isSexualityVisible,
         "pictures": List<dynamic>.from(pictures.map((x) => x)),
