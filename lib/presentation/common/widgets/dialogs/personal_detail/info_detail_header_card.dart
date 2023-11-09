@@ -37,12 +37,13 @@ class InfoDetailHeaderCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                      size: 32,
-                    )),
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                    size: 32,
+                  ),
+                ),
                 Text(
                   user?.name ?? '',
                   style: const TextStyle(
@@ -88,13 +89,11 @@ class InfoDetailHeaderCard extends StatelessWidget {
                                                     const EdgeInsets.symmetric(
                                                   horizontal: 15,
                                                 ),
-                                                leading:
-                                                    const CircleAvatarProfile(
-                                                  image:
-                                                      'assets/imgs/girl1.png',
+                                                leading: CircleAvatarProfile(
+                                                  image: user?.avatar ?? '',
                                                 ),
                                                 title: Text(
-                                                  '${user?.name} (31)',
+                                                  '${user?.name}',
                                                   style: const TextStyle(
                                                     color: Color(0xFF261638),
                                                     fontSize: 20,

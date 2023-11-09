@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../config/config.dart' show AppTheme, SharedPref, Strings;
 import '../screens.dart'
     show
-        ChatEmptyPage,
         ChatNewPage,
         DiscoverPage,
         InterViewPage,
@@ -65,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       icon: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.edit_square),
+          Icon(Icons.mode_edit_outlined),
           SizedBox(width: 8),
           Text(
             'Edit',
@@ -83,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         icon: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(Icons.person_pin),
+        Icon(Icons.person_pin_outlined),
         SizedBox(width: 8),
         Text(
           'Preview',

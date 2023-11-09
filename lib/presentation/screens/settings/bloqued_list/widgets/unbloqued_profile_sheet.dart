@@ -84,7 +84,7 @@ class UnbloquedProfileSheetState extends State<UnbloquedProfileSheet> {
                   child: Column(
                     children: [
                       const Text(
-                        'Unbloqued user',
+                        'Blocked user',
                         style: TextStyle(
                           color: Color(0xFF261638),
                           fontSize: 20,
