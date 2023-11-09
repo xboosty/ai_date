@@ -618,6 +618,12 @@ class _SignInFormState extends State<SignInForm> {
                     enabled: !_isLoadingSignIn,
                     controller: _emailCtrl,
                     keyboardType: TextInputType.emailAddress,
+                    style: const TextStyle(
+                      color: Color(0xFF261638),
+                      fontSize: 14,
+                      fontFamily: Strings.fontFamily,
+                      fontWeight: FontWeight.w600,
+                    ),
                     decoration: const InputDecoration(
                       labelText: 'Email',
                       // hintText: 'Email',
@@ -637,11 +643,17 @@ class _SignInFormState extends State<SignInForm> {
                     validator: (value) => _validateCredential(value ?? ''),
                     textInputAction: TextInputAction.next,
                   ),
-                  // SizedBox(height: size.height * 0.02),
                   PasswordInput(
                     enabled: !_isLoadingSignIn,
                     controller: _passwordCtrl,
                     obscureText: _obscureText,
+                    errorMaxLines: 2,
+                    style: const TextStyle(
+                      color: Color(0xFF261638),
+                      fontSize: 14,
+                      fontFamily: Strings.fontFamily,
+                      fontWeight: FontWeight.w600,
+                    ),
                     onPressedSuffixIcon: () => {
                       setState(() {
                         _obscureText = !_obscureText;

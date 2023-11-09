@@ -86,10 +86,10 @@ class _DiscoverPageState extends State<DiscoverPage>
           ),
         ),
         centerTitle: false,
-        actions: [
-          const Icon(Icons.tune, color: Colors.grey),
-          SizedBox(width: size.width * 0.04),
-        ],
+        // actions: [
+        //   const Icon(Icons.tune, color: Colors.grey),
+        //   SizedBox(width: size.width * 0.04),
+        // ],
         bottom: TabBar(
           controller: _tabController,
           dividerColor: Colors.transparent,
@@ -141,7 +141,7 @@ class IconButtonTitle extends StatelessWidget {
           style: const TextStyle(
             fontSize: 10,
             fontFamily: Strings.fontFamily,
-            // fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w600,
           ),
         )
       ],

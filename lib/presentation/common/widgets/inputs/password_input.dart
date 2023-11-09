@@ -16,6 +16,7 @@ class PasswordInput extends StatelessWidget {
     this.textInputAction,
     this.onFieldSubmitted,
     this.enabled,
+    this.errorMaxLines,
   });
 
   final TextEditingController? controller;
@@ -29,6 +30,7 @@ class PasswordInput extends StatelessWidget {
   final TextInputAction? textInputAction;
   final void Function(String?)? onFieldSubmitted;
   final bool? enabled;
+  final int? errorMaxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,7 @@ class PasswordInput extends StatelessWidget {
       style: style,
       decoration: InputDecoration(
         labelText: labelText,
-        // hintText: 'Password',
+        errorMaxLines: errorMaxLines,
         labelStyle: const TextStyle(
           color: Color(0xFF7F87A6),
           fontSize: 14,

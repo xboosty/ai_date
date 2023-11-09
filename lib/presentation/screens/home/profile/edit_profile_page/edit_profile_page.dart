@@ -240,7 +240,7 @@ class ProfileEditPageState extends State<ProfileEditPage> {
               },
             ),
             const ListTile(
-              leading: Icon(Icons.add_photo_alternate, size: 20),
+              leading: Icon(Icons.add_photo_alternate_outlined, size: 20),
               contentPadding: EdgeInsets.symmetric(vertical: 5.0),
               title: Text(
                 'PROFILE PICTURES',
