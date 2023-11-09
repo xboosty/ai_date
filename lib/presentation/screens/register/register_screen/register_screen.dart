@@ -425,8 +425,10 @@ class _RegisterViewState extends State<RegisterView> {
                         fontWeight: FontWeight.w600,
                       ),
                       keyboardType: TextInputType.name,
-                      validator: (value) =>
-                          RegisterValidators.validateUsername(value ?? ''),
+                      validator: (value) => RegisterValidators.validateUsername(
+                          value ?? '',
+                          messageInvalid:
+                              'Enter a valid name without spaces Ex: Jennifer'),
                       textInputAction: TextInputAction.done,
                       onFieldSubmitted: (_) {
                         _submitUsername();

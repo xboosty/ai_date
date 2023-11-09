@@ -203,7 +203,8 @@ class ProfileEditPageState extends State<ProfileEditPage> {
           children: [
             CardPersonalInfo(
               size: size,
-              initialDate: user?.birthDate ?? DateTime.now(),
+              initialDate: user?.birthDate ??
+                  DateTime.now().subtract(const Duration(days: 365 * 18)),
               dateCtrl: dateCtrl,
               nameCtrl: nameCtrl,
               lastNameCtrl: lastNameCtrl,
