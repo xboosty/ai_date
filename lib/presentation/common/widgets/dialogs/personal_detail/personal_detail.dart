@@ -64,7 +64,10 @@ class PersonalDetail extends StatelessWidget {
                   bloquedButtonAvailable: bloquedButtonAvailable,
                 ),
                 SizedBox(height: size.height * 0.02),
-                _SmallDescriptionProfile(size: size),
+                _SmallDescriptionProfile(
+                  size: size,
+                  user: user,
+                ),
                 const ButtonsInfoProfile(
                   titleOne: '31 years old',
                   titleTwo: '165 cm',
@@ -336,9 +339,11 @@ class _CardSeeProfileDetailsState extends State<_CardSeeProfileDetails>
 class _SmallDescriptionProfile extends StatelessWidget {
   const _SmallDescriptionProfile({
     required this.size,
+    required this.user,
   });
 
   final Size size;
+  final UserEntity? user;
 
   @override
   Widget build(BuildContext context) {
@@ -356,16 +361,16 @@ class _SmallDescriptionProfile extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           color: Colors.white,
         ),
-        child: const Column(
+        child: Column(
           children: [
             ListTile(
-              leading: Icon(
+              leading: const Icon(
                 Icons.person_outlined,
                 color: AppTheme.disabledColor,
               ),
               title: Text(
-                'Female / Lesbian',
-                style: TextStyle(
+                '${user?.gender ?? ''} / ${user?.sexualOrientation ?? ''}',
+                style: const TextStyle(
                   color: Color(0xFF7F87A6),
                   fontSize: 14,
                   fontFamily: Strings.fontFamily,
@@ -373,8 +378,8 @@ class _SmallDescriptionProfile extends StatelessWidget {
                 ),
               ),
             ),
-            Divider(),
-            ListTile(
+            const Divider(),
+            const ListTile(
               leading: Icon(
                 Icons.location_on_outlined,
                 color: AppTheme.disabledColor,
@@ -389,14 +394,15 @@ class _SmallDescriptionProfile extends StatelessWidget {
                 ),
               ),
             ),
-            Divider(),
-            ListTile(
+            const Divider(),
+            const ListTile(
               leading: Icon(
                 Icons.panorama_fish_eye_sharp,
                 color: AppTheme.disabledColor,
               ),
               title: Text(
-                'Female / Lesbian',
+                'Into Woman, Non-Binary, Girl Trans, Queer',
+                maxLines: 2,
                 style: TextStyle(
                   color: Color(0xFF7F87A6),
                   fontSize: 14,

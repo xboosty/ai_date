@@ -12,6 +12,7 @@ class UserResponse {
   final dynamic avatar;
   final dynamic avatarMimeType;
   final String sexualOrientation;
+  final int? sexualityId;
   final bool? isGenderVisible;
   final bool? isSexualityVisible;
   final List<String?> pictures;
@@ -30,6 +31,7 @@ class UserResponse {
     this.avatar,
     this.avatarMimeType,
     required this.sexualOrientation,
+    this.sexualityId,
     this.isGenderVisible,
     this.isSexualityVisible,
     required this.pictures,
@@ -51,6 +53,7 @@ class UserResponse {
         avatar: json["avatar"],
         avatarMimeType: json["avatarMimeType"],
         sexualOrientation: json["sexualOrientation"],
+        sexualityId: json["sexualityId"],
         isGenderVisible: json["isGenderVisible"],
         isSexualityVisible: json["isSexualityVisible"],
         pictures: List<String>.from(json["pictures"].map((x) => x)),
@@ -70,6 +73,7 @@ class UserResponse {
         "avatar": avatar,
         "avatarMimeType": avatarMimeType,
         "sexualOrientation": sexualOrientation,
+        "sexualityId": sexualityId,
         "isGenderVisible": isGenderVisible,
         "isSexualityVisible": isSexualityVisible,
         "pictures": List<dynamic>.from(pictures.map((x) => x)),

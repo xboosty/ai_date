@@ -164,7 +164,22 @@ class ProfileEditPageState extends State<ProfileEditPage> {
         default:
           genderSelected = _genders[2];
       }
-      sexualitySelected = _sexualities[1];
+      switch (user?.sexualityId) {
+        case 0:
+          sexualitySelected = _sexualities[1];
+          break;
+        case 1:
+          sexualitySelected = _sexualities[2];
+          break;
+        case 2:
+          sexualitySelected = _sexualities[3];
+          break;
+        case 3:
+          sexualitySelected = _sexualities[0];
+          break;
+        default:
+          sexualitySelected = _sexualities[0];
+      }
       // imageNetworkUrlOne = lookupMimeType(user?.pictures[0] ?? '');
       // imageNetworkUrlTwo = base64Decode(user?.pictures[1] ?? '').toString();
       // imageNetworkUrlThree = base64Decode(user?.pictures[2] ?? '').toString();

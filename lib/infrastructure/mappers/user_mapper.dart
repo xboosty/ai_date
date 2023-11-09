@@ -12,6 +12,7 @@ class UserMapper {
       phone: user.phone ?? 'null',
       gender: user.gender,
       sexualOrientation: user.sexualOrientation,
+      sexualityId: user.sexualityId ?? -1,
       identity: user.identity ?? '',
       genderId: user.genderId ?? -1,
       statusId: user.statusId ?? -1,
