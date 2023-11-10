@@ -10,6 +10,7 @@ export 'core/services/services_locator.dart';
 export 'helpers/handler_notifications.dart';
 export 'helpers/navigations_app.dart';
 export 'helpers/convert_file_multipartfile.dart';
+export 'helpers/version_app.dart';
 // Shared Preferences
 export 'shared/shared_pref.dart';
 // Utils

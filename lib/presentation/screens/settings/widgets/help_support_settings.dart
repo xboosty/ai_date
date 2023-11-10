@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../config/config.dart' show Strings;
+import '../../../../config/config.dart' show Strings, VersionApp, getIt;
 
 class HelpSupportSetting extends StatelessWidget {
   const HelpSupportSetting({super.key});
@@ -121,9 +121,9 @@ class HelpSupportSetting extends StatelessWidget {
               ),
               const Divider(),
               ListTile(
-                title: const Row(
+                title: Row(
                   children: [
-                    Text(
+                    const Text(
                       'App Version',
                       style: TextStyle(
                         color: Color(0xFF686E8C),
@@ -132,15 +132,32 @@ class HelpSupportSetting extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    Spacer(),
-                    Text(
-                      'V1.0.1',
-                      style: TextStyle(
-                        color: Color(0xFFCCC1EA),
-                        fontSize: 14,
-                        fontFamily: Strings.fontFamily,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    const Spacer(),
+                    FutureBuilder(
+                      future: VersionApp.getVersionApp(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return Text(
+                            'V ${snapshot.data}',
+                            style: const TextStyle(
+                              color: Color(0xFFCCC1EA),
+                              fontSize: 14,
+                              fontFamily: Strings.fontFamily,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
+                        } else {
+                          return Text(
+                            'V ${snapshot.data}',
+                            style: const TextStyle(
+                              color: Color(0xFFCCC1EA),
+                              fontSize: 14,
+                              fontFamily: Strings.fontFamily,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
+                        }
+                      },
                     ),
                   ],
                 ),
