@@ -10,6 +10,7 @@ import '../../../config/config.dart'
         NtsErrorResponse,
         Strings,
         UserRegisterStatus,
+        VersionApp,
         getIt;
 import '../../common/widgets/widgets.dart' show CustomAlertDialog;
 import '../screens.dart' show SignInScreen;
