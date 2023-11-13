@@ -3,7 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-import '../../../config/config.dart' show NtsAccountAuthRepository, getIt;
+import '../../../config/config.dart'
+    show AIAccountRepository, NtsAccountAuthRepository, getIt;
 import '../../../domain/domain.dart' show UserEntity;
 
 part 'account_state.dart';
@@ -13,14 +14,21 @@ class AccountCubit extends Cubit<AccountState> {
       : super(const AccountState(status: UserRegisterStatus.initial));
 
   final repo = getIt<NtsAccountAuthRepository>();
+  final repoApi = getIt<AIAccountRepository>();
 
   Future<void> registerUser(Map<String, dynamic> userRegister) async {
+    // final Map<String, dynamic> userAI = {
+    //   "email": userRegister['email'],
+    //   "avatar": "string"
+    // };
     emit(const AccountState(status: UserRegisterStatus.loading));
     try {
       final hasConnected = await InternetConnectionChecker().hasConnection;
       if (hasConnected) {
         final user = await repo.registerUserRepository(userRegister);
         emit(AccountState(status: UserRegisterStatus.success, user: user));
+      } else {
+        throw 'You don\'t have an internet connection';
       }
     } catch (e) {
       emit(
@@ -195,6 +203,27 @@ class AccountCubit extends Cubit<AccountState> {
       final user = await repo.updateAccountRepository(userUpdate);
       emit(AccountState(status: UserRegisterStatus.success, user: user));
       emit(AccountState(status: UserRegisterStatus.initial, user: user));
+    } catch (e) {
+      emit(
+        AccountState(
+          status: UserRegisterStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
+      rethrow;
+    }
+  }
+
+  Future<void> getSecurityToken() async {
+    emit(const AccountState(status: UserRegisterStatus.loading));
+    try {
+      final hasConnected = await InternetConnectionChecker().hasConnection;
+      if (hasConnected) {
+        // await repoApi.securityTokenRepository();
+        emit(const AccountState(status: UserRegisterStatus.success));
+      } else {
+        throw Exception('You do not have internet, please connect');
+      }
     } catch (e) {
       emit(
         AccountState(

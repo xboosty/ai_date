@@ -1,14 +1,15 @@
+import 'package:ai_date/infrastructure/infrastructure.dart';
 import 'package:dio/dio.dart';
 
 import '../../../config/config.dart'
     show AiSecurityTokenResponse, SecurityMapper, SharedPref;
 import '../../../domain/domain.dart'
-    show AccountDatasource, SecurityTokenEntity, UserEntity;
+    show AccountDatasource, SecurityTokenEntity, AiUserEntity;
 
-class AIAccountAuthDatasource extends AccountDatasource<UserEntity> {
+class AIAccountAuthDatasource extends AccountDatasource<AiUserEntity> {
   AIAccountAuthDatasource._();
 
-  static final dai = AIAccountAuthDatasource._();
+  static final ds = AIAccountAuthDatasource._();
 
   final dio = Dio(
     BaseOptions(
@@ -29,13 +30,13 @@ class AIAccountAuthDatasource extends AccountDatasource<UserEntity> {
   }
 
   @override
-  Future<UserEntity> logIn(Map<String, dynamic> credential) {
+  Future<AiUserEntity> logIn(Map<String, dynamic> credential) {
     // TODO: implement logIn
     throw UnimplementedError();
   }
 
   @override
-  Future<UserEntity?> logInSocial(String token) {
+  Future<AiUserEntity?> logInSocial(String token) {
     // TODO: implement logInSocial
     throw UnimplementedError();
   }
@@ -53,25 +54,41 @@ class AIAccountAuthDatasource extends AccountDatasource<UserEntity> {
   }
 
   @override
-  Future<UserEntity> registerUser(Map<String, dynamic> user) async {
-    final rs = await dio.post('/users/users', data: user);
+  Future<AiUserEntity> registerUser(Map<String, dynamic> user) async {
+    try {
+      final rs = await dio.post(
+        '/users/users',
+        data: user,
+        options: Options(
+          headers: {
+            'Authorization': SharedPref.pref.tokenAI,
+          },
+        ),
+      );
+      if (rs.statusCode == 200) {
+        final userResponse = AiUserResponse.fromJson(rs.data);
+        // Parsed to model response to entity
+        final AiUserEntity aiUserResult =
+            UserMapper.aiUserResponseToEntity(userResponse);
 
-    if (rs.statusCode == 200) {
-    } else {
-      print('hubo un error');
+        return aiUserResult;
+      } else {
+        // Devuelve un error
+        throw Exception(rs.statusMessage);
+      }
+    } catch (e) {
+      rethrow;
     }
-
-    throw UnimplementedError();
   }
 
   @override
-  Future<UserEntity> registerUserSocial(Map<String, dynamic> user) {
+  Future<AiUserEntity> registerUserSocial(Map<String, dynamic> user) {
     // TODO: implement registerUserSocial
     throw UnimplementedError();
   }
 
   @override
-  Future<UserEntity> updateAccount(FormData userUpdate) {
+  Future<AiUserEntity> updateAccount(FormData userUpdate) {
     // TODO: implement updateAccount
     throw UnimplementedError();
   }

@@ -78,6 +78,11 @@ class CardPersonalInfoState extends State<CardPersonalInfo> {
               fontSize: 10,
               labelText: 'Last Name',
               colorLabel: const Color(0xFF6C2EBC),
+              validator: (value) => RegisterValidators.validateLastName(
+                value ?? '',
+                messageInvalid: 'Please enter a valid last name',
+              ),
+              errorMaxLines: 2,
             ),
             ConfigurationInputField(
               controller: widget.emailCtrl,

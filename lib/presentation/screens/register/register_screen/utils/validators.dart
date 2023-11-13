@@ -2,8 +2,10 @@ class RegisterValidators {
   RegisterValidators._();
 
   // Validations
-  static String? validateUsername(String value,
-      {required String messageInvalid}) {
+  static String? validateUsername(
+    String value, {
+    required String messageInvalid,
+  }) {
     // Define your validation logic here.
     if (value.isEmpty) {
       return 'Name is required';
@@ -11,10 +13,21 @@ class RegisterValidators {
     if (value.length < 4) {
       return 'Name must be at least 4 characters long';
     }
-    // if (!RegExp(r'^[a-zA-Z0-9_-]+$').hasMatch(value)) {
-    //   return 'Enter a valid name Ex: jennifer95';
-    // }
     if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
+      return messageInvalid;
+    }
+    return null; // Return null if the input is valid.
+  }
+
+  static String? validateLastName(
+    String value, {
+    required String messageInvalid,
+  }) {
+    if (value.isEmpty) {
+      return null;
+    }
+
+    if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
       return messageInvalid;
     }
     return null; // Return null if the input is valid.
