@@ -30,6 +30,9 @@ void serviceLocatorRepositoryInit() {
   getIt.registerSingleton(
     AIInterviewRepository(datasource: AIInterviewDatasource.ds),
   );
+  getIt.registerSingleton(
+    AIAccountRepository(datasource: AIAccountAuthDatasource.ds),
+  );
 }
 
 void serviceLocatorNotificationInit() {

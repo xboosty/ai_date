@@ -97,7 +97,7 @@ class ProfileEditPageState extends State<ProfileEditPage> {
 
     final formData = FormData.fromMap({
       "BirthDate": DateFormat.yMd().parse(dateCtrl.text).toIso8601String(),
-      "FullName": nameCtrl.text,
+      "FullName": nameCtrl.text.trim(),
       "GenderId": genderSelected.id,
       "Gender": genderSelected.name,
       "SexualOrientationId": sexualitySelected.id,

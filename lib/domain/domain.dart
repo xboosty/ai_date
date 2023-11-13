@@ -5,10 +5,11 @@ export 'datasources/couples_datasource.dart';
 export 'datasources/interview_datasource.dart';
 
 // Entities
-export './entities/user_entity.dart';
-export './entities/phone_entity.dart';
-export './entities/interview_entity.dart';
-export 'entities/security_token_entity.dart';
+export 'entities/ai/ai_user_entity.dart';
+export 'entities/ai/security_token_entity.dart';
+export 'entities/api/phone_entity.dart';
+export 'entities/api/interview_entity.dart';
+export 'entities/api/user_entity.dart';
 
 // Repositories
 export 'repositories/account_repository.dart';

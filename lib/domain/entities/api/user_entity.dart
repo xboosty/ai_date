@@ -1,4 +1,4 @@
-import 'security_token_entity.dart';
+import '../ai/security_token_entity.dart';
 
 class UserEntity {
   final int? id;

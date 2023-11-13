@@ -1,4 +1,5 @@
-import '../../domain/domain.dart' show UserEntity;
+import '../../domain/domain.dart' show AiUserEntity, UserEntity;
+import '../models/ai/ai_user_response.dart';
 import '../models/ntsprint/user_response.dart';
 
 class UserMapper {
@@ -22,6 +23,15 @@ class UserMapper {
       isGenderVisible: user.isGenderVisible ?? false,
       isSexualityVisible: user.isSexualityVisible ?? false,
       pictures: user.pictures,
+    );
+  }
+
+  // userJsonToEntity
+  static AiUserEntity aiUserResponseToEntity(AiUserResponse user) {
+    return AiUserEntity(
+      id: user.id ?? -1,
+      email: user.email ?? '',
+      avatar: user.avatar ?? '',
     );
   }
 }

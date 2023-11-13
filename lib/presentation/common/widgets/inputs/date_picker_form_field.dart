@@ -47,7 +47,8 @@ class DatePickerFormField extends StatelessWidget {
             showDatePicker(
               context: context,
               initialDate: initialDate,
-              firstDate: DateTime(1900, 1),
+              firstDate:
+                  DateTime.now().subtract(const Duration(days: 365 * 100)),
               lastDate: DateTime.now().subtract(const Duration(days: 365 * 18)),
             ).then((date) {
               if (date != null) {
@@ -61,19 +62,7 @@ class DatePickerFormField extends StatelessWidget {
       controller: controller,
       keyboardType: TextInputType.datetime,
       validator: validator,
-      onTap: () {
-        showDatePicker(
-          context: context,
-          initialDate: initialDate,
-          firstDate: DateTime(1900),
-          lastDate: DateTime(2100),
-        ).then((date) {
-          if (date != null) {
-            onDateSelected(date);
-            controller.text = DateFormat.yMd().format(date);
-          }
-        });
-      },
+      readOnly: true,
     );
   }
 }

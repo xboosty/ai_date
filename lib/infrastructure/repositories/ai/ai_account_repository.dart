@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 
 import '../../../domain/domain.dart'
-    show AccountRepository, SecurityTokenEntity, UserEntity;
+    show AccountRepository, SecurityTokenEntity, AiUserEntity;
 import '../../datasources/ai/ai_account_auth_datasource.dart';
 
-class AIAccountRepository extends AccountRepository<UserEntity> {
+class AIAccountRepository extends AccountRepository<AiUserEntity> {
   AIAccountRepository({required super.datasource});
 
   @override
@@ -32,31 +32,31 @@ class AIAccountRepository extends AccountRepository<UserEntity> {
   }
 
   @override
-  Future<UserEntity> registerUserRepository(Map<String, dynamic> user) {
-    // TODO: implement registerUserRepository
-    throw UnimplementedError();
+  Future<AiUserEntity> registerUserRepository(Map<String, dynamic> user) async {
+    final AiUserEntity aiUserEntity = await datasource.registerUser(user);
+    return aiUserEntity;
   }
 
   @override
-  Future<UserEntity> registerUserSocialRepository(Map<String, dynamic> user) {
+  Future<AiUserEntity> registerUserSocialRepository(Map<String, dynamic> user) {
     // TODO: implement registerUserSocialRepository
     throw UnimplementedError();
   }
 
   @override
-  Future<UserEntity> signInUserRepository(Map<String, dynamic> credentials) {
+  Future<AiUserEntity> signInUserRepository(Map<String, dynamic> credentials) {
     // TODO: implement signInUserRepository
     throw UnimplementedError();
   }
 
   @override
-  Future<UserEntity?> signInUserSocialRepository(String token) {
+  Future<AiUserEntity?> signInUserSocialRepository(String token) {
     // TODO: implement signInUserSocialRepository
     throw UnimplementedError();
   }
 
   @override
-  Future<UserEntity> updateAccountRepository(FormData userUpdate) {
+  Future<AiUserEntity> updateAccountRepository(FormData userUpdate) {
     // TODO: implement updateAccountRepository
     throw UnimplementedError();
   }
@@ -68,7 +68,7 @@ class AIAccountRepository extends AccountRepository<UserEntity> {
   }
 
   Future<SecurityTokenEntity> securityTokenRepository() async {
-    final security = await AIAccountAuthDatasource.dai.getSecurityToken();
+    final security = await AIAccountAuthDatasource.ds.getSecurityToken();
     return security;
   }
 }
