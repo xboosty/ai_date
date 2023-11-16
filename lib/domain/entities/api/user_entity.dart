@@ -4,6 +4,7 @@ class UserEntity {
   final int? id;
   final DateTime birthDate;
   final String name;
+  final String lastName;
   final String identity;
   final int genderId;
   final String gender;
@@ -25,6 +26,7 @@ class UserEntity {
     this.id,
     required this.birthDate,
     required this.name,
+    required this.lastName,
     required this.identity,
     required this.genderId,
     required this.gender,
@@ -49,6 +51,7 @@ class UserEntity {
         id: json["id"],
         birthDate: DateTime.parse(json["birthDate"]),
         name: json["name"],
+        lastName: json["lastName"],
         identity: json["identity"],
         genderId: json["genderId"],
         gender: json["gender"],
@@ -69,6 +72,7 @@ class UserEntity {
         "id": id,
         "birthDate": birthDate.toIso8601String(),
         "name": name,
+        "lastName": lastName,
         "identity": identity,
         "genderId": genderId,
         "gender": gender,

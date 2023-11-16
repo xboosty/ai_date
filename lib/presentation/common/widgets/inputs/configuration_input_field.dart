@@ -16,6 +16,7 @@ class ConfigurationInputField extends StatelessWidget {
     this.onFieldSubmitted,
     this.validator,
     this.errorMaxLines,
+    this.isEnabledField = true,
   });
 
   final String labelText;
@@ -29,12 +30,14 @@ class ConfigurationInputField extends StatelessWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final FormFieldValidator<String>? validator;
   final int? errorMaxLines;
+  final bool isEnabledField;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       focusNode: focusNode,
       keyboardType: keyboardType,
+      enabled: isEnabledField,
       textCapitalization: TextCapitalization.none,
       controller: controller,
       style: const TextStyle(

@@ -87,6 +87,7 @@ class CardPersonalInfoState extends State<CardPersonalInfo> {
             ConfigurationInputField(
               controller: widget.emailCtrl,
               focusNode: _focusNodeEmail,
+              isEnabledField: false,
               fontSize: 10,
               labelText: 'Email',
               colorLabel: const Color(0xFF6C2EBC),

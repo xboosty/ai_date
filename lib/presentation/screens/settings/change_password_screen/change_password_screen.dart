@@ -96,6 +96,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   // For Register User
   void _submitChangePassword({required Size size}) async {
+    FocusScope.of(context).unfocus();
     if (_formKey.currentState!.validate()) {
       // If the form is valid, save the form and perform an action.
       _formKey.currentState!.save();

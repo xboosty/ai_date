@@ -8,9 +8,10 @@ class UserMapper {
     return UserEntity(
       id: user.id,
       name: user.fullName,
+      lastName: user.lastName ?? '',
       email: user.email,
       birthDate: user.birthDate ?? DateTime(1000),
-      phone: user.phone ?? 'null',
+      phone: user.phone ?? '',
       gender: user.gender,
       sexualOrientation: user.sexualOrientation,
       sexualityId: user.sexualityId ?? -1,

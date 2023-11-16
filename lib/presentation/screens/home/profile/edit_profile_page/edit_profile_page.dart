@@ -98,6 +98,8 @@ class ProfileEditPageState extends State<ProfileEditPage> {
     final formData = FormData.fromMap({
       "BirthDate": DateFormat.yMd().parse(dateCtrl.text).toIso8601String(),
       "FullName": nameCtrl.text.trim(),
+      "LastName": lastNameCtrl.text,
+      "Email": emailCtrl.text,
       "GenderId": genderSelected.id,
       "Gender": genderSelected.name,
       "SexualOrientationId": sexualitySelected.id,
@@ -148,7 +150,7 @@ class ProfileEditPageState extends State<ProfileEditPage> {
       Map<String, dynamic> userMap = jsonDecode(SharedPref.pref.account);
       user = UserEntity.fromJson(userMap);
       nameCtrl.text = user?.name ?? '';
-      lastNameCtrl.text = '';
+      lastNameCtrl.text = user?.lastName ?? '';
       emailCtrl.text = user?.email ?? '';
       dateCtrl.text =
           DateFormat.yMd().format(user?.birthDate ?? DateTime.now());

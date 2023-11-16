@@ -2,6 +2,7 @@ class UserResponse {
   final int? id;
   final DateTime? birthDate;
   final String fullName;
+  final String? lastName;
   final String? identity;
   final int? genderId;
   final String gender;
@@ -21,6 +22,7 @@ class UserResponse {
     this.id,
     this.birthDate,
     required this.fullName,
+    this.lastName,
     this.identity,
     this.genderId,
     required this.gender,
@@ -43,6 +45,7 @@ class UserResponse {
             ? null
             : DateTime.parse(json["birthDate"]),
         fullName: json["fullName"],
+        lastName: json["lastName"],
         identity: json["identity"],
         genderId: json["genderId"],
         gender: json["gender"],
@@ -63,6 +66,7 @@ class UserResponse {
         "id": id,
         "birthDate": birthDate?.toIso8601String(),
         "fullName": fullName,
+        "lastName": lastName,
         "identity": identity,
         "genderId": genderId,
         "gender": gender,
